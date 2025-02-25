@@ -1,10 +1,11 @@
 
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Navbar } from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Plus } from 'lucide-react';
+import { Plus, ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface Jeu {
@@ -20,6 +21,7 @@ interface StatsResponse {
 
 export default function Dashboard() {
   const { token } = useAuth();
+  const navigate = useNavigate();
   const [jeux, setJeux] = useState<Jeu[]>([]);
   const [totalApprenants, setTotalApprenants] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -119,7 +121,15 @@ export default function Dashboard() {
                   <tbody>
                     {jeux.map((jeu) => (
                       <tr key={jeu._id} className="border-b last:border-0 hover:bg-gray-50/50 transition-colors">
-                        <td className="py-4 px-6 font-medium">{jeu.titre}</td>
+                        <td className="py-4 px-6">
+                          <button
+                            onClick={() => navigate(`/game/${jeu._id}`)}
+                            className="font-medium text-left flex items-center text-primary hover:text-primary/80 transition-colors"
+                          >
+                            {jeu.titre}
+                            <ExternalLink className="ml-2 h-4 w-4" />
+                          </button>
+                        </td>
                         <td className="py-4 px-6 text-right space-x-2">
                           <Button 
                             variant="outline" 
