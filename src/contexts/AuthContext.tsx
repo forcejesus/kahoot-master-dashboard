@@ -1,5 +1,5 @@
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { AuthState, LoginCredentials, LoginResponse, User } from '@/types/auth';
 import { toast } from 'sonner';
 
@@ -15,9 +15,55 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     user: null,
     token: null,
     isAuthenticated: false,
-    isLoading: false,
+    isLoading: true, // Changed to true initially
     error: null,
   });
+
+  // Effect to check for existing token on mount
+  useEffect(() => {
+    const initializeAuth = async () => {
+      const storedToken = localStorage.getItem('token');
+      
+      if (storedToken) {
+        try {
+          // Decode token to get user info
+          const payload = JSON.parse(atob(storedToken.split('.')[1]));
+          
+          // Vérifier si le token n'est pas expiré
+          const currentTime = Math.floor(Date.now() / 1000);
+          if (payload.exp && payload.exp < currentTime) {
+            // Token expiré
+            localStorage.removeItem('token');
+            setState(prev => ({ ...prev, isLoading: false }));
+            return;
+          }
+
+          const user: User = {
+            id: payload.id,
+            name: payload.name,
+            email: payload.email,
+            ecole: payload.ecole,
+          };
+
+          setState({
+            user,
+            token: storedToken,
+            isAuthenticated: true,
+            isLoading: false,
+            error: null,
+          });
+        } catch (error) {
+          // En cas d'erreur de décodage du token
+          localStorage.removeItem('token');
+          setState(prev => ({ ...prev, isLoading: false }));
+        }
+      } else {
+        setState(prev => ({ ...prev, isLoading: false }));
+      }
+    };
+
+    initializeAuth();
+  }, []);
 
   const login = async (credentials: LoginCredentials) => {
     setState(prev => ({ ...prev, isLoading: true, error: null }));
@@ -75,6 +121,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
     toast.success('Déconnexion réussie');
   };
+
+  // Show loading state
+  if (state.isLoading) {
+    return <div className="flex items-center justify-center min-h-screen">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+    </div>;
+  }
 
   return (
     <AuthContext.Provider value={{ ...state, login, logout }}>
