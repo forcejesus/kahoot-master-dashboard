@@ -31,7 +31,7 @@ export default function GameSetup() {
     const fetchData = async () => {
       try {
         const [typesResponse, pointsResponse] = await Promise.all([
-          fetch('http://kahoot.nos-apps.com/api/questions', {
+          fetch('http://kahoot.nos-apps.com/api/type-question', {
             headers: { 'Authorization': `Bearer ${token}` }
           }),
           fetch('http://kahoot.nos-apps.com/api/points', {
