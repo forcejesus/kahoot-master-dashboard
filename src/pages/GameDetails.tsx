@@ -1,4 +1,3 @@
-
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Navbar } from '@/components/Navbar';
@@ -114,7 +113,7 @@ export default function GameDetails() {
               {jeu.image ? (
                 <div className="relative w-full md:w-[300px] h-[200px] rounded-lg overflow-hidden">
                   <img
-                    src={`http://kahoot.nos-apps.com${jeu.image}`}
+                    src={`http://kahoot.nos-apps.com/${jeu.image}`}
                     alt={jeu.titre}
                     className="object-cover w-full h-full"
                   />
@@ -269,7 +268,7 @@ export default function GameDetails() {
                         {question.image ? (
                           <div className="relative w-full h-[200px] rounded-lg overflow-hidden">
                             <img
-                              src={`http://kahoot.nos-apps.com${question.image}`}
+                              src={`http://kahoot.nos-apps.com/${question.image}`}
                               alt={`Image question ${index + 1}`}
                               className="object-cover w-full h-full"
                             />
