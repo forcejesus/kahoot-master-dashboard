@@ -35,41 +35,48 @@ export function CreateKahootDialog({ onSuccess }: CreateKahootDialogProps) {
     }
 
     setIsLoading(true);
-    const formData = new FormData();
-    formData.append("titre", titre);
-    if (image) {
-      formData.append("image", image);
-    }
 
     try {
+      // Create FormData object
+      const formData = new FormData();
+      formData.append("titre", titre);
+      if (image) {
+        formData.append("file", image); // Changed from "image" to "file"
+      }
+
+      // Make API request
       const response = await fetch("http://kahoot.nos-apps.com/api/jeux", {
         method: "POST",
         headers: {
           'Authorization': `Bearer ${token}`
+          // Remove Content-Type header to let browser set it with boundary for FormData
         },
         body: formData
       });
 
       const data = await response.json();
       
-      if (response.ok) {
+      if (response.ok && data.success) {
         toast.success("Kahoot créé avec succès");
         setIsOpen(false);
         setTitre("");
         setImage(null);
-        // Navigate to the game setup page with game information
-        navigate('/game/setup', {
-          state: {
-            gameId: data.data._id,
-            gameTitle: data.data.titre,
-            gameImage: data.data.image
-          }
-        });
+        if (data.data) {
+          navigate('/game/setup', {
+            state: {
+              gameId: data.data._id,
+              gameTitle: data.data.titre,
+              gameImage: data.data.image
+            }
+          });
+        }
         onSuccess?.();
       } else {
         toast.error(data.message || "Erreur lors de la création du kahoot");
+        console.error("API Error:", data);
       }
     } catch (error) {
+      console.error("Request Error:", error);
       toast.error("Erreur lors de la création du kahoot");
     } finally {
       setIsLoading(false);
