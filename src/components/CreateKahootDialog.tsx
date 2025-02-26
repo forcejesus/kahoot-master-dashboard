@@ -37,19 +37,16 @@ export function CreateKahootDialog({ onSuccess }: CreateKahootDialogProps) {
     setIsLoading(true);
 
     try {
-      // Create FormData object
       const formData = new FormData();
       formData.append("titre", titre);
       if (image) {
-        formData.append("file", image); // Changed from "image" to "file"
+        formData.append("image", image); // Changed back to "image"
       }
 
-      // Make API request
       const response = await fetch("http://kahoot.nos-apps.com/api/jeux", {
         method: "POST",
         headers: {
           'Authorization': `Bearer ${token}`
-          // Remove Content-Type header to let browser set it with boundary for FormData
         },
         body: formData
       });
