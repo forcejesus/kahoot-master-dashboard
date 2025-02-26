@@ -33,14 +33,22 @@ export default function GameDetails() {
             'Authorization': `Bearer ${token}`
           }
         });
+        
+        if (!response.ok) {
+          throw new Error('Erreur réseau');
+        }
+        
         const data = await response.json();
-        if (data.success) {
+        console.log('API Response:', data); // Pour le débogage
+
+        if (data && data.data) {
           setJeu(data.data);
         } else {
-          toast.error("Impossible de charger les détails du jeu");
+          toast.error("Format de réponse invalide");
           navigate('/dashboard');
         }
       } catch (error) {
+        console.error('Erreur détaillée:', error);
         toast.error("Erreur lors du chargement des détails");
         navigate('/dashboard');
       } finally {
@@ -48,7 +56,9 @@ export default function GameDetails() {
       }
     };
 
-    fetchGameDetails();
+    if (token && id) {
+      fetchGameDetails();
+    }
   }, [id, token, navigate]);
 
   return (
