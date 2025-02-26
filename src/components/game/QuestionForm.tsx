@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Question, QuestionType, Point } from '@/types/game';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -26,27 +26,52 @@ interface QuestionFormProps {
 
 export function QuestionForm({ gameId, token, questionTypes, points, onQuestionAdded }: QuestionFormProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  
   const [currentQuestion, setCurrentQuestion] = useState<Question>({
     libelle: '',
     temps: 30,
     limite_response: true,
     typeQuestion: '',
     point: '',
-    jeu: gameId
+    jeu: gameId,
+    type_fichier: ''
   });
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      // Détecter automatiquement le type de fichier
+      const fileType = file.type.split('/')[1]?.toLowerCase();
+      setCurrentQuestion(prev => ({
+        ...prev,
+        type_fichier: fileType === 'jpeg' ? 'jpg' : fileType
+      }));
+    }
+  };
 
   const handleAddQuestion = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
+      const formData = new FormData();
+      Object.entries(currentQuestion).forEach(([key, value]) => {
+        formData.append(key, value.toString());
+      });
+
+      if (selectedFile) {
+        formData.append('fichier', selectedFile);
+      }
+
       const response = await fetch('http://kahoot.nos-apps.com/api/questions', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(currentQuestion)
+        body: formData
       });
 
       if (!response.ok) {
@@ -56,15 +81,20 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
       const data = await response.json();
       onQuestionAdded(data);
       
-      // Reset form for next question
+      // Reset form
       setCurrentQuestion({
         libelle: '',
         temps: 30,
         limite_response: true,
         typeQuestion: '',
         point: '',
-        jeu: gameId
+        jeu: gameId,
+        type_fichier: ''
       });
+      setSelectedFile(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
       
       toast.success("Question ajoutée avec succès");
     } catch (error) {
@@ -96,23 +126,20 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="type_fichier">Type de fichier (optionnel)</Label>
-            <Select
-              value={currentQuestion.type_fichier}
-              onValueChange={(value) => setCurrentQuestion({
-                ...currentQuestion,
-                type_fichier: value
-              })}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Sélectionnez un type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="png">PNG</SelectItem>
-                <SelectItem value="jpg">JPG</SelectItem>
-                <SelectItem value="gif">GIF</SelectItem>
-              </SelectContent>
-            </Select>
+            <Label htmlFor="fichier">Fichier média (optionnel)</Label>
+            <Input
+              id="fichier"
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              accept=".png,.jpg,.jpeg,.gif"
+              className="cursor-pointer"
+            />
+            {currentQuestion.type_fichier && (
+              <div className="text-sm text-muted-foreground">
+                Type de fichier détecté : {currentQuestion.type_fichier}
+              </div>
+            )}
           </div>
 
           <div className="space-y-2">
