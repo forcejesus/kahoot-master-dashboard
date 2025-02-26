@@ -8,6 +8,7 @@ import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import GameDetails from "./pages/GameDetails";
+import GameSetup from "./pages/GameSetup";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,11 @@ function AppRoutes() {
       <Route path="/dashboard" element={
         <PrivateRoute>
           <Dashboard />
+        </PrivateRoute>
+      } />
+      <Route path="/game/setup" element={
+        <PrivateRoute>
+          <GameSetup />
         </PrivateRoute>
       } />
       <Route path="/game/:id" element={
