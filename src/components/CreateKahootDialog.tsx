@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 import {
   Dialog,
   DialogContent,
@@ -24,6 +25,7 @@ export function CreateKahootDialog({ onSuccess }: CreateKahootDialogProps) {
   const [titre, setTitre] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const { token } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,6 +57,14 @@ export function CreateKahootDialog({ onSuccess }: CreateKahootDialogProps) {
         setIsOpen(false);
         setTitre("");
         setImage(null);
+        // Navigate to the game setup page with game information
+        navigate('/game/setup', {
+          state: {
+            gameId: data.data._id,
+            gameTitle: data.data.titre,
+            gameImage: data.data.image
+          }
+        });
         onSuccess?.();
       } else {
         toast.error(data.message || "Erreur lors de la création du kahoot");
