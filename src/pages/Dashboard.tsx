@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Navbar } from '@/components/Navbar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ExternalLink, Trash2 } from 'lucide-react';
+import { ExternalLink, Trash2, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { CreateKahootDialog } from '@/components/CreateKahootDialog';
 import { Button } from '@/components/ui/button';
@@ -167,8 +167,17 @@ export default function Dashboard() {
                 className="gap-2"
                 disabled={isDeleting}
               >
-                <Trash2 className="h-4 w-4" />
-                Supprimer ({selectedKahoots.length})
+                {isDeleting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Suppression...
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="h-4 w-4" />
+                    Supprimer ({selectedKahoots.length})
+                  </>
+                )}
               </Button>
             )}
           </CardHeader>
@@ -243,12 +252,20 @@ export default function Dashboard() {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Annuler</AlertDialogCancel>
+              <AlertDialogCancel disabled={isDeleting}>Annuler</AlertDialogCancel>
               <AlertDialogAction 
                 onClick={handleDeleteSelected}
                 className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                disabled={isDeleting}
               >
-                {isDeleting ? "Suppression..." : "Supprimer"}
+                {isDeleting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Suppression...
+                  </>
+                ) : (
+                  "Supprimer"
+                )}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
