@@ -94,160 +94,167 @@ export default function GameDetails() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <Navbar />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <Button
-          variant="ghost"
-          className="mb-6 hover:bg-white/50"
-          onClick={() => navigate('/dashboard')}
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Retour au tableau de bord
-        </Button>
+      
+      <div className="relative">
+        {/* Background Image Section */}
+        <div className="absolute inset-0 h-[400px] overflow-hidden">
+          {jeu.image ? (
+            <>
+              <div 
+                className="absolute inset-0 bg-cover bg-center z-0"
+                style={{ 
+                  backgroundImage: `url(http://kahoot.nos-apps.com/${jeu.image})`,
+                  filter: 'blur(2px)',
+                  transform: 'scale(1.1)' 
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-gray-50 z-1" />
+            </>
+          ) : (
+            <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-gray-50" />
+          )}
+        </div>
 
-        <div className="space-y-8 animate-fade-in">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-            <div className="flex flex-col gap-4">
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                {jeu.titre}
-              </h1>
-              {jeu.image ? (
-                <div className="relative w-full md:w-[300px] h-[200px] rounded-lg overflow-hidden">
-                  <img
-                    src={`http://kahoot.nos-apps.com/${jeu.image}`}
-                    alt={jeu.titre}
-                    className="object-cover w-full h-full"
-                  />
-                </div>
-              ) : (
-                <div className="flex items-center justify-center w-full md:w-[300px] h-[200px] bg-gray-100 rounded-lg">
-                  <div className="text-gray-400 flex flex-col items-center">
-                    <ImageIcon className="w-12 h-12 mb-2" />
-                    <span>Aucune image</span>
-                  </div>
-                </div>
-              )}
-            </div>
-            <div className="flex space-x-4">
-              <Button 
-                variant="outline"
-                className="hover:bg-primary hover:text-white transition-all duration-200"
-                onClick={() => toast.info("Fonctionnalité à venir")}
-              >
-                <Clock className="mr-2 h-4 w-4" />
-                Planifier une session
-              </Button>
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button 
-                    variant="outline"
-                    className="hover:bg-destructive hover:text-destructive-foreground transition-all duration-200"
-                  >
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    Supprimer
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Cette action est irréversible. Cela supprimera définitivement le jeu
-                      et toutes ses données associées.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Annuler</AlertDialogCancel>
-                    <AlertDialogAction 
-                      onClick={handleDeleteGame}
-                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+        {/* Content Section */}
+        <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <Button
+            variant="ghost"
+            className="mb-6 hover:bg-white/20 text-white"
+            onClick={() => navigate('/dashboard')}
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Retour au tableau de bord
+          </Button>
+
+          <div className="space-y-8 animate-fade-in">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+              <div className="flex flex-col gap-4">
+                <h1 className="text-4xl font-bold text-white">
+                  {jeu.titre}
+                </h1>
+              </div>
+              <div className="flex space-x-4">
+                <Button 
+                  variant="outline"
+                  className="bg-white/10 hover:bg-white hover:text-primary transition-all duration-200 text-white border-white/20"
+                  onClick={() => toast.info("Fonctionnalité à venir")}
+                >
+                  <Clock className="mr-2 h-4 w-4" />
+                  Planifier une session
+                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button 
+                      variant="outline"
+                      className="bg-white/10 hover:bg-destructive hover:text-destructive-foreground transition-all duration-200 text-white border-white/20"
                     >
+                      <Trash2 className="mr-2 h-4 w-4" />
                       Supprimer
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Cette action est irréversible. Cela supprimera définitivement le jeu
+                        et toutes ses données associées.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Annuler</AlertDialogCancel>
+                      <AlertDialogAction 
+                        onClick={handleDeleteGame}
+                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      >
+                        Supprimer
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
             </div>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="bg-white/80">
-              <CardHeader>
-                <CardTitle className="text-lg text-primary">Planifications</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <div className="text-3xl font-bold">{jeu.stats?.total_planifications || 0}</div>
-                  <div className="text-sm text-muted-foreground">
-                    {jeu.stats?.planifications_en_cours || 0} en cours
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-8">
+              <Card className="bg-white/80 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle className="text-lg text-primary">Planifications</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <div className="text-3xl font-bold">{jeu.stats?.total_planifications || 0}</div>
+                    <div className="text-sm text-muted-foreground">
+                      {jeu.stats?.planifications_en_cours || 0} en cours
+                    </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
 
-            <Card className="bg-white/80">
-              <CardHeader>
-                <CardTitle className="text-lg text-primary">Apprenants</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <div className="text-3xl font-bold">{jeu.stats?.total_apprenants || 0}</div>
-                  <div className="text-sm text-muted-foreground">
-                    {jeu.stats?.apprenants_actifs || 0} ont participé
+              <Card className="bg-white/80 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle className="text-lg text-primary">Apprenants</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <div className="text-3xl font-bold">{jeu.stats?.total_apprenants || 0}</div>
+                    <div className="text-sm text-muted-foreground">
+                      {jeu.stats?.apprenants_actifs || 0} ont participé
+                    </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
 
-            <Card className="bg-white/80 col-span-2">
-              <CardHeader>
-                <CardTitle className="text-lg text-primary">Sessions en cours</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {planificationsEnCours.length > 0 ? (
-                  <div className="space-y-4">
-                    {planificationsEnCours.map((planif) => (
-                      <div key={planif._id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                        <div className="space-y-1">
-                          <div className="flex items-center space-x-2">
-                            <span className="font-medium">PIN:</span>
-                            <code className="bg-gray-100 px-2 py-1 rounded">{planif.pin}</code>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleCopyPin(planif.pin)}
-                              className="h-8 w-8 p-0"
-                            >
-                              <Copy className="h-4 w-4" />
-                            </Button>
-                          </div>
-                          <div className="text-sm text-muted-foreground">
-                            <span className="font-medium">Limite:</span> {planif.limite_participation || "∞"} participations
-                          </div>
-                          {planif.meilleur_score && (
-                            <div className="flex items-center text-sm text-yellow-600">
-                              <Trophy className="h-4 w-4 mr-1" />
-                              Meilleur score: {planif.meilleur_score.apprenant} ({planif.meilleur_score.score} pts)
+              <Card className="bg-white/80 backdrop-blur-sm col-span-2">
+                <CardHeader>
+                  <CardTitle className="text-lg text-primary">Sessions en cours</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {planificationsEnCours.length > 0 ? (
+                    <div className="space-y-4">
+                      {planificationsEnCours.map((planif) => (
+                        <div key={planif._id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                          <div className="space-y-1">
+                            <div className="flex items-center space-x-2">
+                              <span className="font-medium">PIN:</span>
+                              <code className="bg-gray-100 px-2 py-1 rounded">{planif.pin}</code>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleCopyPin(planif.pin)}
+                                className="h-8 w-8 p-0"
+                              >
+                                <Copy className="h-4 w-4" />
+                              </Button>
                             </div>
-                          )}
-                        </div>
-                        <div className="text-right">
-                          <div className="text-sm font-medium">
-                            {planif.participants_actifs}/{planif.total_participants} participants
+                            <div className="text-sm text-muted-foreground">
+                              <span className="font-medium">Limite:</span> {planif.limite_participation || "∞"} participations
+                            </div>
+                            {planif.meilleur_score && (
+                              <div className="flex items-center text-sm text-yellow-600">
+                                <Trophy className="h-4 w-4 mr-1" />
+                                Meilleur score: {planif.meilleur_score.apprenant} ({planif.meilleur_score.score} pts)
+                              </div>
+                            )}
                           </div>
-                          <div className="text-xs text-muted-foreground">
-                            Fin le {new Date(planif.date_fin).toLocaleDateString()}
+                          <div className="text-right">
+                            <div className="text-sm font-medium">
+                              {planif.participants_actifs}/{planif.total_participants} participants
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              Fin le {new Date(planif.date_fin).toLocaleDateString()}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-8 text-gray-500 flex flex-col items-center">
-                    <AlertCircle className="h-8 w-8 mb-2" />
-                    Aucune session en cours
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-gray-500 flex flex-col items-center">
+                      <AlertCircle className="h-8 w-8 mb-2" />
+                      Aucune session en cours
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
           </div>
 
           <Card className="backdrop-blur-sm bg-white/80 border-t border-white/50 shadow-lg">
@@ -306,8 +313,8 @@ export default function GameDetails() {
               )}
             </CardContent>
           </Card>
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
   );
 }
