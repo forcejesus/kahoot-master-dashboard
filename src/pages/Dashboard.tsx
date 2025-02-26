@@ -99,7 +99,7 @@ export default function Dashboard() {
     setIsDeleting(true);
     try {
       for (const id of selectedKahoots) {
-        await fetch(`http://kahoot.nos-apps.com/api/jeux/${id}`, {
+        await fetch(`http://kahoot.nos-apps.com/api/jeux/delete/${id}`, {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${token}`
