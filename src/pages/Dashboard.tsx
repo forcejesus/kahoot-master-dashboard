@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -15,6 +14,14 @@ interface Kahoot {
     libelle: string;
     reponses: string[];
     reponse_correcte: string;
+  }[];
+  planifications?: {
+    _id: string;
+    pin: string;
+    participants: {
+      apprenant: string;
+      score: number;
+    }[];
   }[];
 }
 
@@ -124,46 +131,32 @@ export default function Dashboard() {
                   <thead>
                     <tr className="border-b">
                       <th className="text-left py-4 px-6 text-primary font-bold">Titre</th>
-                      <th className="text-right py-4 px-6 text-primary font-bold">Actions</th>
+                      <th className="text-center py-4 px-6 text-primary font-bold">Questions</th>
+                      <th className="text-center py-4 px-6 text-primary font-bold">Sessions</th>
+                      <th className="text-center py-4 px-6 text-primary font-bold">Participants</th>
                     </tr>
                   </thead>
                   <tbody>
                     {kahoots.map((kahoot) => (
-                      <tr key={kahoot._id} className="border-b last:border-0 hover:bg-gray-50/50 transition-colors">
+                      <tr 
+                        key={kahoot._id} 
+                        className="border-b last:border-0 hover:bg-gray-50/50 transition-colors cursor-pointer"
+                        onClick={() => handleKahootClick(kahoot)}
+                      >
                         <td className="py-4 px-6">
-                          <button
-                            onClick={() => handleKahootClick(kahoot)}
-                            className="font-medium text-left flex items-center text-primary hover:text-primary/80 transition-colors"
-                          >
+                          <div className="font-medium text-left flex items-center text-primary">
                             {kahoot.titre}
                             <ExternalLink className="ml-2 h-4 w-4" />
-                          </button>
+                          </div>
                         </td>
-                        <td className="py-4 px-6 text-right space-x-2">
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
-                            className="hover:bg-primary hover:text-white transition-all duration-200"
-                            onClick={() => toast.info("Fonctionnalité à venir")}
-                          >
-                            Planifier
-                          </Button>
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
-                            className="hover:bg-secondary hover:text-white transition-all duration-200"
-                            onClick={() => toast.info("Fonctionnalité à venir")}
-                          >
-                            Modifier
-                          </Button>
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            className="hover:bg-red-500 hover:text-white transition-all duration-200 border-red-500/20"
-                            onClick={() => toast.info("Fonctionnalité à venir")}
-                          >
-                            Supprimer
-                          </Button>
+                        <td className="py-4 px-6 text-center">
+                          {kahoot.questions?.length || 0}
+                        </td>
+                        <td className="py-4 px-6 text-center">
+                          {kahoot.planifications?.length || 0}
+                        </td>
+                        <td className="py-4 px-6 text-center">
+                          {kahoot.planifications?.reduce((total, p) => total + (p.participants?.length || 0), 0) || 0}
                         </td>
                       </tr>
                     ))}
