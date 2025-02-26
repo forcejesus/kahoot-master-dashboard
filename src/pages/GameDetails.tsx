@@ -4,7 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Navbar } from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Clock, Users, Copy, Trophy, Trash2, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Clock, Users, Copy, Trophy, Trash2, AlertCircle, ImageIcon } from 'lucide-react';
 import { toast } from 'sonner';
 import {
   AlertDialog,
@@ -31,15 +31,19 @@ interface Planification {
   };
 }
 
+interface Question {
+  libelle: string;
+  reponses: string[];
+  reponse_correcte: string;
+  image?: string;
+}
+
 interface Jeu {
   _id: string;
   titre: string;
+  image?: string;
   planifications?: Planification[];
-  questions?: {
-    libelle: string;
-    reponses: string[];
-    reponse_correcte: string;
-  }[];
+  questions?: Question[];
   stats?: {
     total_planifications: number;
     planifications_en_cours: number;
@@ -102,10 +106,28 @@ export default function GameDetails() {
         </Button>
 
         <div className="space-y-8 animate-fade-in">
-          <div className="flex items-center justify-between">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              {jeu.titre}
-            </h1>
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div className="flex flex-col gap-4">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                {jeu.titre}
+              </h1>
+              {jeu.image ? (
+                <div className="relative w-full md:w-[300px] h-[200px] rounded-lg overflow-hidden">
+                  <img
+                    src={`http://kahoot.nos-apps.com${jeu.image}`}
+                    alt={jeu.titre}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+              ) : (
+                <div className="flex items-center justify-center w-full md:w-[300px] h-[200px] bg-gray-100 rounded-lg">
+                  <div className="text-gray-400 flex flex-col items-center">
+                    <ImageIcon className="w-12 h-12 mb-2" />
+                    <span>Aucune image</span>
+                  </div>
+                </div>
+              )}
+            </div>
             <div className="flex space-x-4">
               <Button 
                 variant="outline"
@@ -243,7 +265,23 @@ export default function GameDetails() {
                           Question {index + 1}: {question.libelle}
                         </CardTitle>
                       </CardHeader>
-                      <CardContent>
+                      <CardContent className="space-y-4">
+                        {question.image ? (
+                          <div className="relative w-full h-[200px] rounded-lg overflow-hidden">
+                            <img
+                              src={`http://kahoot.nos-apps.com${question.image}`}
+                              alt={`Image question ${index + 1}`}
+                              className="object-cover w-full h-full"
+                            />
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-center w-full h-[100px] bg-gray-100 rounded-lg">
+                            <div className="text-gray-400 flex flex-col items-center">
+                              <ImageIcon className="w-8 h-8 mb-1" />
+                              <span className="text-sm">Aucune image</span>
+                            </div>
+                          </div>
+                        )}
                         <div className="grid grid-cols-2 gap-4">
                           {question.reponses.map((reponse, rIndex) => (
                             <div
