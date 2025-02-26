@@ -4,9 +4,21 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Navbar } from '@/components/Navbar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { CreateKahootDialog } from '@/components/CreateKahootDialog';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface Kahoot {
   _id: string;
@@ -26,18 +38,15 @@ interface Kahoot {
   }[];
 }
 
-interface StatsResponse {
-  success: boolean;
-  message: string;
-  data: any[];
-}
-
 export default function Dashboard() {
   const { token } = useAuth();
   const navigate = useNavigate();
   const [kahoots, setKahoots] = useState<Kahoot[]>([]);
   const [totalApprenants, setTotalApprenants] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedKahoots, setSelectedKahoots] = useState<string[]>([]);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -63,8 +72,49 @@ export default function Dashboard() {
     fetchData();
   }, [token]);
 
-  const handleKahootClick = (kahoot: Kahoot) => {
+  const handleKahootClick = (kahoot: Kahoot, e: React.MouseEvent) => {
+    if (e.target instanceof HTMLElement && e.target.closest('.checkbox-cell')) {
+      return; // Ne pas naviguer si on clique sur la case à cocher
+    }
     navigate(`/game/${kahoot._id}`, { state: { jeu: kahoot } });
+  };
+
+  const handleSelectKahoot = (kahootId: string) => {
+    setSelectedKahoots(prev => 
+      prev.includes(kahootId) 
+        ? prev.filter(id => id !== kahootId)
+        : [...prev, kahootId]
+    );
+  };
+
+  const handleSelectAll = () => {
+    if (selectedKahoots.length === kahoots.length) {
+      setSelectedKahoots([]);
+    } else {
+      setSelectedKahoots(kahoots.map(k => k._id));
+    }
+  };
+
+  const handleDeleteSelected = async () => {
+    setIsDeleting(true);
+    try {
+      for (const id of selectedKahoots) {
+        await fetch(`http://kahoot.nos-apps.com/api/jeux/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+      }
+      toast.success(`${selectedKahoots.length} kahoot(s) supprimé(s)`);
+      setSelectedKahoots([]);
+      fetchData();
+    } catch (error) {
+      toast.error("Erreur lors de la suppression");
+    } finally {
+      setIsDeleting(false);
+      setIsDeleteDialogOpen(false);
+    }
   };
 
   return (
@@ -106,10 +156,21 @@ export default function Dashboard() {
         </div>
 
         <Card className="backdrop-blur-sm bg-white/80 border-t border-white/50 shadow-2xl">
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
               Mes Kahoots
             </CardTitle>
+            {selectedKahoots.length > 0 && (
+              <Button
+                variant="destructive"
+                onClick={() => setIsDeleteDialogOpen(true)}
+                className="gap-2"
+                disabled={isDeleting}
+              >
+                <Trash2 className="h-4 w-4" />
+                Supprimer ({selectedKahoots.length})
+              </Button>
+            )}
           </CardHeader>
           <CardContent>
             {isLoading ? (
@@ -123,6 +184,12 @@ export default function Dashboard() {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b">
+                      <th className="py-4 px-6 text-left">
+                        <Checkbox 
+                          checked={selectedKahoots.length === kahoots.length}
+                          onCheckedChange={handleSelectAll}
+                        />
+                      </th>
                       <th className="text-left py-4 px-6 text-primary font-bold">Titre</th>
                       <th className="text-center py-4 px-6 text-primary font-bold">Questions</th>
                       <th className="text-center py-4 px-6 text-primary font-bold">Sessions</th>
@@ -134,8 +201,14 @@ export default function Dashboard() {
                       <tr 
                         key={kahoot._id} 
                         className="border-b last:border-0 hover:bg-gray-50/50 transition-colors cursor-pointer"
-                        onClick={() => handleKahootClick(kahoot)}
+                        onClick={(e) => handleKahootClick(kahoot, e)}
                       >
+                        <td className="py-4 px-6 checkbox-cell">
+                          <Checkbox 
+                            checked={selectedKahoots.includes(kahoot._id)}
+                            onCheckedChange={() => handleSelectKahoot(kahoot._id)}
+                          />
+                        </td>
                         <td className="py-4 px-6">
                           <div className="font-medium text-left flex items-center text-primary">
                             {kahoot.titre}
@@ -159,6 +232,27 @@ export default function Dashboard() {
             )}
           </CardContent>
         </Card>
+
+        <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Cette action va supprimer {selectedKahoots.length} kahoot{selectedKahoots.length > 1 ? 's' : ''} de manière permanente.
+                Cette action est irréversible.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Annuler</AlertDialogCancel>
+              <AlertDialogAction 
+                onClick={handleDeleteSelected}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                {isDeleting ? "Suppression..." : "Supprimer"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </main>
     </div>
   );
