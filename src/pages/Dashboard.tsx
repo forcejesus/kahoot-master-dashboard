@@ -4,8 +4,9 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Navbar } from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Plus, ExternalLink } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
+import { CreateKahootDialog } from '@/components/CreateKahootDialog';
 
 interface Kahoot {
   _id: string;
@@ -99,15 +100,7 @@ export default function Dashboard() {
 
           <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl bg-gradient-to-r from-primary to-secondary text-white border-none">
             <CardContent className="flex items-center justify-center h-full p-8">
-              <Button 
-                variant="secondary" 
-                size="lg"
-                className="w-full text-lg h-20 bg-white text-primary hover:bg-white/90 transition-all duration-200 transform hover:scale-[1.02] shadow-xl"
-                onClick={() => toast.info("Fonctionnalité à venir")}
-              >
-                <Plus className="mr-2 h-6 w-6" />
-                Créer un Kahoot
-              </Button>
+              <CreateKahootDialog />
             </CardContent>
           </Card>
         </div>
