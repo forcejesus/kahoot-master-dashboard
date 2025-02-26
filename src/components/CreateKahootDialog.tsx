@@ -40,7 +40,7 @@ export function CreateKahootDialog({ onSuccess }: CreateKahootDialogProps) {
       const formData = new FormData();
       formData.append("titre", titre);
       if (image) {
-        formData.append("image", image); // Changed back to "image"
+        formData.append("image", image);
       }
 
       const response = await fetch("http://kahoot.nos-apps.com/api/jeux", {
@@ -53,17 +53,17 @@ export function CreateKahootDialog({ onSuccess }: CreateKahootDialogProps) {
 
       const data = await response.json();
       
-      if (response.ok && data.success) {
-        toast.success("Kahoot créé avec succès");
+      if (response.ok && data.statut === 200) {
+        toast.success(data.message || "Kahoot créé avec succès");
         setIsOpen(false);
         setTitre("");
         setImage(null);
-        if (data.data) {
+        if (data.jeu) {
           navigate('/game/setup', {
             state: {
-              gameId: data.data._id,
-              gameTitle: data.data.titre,
-              gameImage: data.data.image
+              gameId: data.jeu._id,
+              gameTitle: data.jeu.titre,
+              gameImage: data.jeu.image
             }
           });
         }
