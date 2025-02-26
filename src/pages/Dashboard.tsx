@@ -1,8 +1,8 @@
+
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Navbar } from '@/components/Navbar';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
@@ -39,27 +39,27 @@ export default function Dashboard() {
   const [totalApprenants, setTotalApprenants] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
+  const fetchData = async () => {
+    try {
+      const kahootsResponse = await fetch('http://kahoot.nos-apps.com/api/jeux', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const kahootsData = await kahootsResponse.json();
+      setKahoots(kahootsData.data);
+
+      const apprenantResponse = await fetch('http://kahoot.nos-apps.com/api/apprenant', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const apprenantData = await apprenantResponse.json();
+      setTotalApprenants(apprenantData.data.length);
+    } catch (error) {
+      toast.error("Erreur lors du chargement des données");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const kahootsResponse = await fetch('http://kahoot.nos-apps.com/api/jeux', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const kahootsData: StatsResponse = await kahootsResponse.json();
-        setKahoots(kahootsData.data);
-
-        const apprenantResponse = await fetch('http://kahoot.nos-apps.com/api/apprenant', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const apprenantData: StatsResponse = await apprenantResponse.json();
-        setTotalApprenants(apprenantData.data.length);
-      } catch (error) {
-        toast.error("Erreur lors du chargement des données");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchData();
   }, [token]);
 
@@ -100,7 +100,7 @@ export default function Dashboard() {
 
           <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl bg-gradient-to-r from-primary to-secondary text-white border-none">
             <CardContent className="flex items-center justify-center h-full p-8">
-              <CreateKahootDialog />
+              <CreateKahootDialog onSuccess={fetchData} />
             </CardContent>
           </Card>
         </div>

@@ -14,7 +14,11 @@ import {
 } from "@/components/ui/dialog";
 import { Plus, ImageIcon, Loader2 } from "lucide-react";
 
-export function CreateKahootDialog() {
+interface CreateKahootDialogProps {
+  onSuccess?: () => void;
+}
+
+export function CreateKahootDialog({ onSuccess }: CreateKahootDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [titre, setTitre] = useState("");
@@ -51,8 +55,7 @@ export function CreateKahootDialog() {
         setIsOpen(false);
         setTitre("");
         setImage(null);
-        // Optionally refresh the page or update the kahoots list
-        window.location.reload();
+        onSuccess?.();
       } else {
         toast.error(data.message || "Erreur lors de la création du kahoot");
       }
