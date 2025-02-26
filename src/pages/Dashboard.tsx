@@ -11,6 +11,11 @@ import { toast } from 'sonner';
 interface Jeu {
   _id: string;
   titre: string;
+  questions?: {
+    libelle: string;
+    reponses: string[];
+    reponse_correcte: string;
+  }[];
 }
 
 interface StatsResponse {
@@ -49,6 +54,10 @@ export default function Dashboard() {
 
     fetchData();
   }, [token]);
+
+  const handleGameClick = (jeu: Jeu) => {
+    navigate(`/game/${jeu._id}`, { state: { jeu } });
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -123,7 +132,7 @@ export default function Dashboard() {
                       <tr key={jeu._id} className="border-b last:border-0 hover:bg-gray-50/50 transition-colors">
                         <td className="py-4 px-6">
                           <button
-                            onClick={() => navigate(`/game/${jeu._id}`)}
+                            onClick={() => handleGameClick(jeu)}
                             className="font-medium text-left flex items-center text-primary hover:text-primary/80 transition-colors"
                           >
                             {jeu.titre}
