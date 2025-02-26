@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plus, ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
 
-interface Jeu {
+interface Kahoot {
   _id: string;
   titre: string;
   questions?: {
@@ -27,18 +27,18 @@ interface StatsResponse {
 export default function Dashboard() {
   const { token } = useAuth();
   const navigate = useNavigate();
-  const [jeux, setJeux] = useState<Jeu[]>([]);
+  const [kahoots, setKahoots] = useState<Kahoot[]>([]);
   const [totalApprenants, setTotalApprenants] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const jeuxResponse = await fetch('http://kahoot.nos-apps.com/api/jeux', {
+        const kahootsResponse = await fetch('http://kahoot.nos-apps.com/api/jeux', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
-        const jeuxData: StatsResponse = await jeuxResponse.json();
-        setJeux(jeuxData.data);
+        const kahootsData: StatsResponse = await kahootsResponse.json();
+        setKahoots(kahootsData.data);
 
         const apprenantResponse = await fetch('http://kahoot.nos-apps.com/api/apprenant', {
           headers: { 'Authorization': `Bearer ${token}` }
@@ -55,8 +55,8 @@ export default function Dashboard() {
     fetchData();
   }, [token]);
 
-  const handleGameClick = (jeu: Jeu) => {
-    navigate(`/game/${jeu._id}`, { state: { jeu } });
+  const handleKahootClick = (kahoot: Kahoot) => {
+    navigate(`/game/${kahoot._id}`, { state: { jeu: kahoot } });
   };
 
   return (
@@ -67,12 +67,12 @@ export default function Dashboard() {
           <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl bg-gradient-to-br from-white to-gray-50 border-t border-white/50">
             <CardHeader className="space-y-1">
               <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                Total des Jeux
+                Total des Kahoots
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-5xl font-bold text-primary">
-                {isLoading ? "..." : jeux.length}
+                {isLoading ? "..." : kahoots.length}
               </div>
             </CardContent>
           </Card>
@@ -108,15 +108,15 @@ export default function Dashboard() {
         <Card className="backdrop-blur-sm bg-white/80 border-t border-white/50 shadow-2xl">
           <CardHeader>
             <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              Mes Jeux
+              Mes Kahoots
             </CardTitle>
           </CardHeader>
           <CardContent>
             {isLoading ? (
               <div className="text-center py-12 text-gray-500">Chargement...</div>
-            ) : jeux.length === 0 ? (
+            ) : kahoots.length === 0 ? (
               <div className="text-center py-12 text-gray-500">
-                Aucun jeu créé pour le moment
+                Aucun kahoot créé pour le moment
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -128,14 +128,14 @@ export default function Dashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {jeux.map((jeu) => (
-                      <tr key={jeu._id} className="border-b last:border-0 hover:bg-gray-50/50 transition-colors">
+                    {kahoots.map((kahoot) => (
+                      <tr key={kahoot._id} className="border-b last:border-0 hover:bg-gray-50/50 transition-colors">
                         <td className="py-4 px-6">
                           <button
-                            onClick={() => handleGameClick(jeu)}
+                            onClick={() => handleKahootClick(kahoot)}
                             className="font-medium text-left flex items-center text-primary hover:text-primary/80 transition-colors"
                           >
-                            {jeu.titre}
+                            {kahoot.titre}
                             <ExternalLink className="ml-2 h-4 w-4" />
                           </button>
                         </td>
