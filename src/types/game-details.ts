@@ -8,6 +8,11 @@ export interface Planification {
   _id: string;
   pin: string;
   date_fin: string;
+  date_debut?: string;
+  heure_debut?: string;
+  heure_fin?: string;
+  statut?: string;
+  type?: string;
   limite_participation: number;
   participants: Participant[];
   total_participants: number;
@@ -16,6 +21,23 @@ export interface Planification {
     apprenant: string;
     score: number;
   };
+}
+
+export interface PlanificationFormData {
+  statut: string;
+  date_debut: string;
+  date_fin: string;
+  heure_debut: string;
+  heure_fin: string;
+  limite_participant: number;
+  type: string;
+  jeu: string;
+}
+
+export interface PlanificationResponse {
+  success: boolean;
+  message: string;
+  data: Planification;
 }
 
 export interface Question {
