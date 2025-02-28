@@ -102,7 +102,8 @@ export default function GameDetails() {
 
           <ActiveSessions 
             planificationsEnCours={planificationsEnCours} 
-            onCopyPin={handleCopyPin} 
+            onCopyPin={handleCopyPin}
+            gameId={jeu._id}
           />
 
           <QuestionsDisplay questions={jeu.questions} />
