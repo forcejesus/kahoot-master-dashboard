@@ -1,31 +1,6 @@
 
 import { Question } from '@/types/game';
 
-export const uploadQuestionImage = async (file: File, token: string): Promise<string> => {
-  const formData = new FormData();
-  formData.append('fichier', file);
-
-  try {
-    const response = await fetch('http://kahoot.nos-apps.com/api/upload', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`
-      },
-      body: formData
-    });
-
-    if (!response.ok) {
-      throw new Error(`Upload failed with status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data.url; // Assuming the API returns the URL of the uploaded image
-  } catch (error) {
-    console.error('Image upload error:', error);
-    throw new Error('Failed to upload image');
-  }
-};
-
 export const submitQuestionWithAnswers = async (
   question: Question,
   answers: string[],
@@ -34,28 +9,30 @@ export const submitQuestionWithAnswers = async (
   token: string
 ) => {
   try {
-    // First handle the file upload if there is one
-    let imageUrl = '';
+    // Créer un FormData pour envoyer à la fois les données et l'image
+    const formData = new FormData();
+    
+    // Ajouter les champs de la question
+    formData.append('libelle', question.libelle);
+    formData.append('temps', question.temps.toString());
+    formData.append('limite_response', question.limite_response.toString());
+    formData.append('typeQuestion', question.typeQuestion);
+    formData.append('point', question.point);
+    formData.append('jeu', question.jeu);
+    formData.append('type_fichier', question.type_fichier || 'image');
+    
+    // Ajouter le fichier s'il existe
     if (selectedFile) {
-      imageUrl = await uploadQuestionImage(selectedFile, token);
+      formData.append('fichier', selectedFile);
     }
 
-    // Prepare question data according to the API format
-    const questionPayload = {
-      ...question,
-      fichier: imageUrl ? [imageUrl] : undefined, // Use "fichier" instead of "image" and as array
-      reponses: undefined, // Don't send reponses in the question object
-      reponse_correcte: undefined // Don't send reponse_correcte in the question object
-    };
-
-    // Create the question
+    // 1. Envoyer la question avec l'image
     const questionResponse = await fetch('http://kahoot.nos-apps.com/api/questions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify(questionPayload)
+      body: formData
     });
 
     if (!questionResponse.ok) {
@@ -63,18 +40,18 @@ export const submitQuestionWithAnswers = async (
     }
 
     const questionResponseData = await questionResponse.json();
-    const questionId = questionResponseData._id || questionResponseData.data?._id;
+    const questionData = questionResponseData.data || questionResponseData;
+    const questionId = questionData._id;
 
     if (!questionId) {
       throw new Error('ID de question non trouvé dans la réponse');
     }
 
-    // 2. Send answers using the question ID
+    // 2. Envoyer les réponses en utilisant l'ID de la question
     const answersPromises = answers.map(async (answer, index) => {
       const isCorrect = index === correctAnswer;
       
       const responseData = {
-        file: imageUrl || null, // Use the uploaded image URL
         etat: isCorrect ? 1 : 0,
         question: questionId,
         reponse_texte: answer
@@ -92,11 +69,9 @@ export const submitQuestionWithAnswers = async (
 
     await Promise.all(answersPromises);
     
-    // Return the complete data
-    const resultQuestion = questionResponseData.data || questionResponseData;
-    
+    // Retourner les données complètes
     return {
-      ...resultQuestion,
+      ...questionData,
       reponses: answers,
       reponse_correcte: answers[correctAnswer]
     };
