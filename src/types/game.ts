@@ -1,5 +1,6 @@
 
 export interface Question {
+  _id?: string;
   libelle: string;
   type_fichier?: string;
   temps: number;
@@ -7,8 +8,9 @@ export interface Question {
   typeQuestion: string;
   point: string;
   jeu: string;
-  reponses?: string[];
-  reponse_correcte?: string;
+  reponses: string[];
+  reponse_correcte: string;
+  image?: string;
 }
 
 export interface QuestionType {
