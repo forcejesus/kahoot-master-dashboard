@@ -41,7 +41,7 @@ export const submitQuestionWithAnswers = async (
     }
 
     // Prepare question data according to the API format
-    const questionData = {
+    const questionPayload = {
       ...question,
       fichier: imageUrl ? [imageUrl] : undefined, // Use "fichier" instead of "image" and as array
       reponses: undefined, // Don't send reponses in the question object
@@ -55,15 +55,15 @@ export const submitQuestionWithAnswers = async (
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(questionData)
+      body: JSON.stringify(questionPayload)
     });
 
     if (!questionResponse.ok) {
       throw new Error('Erreur lors de l\'ajout de la question');
     }
 
-    const questionData = await questionResponse.json();
-    const questionId = questionData._id || questionData.data?._id;
+    const questionResponseData = await questionResponse.json();
+    const questionId = questionResponseData._id || questionResponseData.data?._id;
 
     if (!questionId) {
       throw new Error('ID de question non trouvé dans la réponse');
@@ -93,8 +93,10 @@ export const submitQuestionWithAnswers = async (
     await Promise.all(answersPromises);
     
     // Return the complete data
+    const resultQuestion = questionResponseData.data || questionResponseData;
+    
     return {
-      ...questionData.data,
+      ...resultQuestion,
       reponses: answers,
       reponse_correcte: answers[correctAnswer]
     };
