@@ -2,16 +2,16 @@
 import { useState } from 'react';
 import { Question, QuestionType, Point } from '@/types/game';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Loader2, Plus, Trash2, Check } from 'lucide-react';
 import { toast } from 'sonner';
 import { FileUploadField } from './form/FileUploadField';
 import { DurationSelect } from './form/DurationSelect';
 import { PointsSelect } from './form/PointsSelect';
 import { QuestionTypeSelect } from './form/QuestionTypeSelect';
+import { AnswersInput } from './form/AnswersInput';
+import { SubmitQuestionButton } from './form/SubmitQuestionButton';
 
 interface QuestionFormProps {
   gameId: string;
@@ -35,7 +35,7 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
     type_fichier: ''
   });
 
-  // New state for answers management
+  // State for answers management
   const [answers, setAnswers] = useState<string[]>(['', '']);
   const [correctAnswer, setCorrectAnswer] = useState<number | null>(null);
 
@@ -47,34 +47,16 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
     }));
   };
 
-  const handleAddAnswer = () => {
-    setAnswers([...answers, '']);
-  };
-
-  const handleRemoveAnswer = (index: number) => {
-    const newAnswers = answers.filter((_, i) => i !== index);
-    setAnswers(newAnswers);
-    if (correctAnswer === index) {
-      setCorrectAnswer(null);
-    } else if (correctAnswer !== null && correctAnswer > index) {
-      setCorrectAnswer(correctAnswer - 1);
-    }
-  };
-
-  const handleAnswerChange = (index: number, value: string) => {
-    const newAnswers = [...answers];
-    newAnswers[index] = value;
-    setAnswers(newAnswers);
-  };
-
-  const handleSetCorrectAnswer = (index: number) => {
-    setCorrectAnswer(index);
-  };
-
   const handleAddQuestion = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate answers
+    // Validate form before submission
+    if (!currentQuestion.libelle.trim()) {
+      toast.error("Veuillez saisir une question");
+      return;
+    }
+
+    // Validate answers (now handled by AnswersInput component)
     if (answers.some(answer => !answer.trim())) {
       toast.error("Toutes les réponses doivent être remplies");
       return;
@@ -82,6 +64,16 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
 
     if (correctAnswer === null) {
       toast.error("Veuillez sélectionner une réponse correcte");
+      return;
+    }
+
+    if (!currentQuestion.typeQuestion) {
+      toast.error("Veuillez sélectionner un type de question");
+      return;
+    }
+
+    if (!currentQuestion.point) {
+      toast.error("Veuillez sélectionner les points");
       return;
     }
 
@@ -202,73 +194,16 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
             })}
           />
 
-          {/* Answers Section */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <Label>Réponses</Label>
-              {answers.length < 4 && (
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={handleAddAnswer}
-                >
-                  <Plus className="h-4 w-4 mr-1" /> Ajouter une réponse
-                </Button>
-              )}
-            </div>
-            
-            {answers.map((answer, index) => (
-              <div key={index} className="flex items-center gap-2">
-                <div 
-                  className={`flex-grow flex items-center p-3 rounded-md border ${
-                    correctAnswer === index ? 'border-green-500 bg-green-50' : 'border-gray-200'
-                  }`}
-                >
-                  <Input
-                    value={answer}
-                    onChange={(e) => handleAnswerChange(index, e.target.value)}
-                    placeholder={`Réponse ${index + 1}`}
-                    className="border-0 focus-visible:ring-0 p-0"
-                    required
-                  />
-                </div>
-                <Button
-                  type="button"
-                  variant={correctAnswer === index ? "default" : "outline"}
-                  size="icon"
-                  onClick={() => handleSetCorrectAnswer(index)}
-                  className={correctAnswer === index ? "bg-green-500 hover:bg-green-600" : ""}
-                >
-                  <Check className="h-4 w-4" />
-                </Button>
-                {answers.length > 2 && (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="icon"
-                    onClick={() => handleRemoveAnswer(index)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                )}
-              </div>
-            ))}
-          </div>
+          {/* Using the new AnswersInput component */}
+          <AnswersInput
+            answers={answers}
+            correctAnswer={correctAnswer}
+            onAnswersChange={setAnswers}
+            onCorrectAnswerChange={setCorrectAnswer}
+          />
 
-          <Button type="submit" disabled={isLoading} className="w-full">
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Ajout en cours...
-              </>
-            ) : (
-              <>
-                <Plus className="mr-2 h-4 w-4" />
-                Ajouter la question
-              </>
-            )}
-          </Button>
+          {/* Using the new SubmitQuestionButton component */}
+          <SubmitQuestionButton isLoading={isLoading} />
         </form>
       </CardContent>
     </Card>
