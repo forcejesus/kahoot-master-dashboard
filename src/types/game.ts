@@ -7,6 +7,8 @@ export interface Question {
   typeQuestion: string;
   point: string;
   jeu: string;
+  reponses?: string[];
+  reponse_correcte?: string;
 }
 
 export interface QuestionType {
