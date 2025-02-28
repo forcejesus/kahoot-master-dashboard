@@ -114,6 +114,9 @@ export function QuestionsDisplay({ questions }: QuestionsDisplayProps) {
                         }}
                       >
                         {reponse}
+                        {reponse === question.reponse_correcte && (
+                          <span className="ml-2 text-green-600 font-medium">✓</span>
+                        )}
                       </div>
                     ))}
                   </div>
