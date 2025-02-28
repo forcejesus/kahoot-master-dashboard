@@ -56,7 +56,7 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
       return;
     }
 
-    // Validate answers (now handled by AnswersInput component)
+    // Validate answers
     if (answers.some(answer => !answer.trim())) {
       toast.error("Toutes les réponses doivent être remplies");
       return;
@@ -85,15 +85,13 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
         formData.append(key, value.toString());
       });
 
-      // Add answers and correct answer to form data
-      formData.append('reponses', JSON.stringify(answers));
-      formData.append('reponse_correcte', answers[correctAnswer]);
-
+      // Ajouter le fichier si présent
       if (selectedFile) {
         formData.append('fichier', selectedFile);
       }
 
-      const response = await fetch('http://kahoot.nos-apps.com/api/questions', {
+      // 1. Envoyer d'abord la question pour obtenir son ID
+      const questionResponse = await fetch('http://kahoot.nos-apps.com/api/questions', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -101,12 +99,46 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
         body: formData
       });
 
-      if (!response.ok) {
+      if (!questionResponse.ok) {
         throw new Error('Erreur lors de l\'ajout de la question');
       }
 
-      const data = await response.json();
-      onQuestionAdded(data);
+      const questionData = await questionResponse.json();
+      const questionId = questionData._id || questionData.data?._id;
+
+      if (!questionId) {
+        throw new Error('ID de question non trouvé dans la réponse');
+      }
+
+      // 2. Envoyer les réponses en utilisant l'ID de la question
+      const answersPromises = answers.map(async (answer, index) => {
+        const isCorrect = index === correctAnswer;
+        
+        const responseData = {
+          file: "Image vers le fichier image", // Format demandé
+          etat: isCorrect ? 1 : 0,
+          question: questionId,
+          reponse_texte: answer
+        };
+
+        return fetch('http://kahoot.nos-apps.com/api/reponse', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(responseData)
+        });
+      });
+
+      await Promise.all(answersPromises);
+      
+      // Mise à jour de la question avec les nouvelles réponses
+      onQuestionAdded({
+        ...questionData,
+        reponses: answers,
+        reponse_correcte: answers[correctAnswer]
+      });
       
       // Reset form
       setCurrentQuestion({
@@ -122,9 +154,10 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
       setAnswers(['', '']);
       setCorrectAnswer(null);
       
-      toast.success("Question ajoutée avec succès");
+      toast.success("Question et réponses ajoutées avec succès");
     } catch (error) {
-      toast.error("Erreur lors de l'ajout de la question");
+      console.error('Erreur:', error);
+      toast.error("Erreur lors de l'ajout de la question et des réponses");
     } finally {
       setIsLoading(false);
     }
@@ -194,7 +227,6 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
             })}
           />
 
-          {/* Using the new AnswersInput component */}
           <AnswersInput
             answers={answers}
             correctAnswer={correctAnswer}
@@ -202,7 +234,6 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
             onCorrectAnswerChange={setCorrectAnswer}
           />
 
-          {/* Using the new SubmitQuestionButton component */}
           <SubmitQuestionButton isLoading={isLoading} />
         </form>
       </CardContent>
