@@ -1,3 +1,4 @@
+
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Navbar } from '@/components/Navbar';
@@ -124,8 +125,8 @@ export default function GameDetails() {
         {/* Content Section */}
         <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <Button
-            variant="ghost"
-            className="mb-6 hover:bg-white/20 text-white"
+            variant="navigation"
+            className="mb-6"
             onClick={() => navigate('/dashboard')}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
