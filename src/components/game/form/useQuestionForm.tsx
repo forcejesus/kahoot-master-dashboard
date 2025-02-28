@@ -1,101 +1,109 @@
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Question } from '@/types/game';
+import { uploadQuestionImage } from './questionService';
 import { toast } from 'sonner';
-import { validateQuestionForm } from './validation';
-import { submitQuestionWithAnswers } from './questionService';
 
-interface UseQuestionFormProps {
-  gameId: string;
-  token: string;
-  onQuestionAdded: (question: Question) => void;
-}
-
-export function useQuestionForm({ gameId, token, onQuestionAdded }: UseQuestionFormProps) {
-  const [isLoading, setIsLoading] = useState(false);
+export const useQuestionForm = (gameId: string, token: string) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  
-  const [currentQuestion, setCurrentQuestion] = useState<Question>({
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formQuestion, setFormQuestion] = useState<Question>({
     libelle: '',
-    temps: 30,
+    temps: 20,
     limite_response: true,
     typeQuestion: '',
     point: '',
     jeu: gameId,
-    type_fichier: ''
+    type_fichier: 'image',
+    reponses: [],
+    reponse_correcte: ''
   });
 
-  // State for answers management
-  const [answers, setAnswers] = useState<string[]>(['', '']);
-  const [correctAnswer, setCorrectAnswer] = useState<number | null>(null);
-
-  const handleFileChange = (file: File | null, fileType: string) => {
+  const handleFileChange = useCallback((file: File | null) => {
     setSelectedFile(file);
-    setCurrentQuestion(prev => ({
-      ...prev,
-      type_fichier: fileType
-    }));
-  };
+    
+    if (file) {
+      const fileReader = new FileReader();
+      fileReader.onload = () => {
+        setPreviewUrl(fileReader.result as string);
+      };
+      fileReader.readAsDataURL(file);
+    } else {
+      setPreviewUrl(null);
+    }
+  }, []);
 
-  const resetForm = () => {
-    setCurrentQuestion({
+  const updateFormQuestion = useCallback((updates: Partial<Question>) => {
+    setFormQuestion(prev => ({ ...prev, ...updates }));
+  }, []);
+
+  const resetForm = useCallback(() => {
+    setFormQuestion({
       libelle: '',
-      temps: 30,
+      temps: 20,
       limite_response: true,
       typeQuestion: '',
       point: '',
       jeu: gameId,
-      type_fichier: ''
+      type_fichier: 'image',
+      reponses: [],
+      reponse_correcte: ''
     });
     setSelectedFile(null);
-    setAnswers(['', '']);
-    setCorrectAnswer(null);
-  };
+    setPreviewUrl(null);
+  }, [gameId]);
 
-  const handleAddQuestion = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Validate form before submission
-    if (!validateQuestionForm(currentQuestion, answers, correctAnswer, selectedFile)) {
-      return;
-    }
-
-    setIsLoading(true);
-
+  const handleFormSubmit = useCallback(async (
+    onSuccess: (question: Question) => void
+  ) => {
     try {
-      const updatedQuestion = await submitQuestionWithAnswers(
-        currentQuestion, 
-        answers, 
-        correctAnswer!, 
-        selectedFile, 
-        token
-      );
+      setIsSubmitting(true);
+      let imageUrl = '';
+
+      if (selectedFile) {
+        imageUrl = await uploadQuestionImage(selectedFile, token);
+      }
+
+      const questionData = {
+        ...formQuestion,
+        ...(imageUrl ? { image: imageUrl } : {})
+      };
+
+      const response = await fetch('http://kahoot.nos-apps.com/api/question', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(questionData)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create question');
+      }
+
+      const data = await response.json();
+      toast.success('Question créée avec succès');
       
-      // Notify parent component
-      onQuestionAdded(updatedQuestion);
-      
-      // Reset form
+      onSuccess(data);
       resetForm();
-      
-      toast.success("Question et réponses ajoutées avec succès");
     } catch (error) {
-      console.error('Erreur:', error);
-      toast.error("Erreur lors de l'ajout de la question et des réponses");
+      console.error('Error creating question:', error);
+      toast.error('Erreur lors de la création de la question');
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
-  };
+  }, [formQuestion, resetForm, selectedFile, token]);
 
   return {
-    isLoading,
-    currentQuestion,
-    setCurrentQuestion,
+    formQuestion,
+    updateFormQuestion,
     selectedFile,
+    previewUrl,
     handleFileChange,
-    answers,
-    setAnswers,
-    correctAnswer,
-    setCorrectAnswer,
-    handleAddQuestion
+    handleFormSubmit,
+    isSubmitting,
+    resetForm
   };
-}
+};
