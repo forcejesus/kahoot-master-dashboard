@@ -4,11 +4,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Navbar } from '@/components/Navbar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Question, QuestionType, Point } from '@/types/game';
 import { QuestionForm } from '@/components/game/QuestionForm';
 import { QuestionsList } from '@/components/game/QuestionsList';
-import { Clock, Users, Trophy, BookOpen } from 'lucide-react';
+import { Clock, Users, Trophy, BookOpen, ArrowLeft } from 'lucide-react';
 
 export default function GameSetup() {
   const { token } = useAuth();
@@ -56,10 +57,24 @@ export default function GameSetup() {
     setQuestions([...questions, question]);
   };
 
+  const handleBackToDashboard = () => {
+    navigate('/dashboard');
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <Navbar />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Back to Dashboard Button */}
+        <Button 
+          variant="outline" 
+          className="mb-6 shadow-sm hover:shadow-md transition-all duration-200"
+          onClick={handleBackToDashboard}
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Retour au tableau de bord
+        </Button>
+        
         {/* Game Title and Image Card */}
         <Card className="mb-8">
           <CardHeader>

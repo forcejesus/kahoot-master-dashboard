@@ -12,8 +12,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from "@/components/ui/dialog";
-import { Plus, ImageIcon, Loader2 } from "lucide-react";
+import { Plus, ImageIcon, Loader2, ArrowLeft } from "lucide-react";
 
 interface CreateKahootDialogProps {
   onSuccess?: () => void;
@@ -26,6 +27,16 @@ export function CreateKahootDialog({ onSuccess }: CreateKahootDialogProps) {
   const [image, setImage] = useState<File | null>(null);
   const { token } = useAuth();
   const navigate = useNavigate();
+
+  const resetForm = () => {
+    setTitre("");
+    setImage(null);
+  };
+
+  const handleClose = () => {
+    resetForm();
+    setIsOpen(false);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,8 +67,7 @@ export function CreateKahootDialog({ onSuccess }: CreateKahootDialogProps) {
       if (response.ok && data.statut === 200) {
         toast.success(data.message || "Kahoot créé avec succès");
         setIsOpen(false);
-        setTitre("");
-        setImage(null);
+        resetForm();
         if (data.jeu) {
           navigate('/game/setup', {
             state: {
@@ -143,16 +153,25 @@ export function CreateKahootDialog({ onSuccess }: CreateKahootDialogProps) {
             </div>
           </div>
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Création en cours...
-              </>
-            ) : (
-              "Créer le Kahoot"
-            )}
-          </Button>
+          <div className="flex gap-3">
+            <DialogClose asChild>
+              <Button type="button" variant="outline" className="w-full" disabled={isLoading}>
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Annuler
+              </Button>
+            </DialogClose>
+            
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Création en cours...
+                </>
+              ) : (
+                "Créer le Kahoot"
+              )}
+            </Button>
+          </div>
         </form>
       </DialogContent>
     </Dialog>
