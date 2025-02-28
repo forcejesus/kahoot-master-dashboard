@@ -5,15 +5,21 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogAction } from '@/components/ui/alert-dialog';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login, isAuthenticated, isLoading } = useAuth();
+  const [showErrorDialog, setShowErrorDialog] = useState(false);
+  const { login, isAuthenticated, isLoading, error } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await login({ email, password });
+    try {
+      await login({ email, password });
+    } catch (err) {
+      setShowErrorDialog(true);
+    }
   };
 
   if (isAuthenticated) {
@@ -53,6 +59,11 @@ export default function Login() {
                   className="w-full transition-all duration-200 focus:scale-[1.02]"
                 />
               </div>
+              {error && (
+                <div className="px-4 py-3 bg-destructive/15 text-destructive rounded-md text-sm">
+                  {error}
+                </div>
+              )}
               <Button 
                 type="submit" 
                 className="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-all duration-200 transform hover:scale-[1.02] shadow-xl hover:shadow-primary/20"
@@ -64,6 +75,23 @@ export default function Login() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Error Alert Dialog */}
+      <AlertDialog open={showErrorDialog} onOpenChange={setShowErrorDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-destructive">Échec de connexion</AlertDialogTitle>
+            <AlertDialogDescription>
+              Identifiants incorrects. Veuillez vérifier votre email et mot de passe et réessayer.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setShowErrorDialog(false)}>
+              OK
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
