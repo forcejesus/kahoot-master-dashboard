@@ -1,7 +1,7 @@
 
 import { useState, useCallback } from 'react';
 import { Question } from '@/types/game';
-import { uploadQuestionImage } from './questionService';
+import { submitQuestionWithAnswers } from './questionService';
 import { toast } from 'sonner';
 
 export const useQuestionForm = (gameId: string, token: string) => {
@@ -55,38 +55,24 @@ export const useQuestionForm = (gameId: string, token: string) => {
   }, [gameId]);
 
   const handleFormSubmit = useCallback(async (
-    onSuccess: (question: Question) => void
+    onSuccess: (question: Question) => void,
+    answers: string[] = [],
+    correctAnswer: number = 0
   ) => {
     try {
       setIsSubmitting(true);
-      let imageUrl = '';
-
-      if (selectedFile) {
-        imageUrl = await uploadQuestionImage(selectedFile, token);
-      }
-
-      const questionData = {
-        ...formQuestion,
-        ...(imageUrl ? { image: imageUrl } : {})
-      };
-
-      const response = await fetch('http://kahoot.nos-apps.com/api/question', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(questionData)
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create question');
-      }
-
-      const data = await response.json();
-      toast.success('Question créée avec succès');
       
-      onSuccess(data);
+      // Use the submitQuestionWithAnswers function from questionService
+      const resultQuestion = await submitQuestionWithAnswers(
+        formQuestion,
+        answers,
+        correctAnswer,
+        selectedFile,
+        token
+      );
+
+      toast.success('Question créée avec succès');
+      onSuccess(resultQuestion);
       resetForm();
     } catch (error) {
       console.error('Error creating question:', error);

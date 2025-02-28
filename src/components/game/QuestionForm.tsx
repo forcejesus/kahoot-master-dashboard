@@ -44,18 +44,16 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
       return; // Don't submit if no correct answer selected
     }
 
-    // Update formQuestion with answers and correct answer
-    updateFormQuestion({
-      reponses: answers,
-      reponse_correcte: answers[correctAnswer]
-    });
-
     // Submit the form and call the onQuestionAdded callback on success
-    await handleFormSubmit((question) => {
-      onQuestionAdded(question);
-      setAnswers(['', '']);
-      setCorrectAnswer(null);
-    });
+    await handleFormSubmit(
+      (question) => {
+        onQuestionAdded(question);
+        setAnswers(['', '']);
+        setCorrectAnswer(null);
+      },
+      answers,
+      correctAnswer
+    );
   };
 
   return (
