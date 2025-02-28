@@ -19,10 +19,18 @@ export interface Planification {
 }
 
 export interface Question {
+  _id?: string;
   libelle: string;
   reponses: string[];
   reponse_correcte: string;
   image?: string;
+}
+
+export interface QuestionResponse {
+  file?: string;
+  etat: 0 | 1; // 0: false, 1: true
+  question: string;
+  reponse_texte: string;
 }
 
 export interface Kahoot {
@@ -36,5 +44,10 @@ export interface Kahoot {
     planifications_en_cours: number;
     total_apprenants: number;
     apprenants_actifs: number;
+    sessions_completees?: number;
+    meilleur_score?: {
+      apprenant: string;
+      score: number;
+    };
   };
 }
