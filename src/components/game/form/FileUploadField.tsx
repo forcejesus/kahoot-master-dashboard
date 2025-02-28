@@ -12,11 +12,13 @@ export function FileUploadField({ onFileChange, currentFileType }: FileUploadFie
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const file = e.target.files?.[0] || null;
     if (file) {
       console.log("Fichier sélectionné:", file.name, file.type, file.size);
+    } else {
+      console.log("Aucun fichier sélectionné");
     }
-    onFileChange(file || null);
+    onFileChange(file);
   };
 
   const handleClearFile = () => {
@@ -24,6 +26,7 @@ export function FileUploadField({ onFileChange, currentFileType }: FileUploadFie
       fileInputRef.current.value = '';
     }
     onFileChange(null);
+    console.log("Fichier effacé");
   };
 
   return (

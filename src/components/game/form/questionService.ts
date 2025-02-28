@@ -19,14 +19,15 @@ export const submitQuestionWithAnswers = async (
     formData.append('typeQuestion', question.typeQuestion);
     formData.append('point', question.point);
     formData.append('jeu', question.jeu);
-    formData.append('type_fichier', question.type_fichier || 'image');
     
-    // Ajouter le fichier s'il existe
+    // Only set type_fichier if a file is actually provided
     if (selectedFile) {
+      formData.append('type_fichier', question.type_fichier || 'image');
       formData.append('fichier', selectedFile);
       console.log("Ajout du fichier:", selectedFile.name, selectedFile.type, selectedFile.size);
     } else {
       console.log("Aucun fichier sélectionné pour cette question");
+      // When no file is uploaded, don't include type_fichier to prevent path access on undefined
     }
 
     // Log des données envoyées pour le débogage
@@ -37,7 +38,7 @@ export const submitQuestionWithAnswers = async (
       typeQuestion: question.typeQuestion,
       point: question.point,
       jeu: question.jeu,
-      type_fichier: question.type_fichier
+      type_fichier: selectedFile ? (question.type_fichier || 'image') : undefined
     });
 
     // 1. Envoyer la question avec l'image
@@ -62,7 +63,7 @@ export const submitQuestionWithAnswers = async (
       throw new Error(`Réponse invalide du serveur: ${responseText}`);
     }
 
-    if (!questionResponse.ok) {
+    if (!questionResponse.ok || !questionResponseData.success) {
       console.error("Erreur de l'API:", questionResponseData);
       throw new Error(`Erreur lors de l'ajout de la question: ${questionResponseData.message || responseText}`);
     }
