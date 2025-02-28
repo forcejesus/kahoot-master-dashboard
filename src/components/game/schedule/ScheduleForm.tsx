@@ -1,8 +1,8 @@
 
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { PlanificationFormData, PlanificationResponse } from "@/types/game-details";
+import { PlanificationFormData, PlanificationResponse, Kahoot } from "@/types/game-details";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,6 +14,8 @@ import { format } from "date-fns";
 
 export function ScheduleForm() {
   const { id } = useParams<{ id: string }>();
+  const location = useLocation();
+  const kahoot = location.state?.jeu as Kahoot | undefined;
   const { token } = useAuth();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);

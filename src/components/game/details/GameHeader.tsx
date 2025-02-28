@@ -26,7 +26,7 @@ export function GameHeader({ jeu, token, onDelete }: GameHeaderProps) {
         <Button 
           variant="outline"
           className="bg-white/10 hover:bg-white hover:text-primary transition-all duration-200 text-white border-white/20"
-          onClick={() => toast.info("Fonctionnalité à venir")}
+          onClick={() => navigate(`/game/${jeu._id}/schedule`, { state: { jeu } })}
         >
           <Clock className="mr-2 h-4 w-4" />
           Planifier une session
