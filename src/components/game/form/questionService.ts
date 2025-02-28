@@ -1,6 +1,26 @@
 
 import { Question } from '@/types/game';
 
+export const uploadQuestionImage = async (file: File, token: string): Promise<string> => {
+  const formData = new FormData();
+  formData.append('fichier', file);
+
+  const response = await fetch('http://kahoot.nos-apps.com/api/upload', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    },
+    body: formData
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to upload image');
+  }
+
+  const data = await response.json();
+  return data.url; // Assuming the API returns the URL of the uploaded image
+};
+
 export const submitQuestionWithAnswers = async (
   question: Question,
   answers: string[],
