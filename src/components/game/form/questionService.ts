@@ -38,8 +38,15 @@ export const submitQuestionWithAnswers = async (
     let imageUrl = '';
     if (selectedFile) {
       imageUrl = await uploadQuestionImage(selectedFile, token);
-      question.image = imageUrl;
     }
+
+    // Prepare question data according to the API format
+    const questionData = {
+      ...question,
+      fichier: imageUrl ? [imageUrl] : undefined, // Use "fichier" instead of "image" and as array
+      reponses: undefined, // Don't send reponses in the question object
+      reponse_correcte: undefined // Don't send reponse_correcte in the question object
+    };
 
     // Create the question
     const questionResponse = await fetch('http://kahoot.nos-apps.com/api/questions', {
@@ -48,11 +55,7 @@ export const submitQuestionWithAnswers = async (
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        ...question,
-        reponses: undefined, // Don't send reponses in the question object
-        reponse_correcte: undefined // Don't send reponse_correcte in the question object
-      })
+      body: JSON.stringify(questionData)
     });
 
     if (!questionResponse.ok) {
@@ -71,7 +74,7 @@ export const submitQuestionWithAnswers = async (
       const isCorrect = index === correctAnswer;
       
       const responseData = {
-        file: selectedFile ? imageUrl : null, // Use the uploaded image URL
+        file: imageUrl || null, // Use the uploaded image URL
         etat: isCorrect ? 1 : 0,
         question: questionId,
         reponse_texte: answer
@@ -91,7 +94,7 @@ export const submitQuestionWithAnswers = async (
     
     // Return the complete data
     return {
-      ...questionData,
+      ...questionData.data,
       reponses: answers,
       reponse_correcte: answers[correctAnswer]
     };

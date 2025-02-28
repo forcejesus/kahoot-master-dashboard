@@ -29,6 +29,10 @@ export const useQuestionForm = (gameId: string, token: string) => {
         setPreviewUrl(fileReader.result as string);
       };
       fileReader.readAsDataURL(file);
+      
+      // Set the file type based on the file extension
+      const fileType = file.name.split('.').pop()?.toLowerCase() || 'image';
+      updateFormQuestion({ type_fichier: fileType });
     } else {
       setPreviewUrl(null);
     }
@@ -61,6 +65,25 @@ export const useQuestionForm = (gameId: string, token: string) => {
   ) => {
     try {
       setIsSubmitting(true);
+      
+      // Validate form
+      if (!formQuestion.libelle) {
+        toast.error('Veuillez entrer une question');
+        setIsSubmitting(false);
+        return;
+      }
+      
+      if (!formQuestion.typeQuestion) {
+        toast.error('Veuillez sélectionner un type de question');
+        setIsSubmitting(false);
+        return;
+      }
+      
+      if (!formQuestion.point) {
+        toast.error('Veuillez sélectionner les points');
+        setIsSubmitting(false);
+        return;
+      }
       
       // Use the submitQuestionWithAnswers function from questionService
       const resultQuestion = await submitQuestionWithAnswers(

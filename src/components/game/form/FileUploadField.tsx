@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 interface FileUploadFieldProps {
-  onFileChange: (file: File | null, fileType: string) => void;
+  onFileChange: (file: File | null) => void;
   currentFileType: string;
 }
 
@@ -13,10 +13,7 @@ export function FileUploadField({ onFileChange, currentFileType }: FileUploadFie
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const fileType = file.type.split('/')[1]?.toLowerCase();
-      onFileChange(file, fileType === 'jpeg' ? 'jpg' : fileType);
-    }
+    onFileChange(file || null);
   };
 
   return (
