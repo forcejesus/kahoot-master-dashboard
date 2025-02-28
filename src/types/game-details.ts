@@ -33,6 +33,17 @@ export interface QuestionResponse {
   reponse_texte: string;
 }
 
+export interface UserResponse {
+  _id: string;
+  etat: 0 | 1;
+  reponse_texte: string;
+  apprenant: {
+    _id: string;
+    name: string;
+  };
+  created_at: string;
+}
+
 export interface Kahoot {
   _id: string;
   titre: string;

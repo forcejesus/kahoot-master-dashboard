@@ -1,12 +1,19 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ImageIcon, Send } from "lucide-react";
-import { Question, QuestionResponse } from "@/types/game-details";
+import { ImageIcon, Send, Users } from "lucide-react";
+import { Question, QuestionResponse, UserResponse } from "@/types/game-details";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
 
 interface QuestionsDisplayProps {
   questions?: Question[];
@@ -17,6 +24,34 @@ export function QuestionsDisplay({ questions }: QuestionsDisplayProps) {
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
   const [responseText, setResponseText] = useState<string>("");
   const [submittingQuestion, setSubmittingQuestion] = useState<string | null>(null);
+  const [userResponses, setUserResponses] = useState<Record<string, UserResponse[]>>({});
+  const [loadingResponses, setLoadingResponses] = useState<Record<string, boolean>>({});
+
+  const fetchUserResponses = async (questionId: string) => {
+    if (!questionId || loadingResponses[questionId]) return;
+    
+    setLoadingResponses(prev => ({ ...prev, [questionId]: true }));
+    
+    try {
+      const response = await fetch(`http://kahoot.nos-apps.com/api/reponse?question=${questionId}`, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error("Erreur lors de la récupération des réponses");
+      }
+      
+      const data = await response.json();
+      setUserResponses(prev => ({ ...prev, [questionId]: data }));
+    } catch (error) {
+      console.error("Erreur lors de la récupération des réponses:", error);
+      toast.error("Impossible de charger les réponses des apprenants");
+    } finally {
+      setLoadingResponses(prev => ({ ...prev, [questionId]: false }));
+    }
+  };
 
   const handleSubmitResponse = async (question: Question) => {
     if (!question._id) {
@@ -59,6 +94,9 @@ export function QuestionsDisplay({ questions }: QuestionsDisplayProps) {
       toast.success(isCorrect ? "Réponse correcte !" : "Réponse incorrecte");
       setResponseText("");
       setSelectedQuestion(null);
+      
+      // Refresh responses for this question
+      await fetchUserResponses(question._id);
     } catch (error) {
       toast.error("Erreur lors de l'envoi de la réponse");
       console.error(error);
@@ -155,6 +193,62 @@ export function QuestionsDisplay({ questions }: QuestionsDisplayProps) {
                     >
                       Répondre à cette question
                     </Button>
+                  )}
+
+                  {question._id && (
+                    <Accordion type="single" collapsible className="mt-4">
+                      <AccordionItem value="responses">
+                        <AccordionTrigger 
+                          onClick={() => fetchUserResponses(question._id || "")}
+                          className="flex items-center justify-between py-2"
+                        >
+                          <div className="flex items-center">
+                            <Users className="w-4 h-4 mr-2" />
+                            <span>Réponses des apprenants</span>
+                          </div>
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          {loadingResponses[question._id || ""] ? (
+                            <div className="flex justify-center py-4">
+                              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+                            </div>
+                          ) : userResponses[question._id || ""]?.length ? (
+                            <div className="space-y-2 mt-2">
+                              {userResponses[question._id || ""].map((response, idx) => (
+                                <div 
+                                  key={idx} 
+                                  className={`p-3 rounded-md border ${
+                                    response.etat === 1 
+                                      ? 'bg-green-50 border-green-200' 
+                                      : 'bg-red-50 border-red-200'
+                                  }`}
+                                >
+                                  <div className="flex justify-between items-center">
+                                    <span className="font-medium">{response.apprenant.name}</span>
+                                    <Badge 
+                                      variant={response.etat === 1 ? "success" : "destructive"}
+                                      className={response.etat === 1 ? "bg-green-500" : "bg-red-500"}
+                                    >
+                                      {response.etat === 1 ? "Correcte" : "Incorrecte"}
+                                    </Badge>
+                                  </div>
+                                  <p className="text-sm mt-1">
+                                    Réponse: {response.reponse_texte}
+                                  </p>
+                                  <p className="text-xs text-gray-500 mt-1">
+                                    {new Date(response.created_at).toLocaleString()}
+                                  </p>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="text-center py-4 text-gray-500">
+                              Aucune réponse pour cette question
+                            </p>
+                          )}
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
                   )}
                 </CardContent>
               </Card>
