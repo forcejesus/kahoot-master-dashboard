@@ -1,6 +1,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertCircle, Copy, Trophy } from "lucide-react";
+import { AlertCircle, Copy, Trophy, Calendar, Users, Clock } from "lucide-react";
 import { Kahoot, Planification } from "@/types/game-details";
 import { Button } from "@/components/ui/button";
 
@@ -15,7 +15,10 @@ export function GameStats({ jeu, planificationsEnCours, onCopyPin }: GameStatsPr
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-8">
       <Card className="bg-white/80 backdrop-blur-sm">
         <CardHeader>
-          <CardTitle className="text-lg text-primary">Planifications</CardTitle>
+          <CardTitle className="text-lg text-primary flex items-center gap-2">
+            <Calendar className="h-5 w-5" />
+            Planifications
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
@@ -29,7 +32,10 @@ export function GameStats({ jeu, planificationsEnCours, onCopyPin }: GameStatsPr
 
       <Card className="bg-white/80 backdrop-blur-sm">
         <CardHeader>
-          <CardTitle className="text-lg text-primary">Apprenants</CardTitle>
+          <CardTitle className="text-lg text-primary flex items-center gap-2">
+            <Users className="h-5 w-5" />
+            Apprenants
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
@@ -41,7 +47,45 @@ export function GameStats({ jeu, planificationsEnCours, onCopyPin }: GameStatsPr
         </CardContent>
       </Card>
 
-      <Card className="bg-white/80 backdrop-blur-sm col-span-2">
+      <Card className="bg-white/80 backdrop-blur-sm">
+        <CardHeader>
+          <CardTitle className="text-lg text-primary flex items-center gap-2">
+            <Clock className="h-5 w-5" />
+            Activité
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            <div className="text-3xl font-bold">
+              {jeu.stats?.sessions_completees || 0}
+            </div>
+            <div className="text-sm text-muted-foreground">
+              Sessions complétées
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="bg-white/80 backdrop-blur-sm">
+        <CardHeader>
+          <CardTitle className="text-lg text-primary flex items-center gap-2">
+            <Trophy className="h-5 w-5" />
+            Meilleur Score
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            <div className="text-3xl font-bold">
+              {jeu.stats?.meilleur_score?.score || 0}
+            </div>
+            <div className="text-sm text-muted-foreground">
+              {jeu.stats?.meilleur_score?.apprenant || "Aucun"}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="bg-white/80 backdrop-blur-sm col-span-1 md:col-span-2 lg:col-span-4">
         <CardHeader>
           <CardTitle className="text-lg text-primary">Sessions en cours</CardTitle>
         </CardHeader>
