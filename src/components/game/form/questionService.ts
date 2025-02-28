@@ -24,7 +24,21 @@ export const submitQuestionWithAnswers = async (
     // Ajouter le fichier s'il existe
     if (selectedFile) {
       formData.append('fichier', selectedFile);
+      console.log("Ajout du fichier:", selectedFile.name, selectedFile.type, selectedFile.size);
+    } else {
+      console.log("Aucun fichier sélectionné pour cette question");
     }
+
+    // Log des données envoyées pour le débogage
+    console.log("Envoi de la question avec les données:", {
+      libelle: question.libelle,
+      temps: question.temps,
+      limite_response: question.limite_response,
+      typeQuestion: question.typeQuestion,
+      point: question.point,
+      jeu: question.jeu,
+      type_fichier: question.type_fichier
+    });
 
     // 1. Envoyer la question avec l'image
     const questionResponse = await fetch('http://kahoot.nos-apps.com/api/questions', {
@@ -35,19 +49,36 @@ export const submitQuestionWithAnswers = async (
       body: formData
     });
 
-    if (!questionResponse.ok) {
-      throw new Error('Erreur lors de l\'ajout de la question');
+    // Vérifier la réponse du serveur
+    const responseText = await questionResponse.text();
+    console.log("Réponse brute du serveur:", responseText);
+    
+    // Essayer de parser la réponse JSON
+    let questionResponseData;
+    try {
+      questionResponseData = JSON.parse(responseText);
+    } catch (e) {
+      console.error("Erreur de parsing JSON:", e);
+      throw new Error(`Réponse invalide du serveur: ${responseText}`);
     }
 
-    const questionResponseData = await questionResponse.json();
-    const questionData = questionResponseData.data || questionResponseData;
-    const questionId = questionData._id;
+    if (!questionResponse.ok) {
+      console.error("Erreur de l'API:", questionResponseData);
+      throw new Error(`Erreur lors de l'ajout de la question: ${questionResponseData.message || responseText}`);
+    }
 
+    // Extraire les données de la question
+    const questionData = questionResponseData.data || questionResponseData;
+    console.log("Données de question reçues:", questionData);
+    
+    const questionId = questionData._id;
     if (!questionId) {
       throw new Error('ID de question non trouvé dans la réponse');
     }
 
     // 2. Envoyer les réponses en utilisant l'ID de la question
+    console.log("Envoi des réponses pour la question ID:", questionId);
+    
     const answersPromises = answers.map(async (answer, index) => {
       const isCorrect = index === correctAnswer;
       
@@ -57,7 +88,9 @@ export const submitQuestionWithAnswers = async (
         reponse_texte: answer
       };
 
-      return fetch('http://kahoot.nos-apps.com/api/reponse', {
+      console.log(`Envoi de la réponse ${index+1}:`, responseData);
+
+      const reponseResponse = await fetch('http://kahoot.nos-apps.com/api/reponse', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -65,9 +98,15 @@ export const submitQuestionWithAnswers = async (
         },
         body: JSON.stringify(responseData)
       });
+      
+      const reponseData = await reponseResponse.json();
+      console.log(`Réponse ${index+1} créée:`, reponseData);
+      
+      return reponseResponse;
     });
 
     await Promise.all(answersPromises);
+    console.log("Toutes les réponses ont été créées avec succès");
     
     // Retourner les données complètes
     return {

@@ -35,6 +35,7 @@ export const useQuestionForm = (gameId: string, token: string) => {
       updateFormQuestion({ type_fichier: fileType });
     } else {
       setPreviewUrl(null);
+      updateFormQuestion({ type_fichier: 'image' });
     }
   }, []);
 
@@ -85,6 +86,17 @@ export const useQuestionForm = (gameId: string, token: string) => {
         return;
       }
       
+      console.log("Soumission du formulaire avec les données:", {
+        question: formQuestion,
+        answers,
+        correctAnswer,
+        file: selectedFile ? {
+          name: selectedFile.name,
+          type: selectedFile.type,
+          size: selectedFile.size
+        } : null
+      });
+      
       // Use the submitQuestionWithAnswers function from questionService
       const resultQuestion = await submitQuestionWithAnswers(
         formQuestion,
@@ -94,8 +106,11 @@ export const useQuestionForm = (gameId: string, token: string) => {
         token
       );
 
+      console.log("Question créée avec succès:", resultQuestion);
       toast.success('Question créée avec succès');
       onSuccess(resultQuestion);
+      
+      // Important: Reset form after successful submission
       resetForm();
     } catch (error) {
       console.error('Error creating question:', error);
