@@ -1,15 +1,15 @@
 
 import { Question, QuestionType, Point } from '@/types/game';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import { FileUploadField } from './form/FileUploadField';
 import { DurationSelect } from './form/DurationSelect';
 import { PointsSelect } from './form/PointsSelect';
 import { QuestionTypeSelect } from './form/QuestionTypeSelect';
 import { AnswersInput } from './form/AnswersInput';
 import { SubmitQuestionButton } from './form/SubmitQuestionButton';
+import { LabelledQuestionField } from './form/LabelledQuestionField';
 import { useQuestionForm } from './form/useQuestionForm';
 
 interface QuestionFormProps {
@@ -41,19 +41,13 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
       </CardHeader>
       <CardContent>
         <form onSubmit={handleAddQuestion} className="space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="libelle">Question</Label>
-            <Input
-              id="libelle"
-              value={currentQuestion.libelle}
-              onChange={(e) => setCurrentQuestion({
-                ...currentQuestion,
-                libelle: e.target.value
-              })}
-              placeholder="Entrez votre question"
-              required
-            />
-          </div>
+          <LabelledQuestionField 
+            value={currentQuestion.libelle}
+            onChange={(value) => setCurrentQuestion({
+              ...currentQuestion,
+              libelle: value
+            })}
+          />
 
           <FileUploadField 
             onFileChange={handleFileChange}
