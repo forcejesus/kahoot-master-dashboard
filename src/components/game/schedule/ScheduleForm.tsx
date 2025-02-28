@@ -1,16 +1,13 @@
 
-import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { Kahoot, PlanificationResponse } from "@/types/game-details";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScheduleFormProvider, useScheduleForm } from "./ScheduleFormContext";
 import { ScheduleFormInputs } from "./ScheduleFormInputs";
 import { ScheduleSubmitButton } from "./ScheduleSubmitButton";
 import { ScheduleSuccess } from "./ScheduleSuccess";
 
 function ScheduleFormContent() {
-  const { id } = useParams<{ id: string }>();
   const { token } = useAuth();
   const { formData, setIsSubmitting, setCreatedPin } = useScheduleForm();
   
@@ -67,18 +64,18 @@ function ScheduleFormContent() {
         </form>
       </CardContent>
       
-      <ScheduleSuccess gameId={id || ""} />
+      <ScheduleSuccess gameId={formData.jeu} />
     </Card>
   );
 }
 
-export function ScheduleForm() {
-  const { id } = useParams<{ id: string }>();
-  const location = useLocation();
-  const kahoot = location.state?.jeu as Kahoot | undefined;
-  
+interface ScheduleFormProps {
+  gameId: string;
+}
+
+export function ScheduleForm({ gameId }: ScheduleFormProps) {
   return (
-    <ScheduleFormProvider gameId={id || ""}>
+    <ScheduleFormProvider gameId={gameId}>
       <ScheduleFormContent />
     </ScheduleFormProvider>
   );

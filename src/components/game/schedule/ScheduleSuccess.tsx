@@ -9,9 +9,10 @@ import { useScheduleForm } from "./ScheduleFormContext";
 
 interface ScheduleSuccessProps {
   gameId: string;
+  onSuccess?: () => void;
 }
 
-export function ScheduleSuccess({ gameId }: ScheduleSuccessProps) {
+export function ScheduleSuccess({ gameId, onSuccess }: ScheduleSuccessProps) {
   const navigate = useNavigate();
   const { createdPin, setCreatedPin, setFormData } = useScheduleForm();
   
@@ -25,7 +26,7 @@ export function ScheduleSuccess({ gameId }: ScheduleSuccessProps) {
   };
   
   return (
-    <CardFooter className="flex flex-col space-y-4">
+    <div className="flex flex-col space-y-4">
       <div className="p-4 bg-green-50 rounded-lg border border-green-200 text-center w-full">
         <p className="text-green-600 mb-2">Planification créée avec succès !</p>
         <div className="flex items-center justify-center space-x-2">
@@ -45,9 +46,12 @@ export function ScheduleSuccess({ gameId }: ScheduleSuccessProps) {
         <Button 
           variant="outline" 
           className="flex-1"
-          onClick={() => navigate(`/game/${gameId}`)}
+          onClick={() => {
+            onSuccess?.();
+            navigate(`/game/${gameId}`);
+          }}
         >
-          Retour au jeu
+          Fermer
         </Button>
         <Button 
           className="flex-1"
@@ -63,6 +67,6 @@ export function ScheduleSuccess({ gameId }: ScheduleSuccessProps) {
           Nouvelle planification
         </Button>
       </div>
-    </CardFooter>
+    </div>
   );
 }
