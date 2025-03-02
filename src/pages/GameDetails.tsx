@@ -24,7 +24,8 @@ export default function GameDetails() {
     if (!jeu) return;
     
     try {
-      const response = await fetch(`http://kahoot.nos-apps.com/api/jeux/${jeu._id}`, {
+      // Modification: Récupérer la liste des jeux et filtrer par ID
+      const response = await fetch(`http://kahoot.nos-apps.com/api/jeux`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -35,7 +36,15 @@ export default function GameDetails() {
       }
 
       const data = await response.json();
-      setJeu(data.data);
+      
+      // Trouver le jeu avec l'ID correspondant
+      const foundGame = data.data.find((game: Kahoot) => game._id === jeu._id);
+      
+      if (foundGame) {
+        setJeu(foundGame);
+      } else {
+        toast.error("Jeu non trouvé dans la liste");
+      }
     } catch (error) {
       toast.error("Erreur lors du rafraîchissement des données");
     }
