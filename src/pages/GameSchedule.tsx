@@ -1,17 +1,14 @@
 
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Kahoot } from "@/types/game-details";
-import { ScheduleDialog } from "@/components/game/schedule/ScheduleDialog";
+import { ScheduleForm } from "@/components/game/schedule/ScheduleForm";
 import { HomeIcon, CalendarClock } from "lucide-react";
 
 export default function GameSchedule() {
   const location = useLocation();
-  const { id } = useParams<{ id: string }>();
   const kahoot = location.state?.jeu as Kahoot | undefined;
-  const gameId = id || kahoot?._id || "";
-  const gameTitle = kahoot?.titre || "Jeu sans titre";
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -28,7 +25,7 @@ export default function GameSchedule() {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href={`/game/${kahoot?._id || id}`}>
+              <BreadcrumbLink href={`/game/${kahoot?._id}`}>
                 {kahoot?.titre || "Jeu"}
               </BreadcrumbLink>
             </BreadcrumbItem>
@@ -48,13 +45,13 @@ export default function GameSchedule() {
               Planifier une session de jeu
             </h1>
             {kahoot && (
-              <p className="text-lg text-gray-600 mb-8">
+              <p className="text-lg text-gray-600">
                 Vous planifiez une session pour: <span className="font-semibold">{kahoot.titre}</span>
               </p>
             )}
           </div>
           
-          <ScheduleDialog gameId={gameId} gameTitle={gameTitle} />
+          <ScheduleForm />
         </div>
       </main>
     </div>

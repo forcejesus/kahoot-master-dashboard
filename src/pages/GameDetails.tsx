@@ -5,7 +5,7 @@ import { Navbar } from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
-import { Kahoot } from '@/types/game-details';
+import { Kahoot, Planification } from '@/types/game-details';
 import { GameHeader } from '@/components/game/details/GameHeader';
 import { GameStats } from '@/components/game/details/GameStats';
 import { ActiveSessions } from '@/components/game/details/ActiveSessions';
@@ -17,10 +17,7 @@ export default function GameDetails() {
   const { token } = useAuth();
   const jeu = location.state?.jeu as Kahoot;
 
-  console.log("GameDetails received jeu:", jeu);
-
   if (!jeu) {
-    console.log("No game data found, redirecting to dashboard");
     navigate('/dashboard');
     return null;
   }
@@ -91,8 +88,9 @@ export default function GameDetails() {
 
           <div className="space-y-8 animate-fade-in">
             <GameHeader 
-              jeu={jeu}
-              onDeleteSuccess={handleDeleteGame}
+              jeu={jeu} 
+              token={token} 
+              onDelete={handleDeleteGame} 
             />
 
             <GameStats 

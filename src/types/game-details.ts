@@ -70,9 +70,6 @@ export interface Kahoot {
   _id: string;
   titre: string;
   image?: string;
-  created_at: string;
-  statut?: string;
-  est_public?: boolean;
   planifications?: Planification[];
   questions?: Question[];
   stats?: {
