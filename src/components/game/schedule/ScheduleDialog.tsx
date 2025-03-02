@@ -27,7 +27,8 @@ function ScheduleDialogContent({ gameId, onSuccess }: { gameId: string, onSucces
     setIsSubmitting(true);
     
     try {
-      const response = await fetch("http://kahoot.nos-apps.com/api/planifications/create", {
+      // Updated API endpoint
+      const response = await fetch("http://kahoot.nos-apps.com/api/planification", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

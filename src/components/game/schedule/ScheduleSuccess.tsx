@@ -1,10 +1,11 @@
 
 import { Button } from "@/components/ui/button";
-import { Copy } from "lucide-react";
+import { Copy, Check } from "lucide-react";
 import { CardFooter } from "@/components/ui/card";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { useScheduleForm } from "./ScheduleFormContext";
+import { useState } from "react";
 
 interface ScheduleSuccessProps {
   gameId: string;
@@ -13,6 +14,7 @@ interface ScheduleSuccessProps {
 
 export function ScheduleSuccess({ gameId, onClose }: ScheduleSuccessProps) {
   const { createdPin, setCreatedPin, setFormData } = useScheduleForm();
+  const [copied, setCopied] = useState(false);
   
   if (!createdPin) return null;
   
@@ -20,6 +22,8 @@ export function ScheduleSuccess({ gameId, onClose }: ScheduleSuccessProps) {
     if (createdPin) {
       navigator.clipboard.writeText(createdPin);
       toast.success("PIN copié dans le presse-papier");
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     }
   };
 
@@ -33,23 +37,36 @@ export function ScheduleSuccess({ gameId, onClose }: ScheduleSuccessProps) {
   };
   
   return (
-    <CardFooter className="flex flex-col space-y-4">
-      <div className="p-4 bg-green-50 rounded-lg border border-green-200 text-center w-full">
-        <p className="text-green-600 mb-2">Planification créée avec succès !</p>
-        <div className="flex items-center justify-center space-x-2">
-          <span className="font-mono text-xl font-bold">{createdPin}</span>
-          <Button 
-            size="sm" 
-            variant="outline" 
-            onClick={handleCopyPin}
-            className="gap-1"
-          >
-            <Copy className="h-4 w-4" />
-            Copier le PIN
-          </Button>
+    <div className="flex flex-col space-y-6">
+      <div className="p-6 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg border border-primary/20 text-center w-full shadow-md">
+        <h3 className="text-lg font-semibold mb-2 text-primary">Planification créée avec succès !</h3>
+        <p className="text-gray-600 mb-4">Voici le code PIN pour cette session :</p>
+        
+        <div className="bg-white py-6 px-4 rounded-lg border-2 border-primary/20 shadow-inner mb-6">
+          <span className="font-mono text-3xl font-bold tracking-wider text-primary">{createdPin}</span>
         </div>
+        
+        <Button 
+          size="lg" 
+          variant={copied ? "secondary" : "default"}
+          onClick={handleCopyPin}
+          className="w-full gap-2 font-medium text-md py-6"
+        >
+          {copied ? (
+            <>
+              <Check className="h-5 w-5" />
+              PIN Copié !
+            </>
+          ) : (
+            <>
+              <Copy className="h-5 w-5" />
+              Copier le PIN
+            </>
+          )}
+        </Button>
       </div>
-      <div className="flex space-x-4 w-full">
+      
+      <CardFooter className="flex space-x-4 pt-4 px-0">
         <Button 
           variant="outline" 
           className="flex-1"
@@ -58,12 +75,13 @@ export function ScheduleSuccess({ gameId, onClose }: ScheduleSuccessProps) {
           Fermer
         </Button>
         <Button 
+          variant="secondary"
           className="flex-1"
           onClick={handleNewPlanification}
         >
           Nouvelle planification
         </Button>
-      </div>
-    </CardFooter>
+      </CardFooter>
+    </div>
   );
 }
