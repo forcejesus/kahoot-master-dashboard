@@ -60,7 +60,7 @@ export function GameHeader({ jeu, onDeleteSuccess }: GameHeaderProps) {
         <div className="w-full md:w-1/4 aspect-video md:aspect-square rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
           {jeu.image ? (
             <img
-              src={jeu.image}
+              src={`http://kahoot.nos-apps.com/${jeu.image}`}
               alt={jeu.titre}
               className="w-full h-full object-cover"
             />
@@ -76,7 +76,7 @@ export function GameHeader({ jeu, onDeleteSuccess }: GameHeaderProps) {
             <div>
               <h1 className="text-2xl md:text-3xl font-bold">{jeu.titre}</h1>
               <div className="flex items-center mt-2 text-sm text-gray-500">
-                <span>Créé le {new Date(jeu.created_at).toLocaleDateString()}</span>
+                <span>Créé le {new Date(jeu.created_at || Date.now()).toLocaleDateString()}</span>
                 <Dot className="mx-1" />
                 <span>{jeu.questions?.length || 0} questions</span>
               </div>

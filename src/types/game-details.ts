@@ -70,9 +70,9 @@ export interface Kahoot {
   _id: string;
   titre: string;
   image?: string;
-  created_at: string; // Add this property
-  statut?: string;    // Add this property
-  est_public?: boolean; // Add this property
+  created_at: string;
+  statut?: string;
+  est_public?: boolean;
   planifications?: Planification[];
   questions?: Question[];
   stats?: {
