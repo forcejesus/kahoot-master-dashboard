@@ -5,20 +5,50 @@ import { Navbar } from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
-import { Kahoot, Planification } from '@/types/game-details';
+import { Kahoot } from '@/types/game-details';
 import { GameHeader } from '@/components/game/details/GameHeader';
 import { GameStats } from '@/components/game/details/GameStats';
 import { ActiveSessions } from '@/components/game/details/ActiveSessions';
 import { QuestionsDisplay } from '@/components/game/details/QuestionsDisplay';
+import { useEffect, useState } from 'react';
 
 export default function GameDetails() {
   const navigate = useNavigate();
   const location = useLocation();
   const { token } = useAuth();
-  const jeu = location.state?.jeu as Kahoot;
+  const initialJeu = location.state?.jeu as Kahoot;
+  const [jeu, setJeu] = useState<Kahoot | null>(initialJeu);
+
+  // Fonction pour rafraîchir les détails du jeu
+  const refreshGameDetails = async () => {
+    if (!jeu) return;
+    
+    try {
+      const response = await fetch(`http://kahoot.nos-apps.com/api/jeux/${jeu._id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Erreur lors du chargement des détails du jeu');
+      }
+
+      const data = await response.json();
+      setJeu(data.data);
+    } catch (error) {
+      toast.error("Erreur lors du rafraîchissement des données");
+    }
+  };
+
+  // Récupérer les détails initiaux si nous n'avons pas de state
+  useEffect(() => {
+    if (!jeu) {
+      navigate('/dashboard');
+    }
+  }, [jeu, navigate]);
 
   if (!jeu) {
-    navigate('/dashboard');
     return null;
   }
 
@@ -91,6 +121,7 @@ export default function GameDetails() {
               jeu={jeu} 
               token={token} 
               onDelete={handleDeleteGame} 
+              onRefresh={refreshGameDetails}
             />
 
             <GameStats 

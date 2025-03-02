@@ -1,7 +1,9 @@
 
 import { createContext, ReactNode, useContext, useState } from "react";
 import { format } from "date-fns";
-import { PlanificationFormData } from "@/types/game-details";
+import { PlanificationFormData, PlanificationResponse } from "@/types/game-details";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 interface ScheduleFormContextType {
   formData: PlanificationFormData;
@@ -12,6 +14,7 @@ interface ScheduleFormContextType {
   setIsSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
   createdPin: string | null;
   setCreatedPin: React.Dispatch<React.SetStateAction<string | null>>;
+  submitForm: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
 }
 
 const ScheduleFormContext = createContext<ScheduleFormContextType | undefined>(undefined);
@@ -25,6 +28,7 @@ export function ScheduleFormProvider({
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [createdPin, setCreatedPin] = useState<string | null>(null);
+  const { token } = useAuth();
   
   const [formData, setFormData] = useState<PlanificationFormData>({
     statut: "en attente",
@@ -46,6 +50,37 @@ export function ScheduleFormProvider({
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    try {
+      const response = await fetch("http://kahoot.nos-apps.com/api/planifications/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data: PlanificationResponse = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Erreur lors de la création de la planification");
+      }
+
+      // Stocker le PIN généré
+      setCreatedPin(data.data.pin);
+      toast.success("Planification créée avec succès !");
+    } catch (error) {
+      toast.error("Erreur lors de la création de la planification");
+      console.error("Erreur:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <ScheduleFormContext.Provider 
       value={{ 
@@ -56,7 +91,8 @@ export function ScheduleFormProvider({
         isSubmitting,
         setIsSubmitting,
         createdPin,
-        setCreatedPin
+        setCreatedPin,
+        submitForm
       }}
     >
       {children}

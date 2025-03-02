@@ -1,20 +1,18 @@
 
-import { useNavigate } from 'react-router-dom';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Clock, Trash2 } from 'lucide-react';
-import { toast } from 'sonner';
+import { Trash2 } from 'lucide-react';
 import { Kahoot } from '@/types/game-details';
+import { ScheduleDialog } from '../schedule/ScheduleDialog';
 
 interface GameHeaderProps {
   jeu: Kahoot;
   token: string | null;
   onDelete: () => void;
+  onRefresh: () => void;
 }
 
-export function GameHeader({ jeu, token, onDelete }: GameHeaderProps) {
-  const navigate = useNavigate();
-
+export function GameHeader({ jeu, token, onDelete, onRefresh }: GameHeaderProps) {
   return (
     <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
       <div className="flex flex-col gap-4">
@@ -23,14 +21,11 @@ export function GameHeader({ jeu, token, onDelete }: GameHeaderProps) {
         </h1>
       </div>
       <div className="flex space-x-4">
-        <Button 
-          variant="outline"
-          className="bg-white/10 hover:bg-white hover:text-primary transition-all duration-200 text-white border-white/20"
-          onClick={() => navigate(`/game/${jeu._id}/schedule`, { state: { jeu } })}
-        >
-          <Clock className="mr-2 h-4 w-4" />
-          Planifier une session
-        </Button>
+        <ScheduleDialog 
+          gameId={jeu._id} 
+          jeu={jeu} 
+          onSuccess={onRefresh} 
+        />
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button 

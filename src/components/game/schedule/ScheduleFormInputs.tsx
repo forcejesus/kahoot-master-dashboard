@@ -3,12 +3,21 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useScheduleForm } from "./ScheduleFormContext";
+import { useEffect, useRef } from "react";
 
 export function ScheduleFormInputs() {
-  const { formData, handleInputChange, handleSelectChange } = useScheduleForm();
+  const { formData, handleInputChange, handleSelectChange, submitForm } = useScheduleForm();
+  const formRef = useRef<HTMLFormElement>(null);
+  
+  // Sauvegarder les données du formulaire dans l'attribut data du formulaire
+  useEffect(() => {
+    if (formRef.current) {
+      formRef.current.dataset.formData = JSON.stringify(formData);
+    }
+  }, [formData]);
   
   return (
-    <>
+    <form ref={formRef} onSubmit={submitForm} className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="date_debut">Date de début</Label>
@@ -106,6 +115,6 @@ export function ScheduleFormInputs() {
           </SelectContent>
         </Select>
       </div>
-    </>
+    </form>
   );
 }

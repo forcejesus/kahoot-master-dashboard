@@ -2,17 +2,16 @@
 import { Button } from "@/components/ui/button";
 import { Copy } from "lucide-react";
 import { CardFooter } from "@/components/ui/card";
-import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { useScheduleForm } from "./ScheduleFormContext";
 
 interface ScheduleSuccessProps {
   gameId: string;
+  onClose?: () => void;
 }
 
-export function ScheduleSuccess({ gameId }: ScheduleSuccessProps) {
-  const navigate = useNavigate();
+export function ScheduleSuccess({ gameId, onClose }: ScheduleSuccessProps) {
   const { createdPin, setCreatedPin, setFormData } = useScheduleForm();
   
   if (!createdPin) return null;
@@ -22,6 +21,15 @@ export function ScheduleSuccess({ gameId }: ScheduleSuccessProps) {
       navigator.clipboard.writeText(createdPin);
       toast.success("PIN copié dans le presse-papier");
     }
+  };
+
+  const handleNewPlanification = () => {
+    setCreatedPin(null);
+    setFormData(prev => ({
+      ...prev,
+      date_debut: format(new Date(), "yyyy/MM/dd"),
+      date_fin: format(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), "yyyy/MM/dd"),
+    }));
   };
   
   return (
@@ -45,20 +53,13 @@ export function ScheduleSuccess({ gameId }: ScheduleSuccessProps) {
         <Button 
           variant="outline" 
           className="flex-1"
-          onClick={() => navigate(`/game/${gameId}`)}
+          onClick={onClose}
         >
-          Retour au jeu
+          Fermer
         </Button>
         <Button 
           className="flex-1"
-          onClick={() => {
-            setCreatedPin(null);
-            setFormData(prev => ({
-              ...prev,
-              date_debut: format(new Date(), "yyyy/MM/dd"),
-              date_fin: format(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), "yyyy/MM/dd"),
-            }));
-          }}
+          onClick={handleNewPlanification}
         >
           Nouvelle planification
         </Button>
