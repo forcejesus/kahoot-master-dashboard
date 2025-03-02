@@ -6,6 +6,7 @@ import { ScheduleFormProvider, useScheduleForm } from "./ScheduleFormContext";
 import { ScheduleFormInputs } from "./ScheduleFormInputs";
 import { ScheduleSubmitButton } from "./ScheduleSubmitButton";
 import { ScheduleSuccess } from "./ScheduleSuccess";
+import { PlanificationResponse } from "@/types/game-details";
 
 function ScheduleFormContent() {
   const { token } = useAuth();

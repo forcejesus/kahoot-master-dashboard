@@ -1,5 +1,5 @@
 
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Kahoot } from "@/types/game-details";
@@ -8,6 +8,7 @@ import { HomeIcon, CalendarClock } from "lucide-react";
 
 export default function GameSchedule() {
   const location = useLocation();
+  const { id } = useParams<{ id: string }>();
   const kahoot = location.state?.jeu as Kahoot | undefined;
 
   return (
@@ -25,7 +26,7 @@ export default function GameSchedule() {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href={`/game/${kahoot?._id}`}>
+              <BreadcrumbLink href={`/game/${kahoot?._id || id}`}>
                 {kahoot?.titre || "Jeu"}
               </BreadcrumbLink>
             </BreadcrumbItem>
@@ -51,7 +52,7 @@ export default function GameSchedule() {
             )}
           </div>
           
-          <ScheduleForm />
+          <ScheduleForm gameId={id || kahoot?._id || ""} />
         </div>
       </main>
     </div>

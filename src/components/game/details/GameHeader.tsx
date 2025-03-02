@@ -2,8 +2,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Dot, Calendar, Play, Pencil, Trash2, AlertTriangle } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Dot, Calendar, Play, Pencil, Trash2 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Kahoot } from "@/types/game-details";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
@@ -28,7 +28,6 @@ interface GameHeaderProps {
 export function GameHeader({ jeu, onDeleteSuccess }: GameHeaderProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const { token } = useAuth();
-  const navigate = useNavigate();
 
   const handleDelete = async () => {
     setIsDeleting(true);
@@ -43,7 +42,6 @@ export function GameHeader({ jeu, onDeleteSuccess }: GameHeaderProps) {
       if (response.ok) {
         toast.success("Jeu supprimé avec succès");
         onDeleteSuccess();
-        navigate("/dashboard");
       } else {
         const data = await response.json();
         toast.error(data.message || "Erreur lors de la suppression");

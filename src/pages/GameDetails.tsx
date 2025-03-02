@@ -5,7 +5,7 @@ import { Navbar } from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
-import { Kahoot, Planification } from '@/types/game-details';
+import { Kahoot } from '@/types/game-details';
 import { GameHeader } from '@/components/game/details/GameHeader';
 import { GameStats } from '@/components/game/details/GameStats';
 import { ActiveSessions } from '@/components/game/details/ActiveSessions';
@@ -89,8 +89,7 @@ export default function GameDetails() {
           <div className="space-y-8 animate-fade-in">
             <GameHeader 
               jeu={jeu} 
-              token={token} 
-              onDelete={handleDeleteGame} 
+              onDeleteSuccess={handleDeleteGame} 
             />
 
             <GameStats 
