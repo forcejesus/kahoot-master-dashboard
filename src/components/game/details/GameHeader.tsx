@@ -29,6 +29,8 @@ export function GameHeader({ jeu, onDeleteSuccess }: GameHeaderProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const { token } = useAuth();
 
+  console.log("GameHeader received jeu:", jeu);
+
   const handleDelete = async () => {
     setIsDeleting(true);
     try {

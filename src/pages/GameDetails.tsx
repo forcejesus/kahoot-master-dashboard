@@ -17,7 +17,10 @@ export default function GameDetails() {
   const { token } = useAuth();
   const jeu = location.state?.jeu as Kahoot;
 
+  console.log("GameDetails received jeu:", jeu);
+
   if (!jeu) {
+    console.log("No game data found, redirecting to dashboard");
     navigate('/dashboard');
     return null;
   }
@@ -88,8 +91,8 @@ export default function GameDetails() {
 
           <div className="space-y-8 animate-fade-in">
             <GameHeader 
-              jeu={jeu} 
-              onDeleteSuccess={handleDeleteGame} 
+              jeu={jeu}
+              onDeleteSuccess={handleDeleteGame}
             />
 
             <GameStats 

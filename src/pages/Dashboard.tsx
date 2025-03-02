@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -19,6 +18,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Kahoot } from '@/types/game-details';
 
 interface Kahoot {
   _id: string;
@@ -76,6 +76,9 @@ export default function Dashboard() {
     if (e.target instanceof HTMLElement && e.target.closest('.checkbox-cell')) {
       return; // Ne pas naviguer si on clique sur la case à cocher
     }
+    
+    // Make sure we have the complete kahoot data before navigating
+    console.log("Navigating to game details with data:", kahoot);
     navigate(`/game/${kahoot._id}`, { state: { jeu: kahoot } });
   };
 
