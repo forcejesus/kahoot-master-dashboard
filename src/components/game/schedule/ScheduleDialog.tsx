@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Button } from "@/components/ui/button";
 import { Clock } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { ScheduleFormProvider } from "./ScheduleFormContext";
+import { ScheduleFormProvider, useScheduleForm } from "./ScheduleFormContext";
 import { ScheduleFormInputs } from "./ScheduleFormInputs";
 import { ScheduleSubmitButton } from "./ScheduleSubmitButton";
 import { ScheduleSuccess } from "./ScheduleSuccess";
@@ -18,11 +18,14 @@ interface ScheduleDialogProps {
   onSuccess: () => void;
 }
 
-export function ScheduleDialog({ gameId, jeu, onSuccess }: ScheduleDialogProps) {
-  const [open, setOpen] = useState(false);
+function ScheduleDialogContent({ gameId, onSuccess }: { gameId: string, onSuccess: () => void }) {
   const { token } = useAuth();
+  const { formData, setCreatedPin, isSubmitting, setIsSubmitting } = useScheduleForm();
   
-  const handleSubmit = async (formData: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
     try {
       const response = await fetch("http://kahoot.nos-apps.com/api/planifications/create", {
         method: "POST",
@@ -39,19 +42,35 @@ export function ScheduleDialog({ gameId, jeu, onSuccess }: ScheduleDialogProps) 
         throw new Error(data.message || "Erreur lors de la création de la planification");
       }
 
-      return data;
+      // Stocker le PIN généré
+      setCreatedPin(data.data.pin);
+      toast.success("Planification créée avec succès !");
+      onSuccess();
     } catch (error) {
+      toast.error("Erreur lors de la création de la planification");
       console.error("Erreur:", error);
-      throw error;
+    } finally {
+      setIsSubmitting(false);
     }
   };
   
-  const handleClose = () => {
-    // Lorsque l'utilisateur ferme le dialogue après avoir créé une planification,
-    // nous rafraîchissons les données du jeu
-    onSuccess();
-    setOpen(false);
-  };
+  return (
+    <>
+      <Card className="border-none shadow-none">
+        <CardContent className="p-0 space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <ScheduleFormInputs />
+            <ScheduleSubmitButton />
+          </form>
+          <ScheduleSuccess gameId={gameId} onClose={onSuccess} />
+        </CardContent>
+      </Card>
+    </>
+  );
+}
+
+export function ScheduleDialog({ gameId, jeu, onSuccess }: ScheduleDialogProps) {
+  const [open, setOpen] = useState(false);
   
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -73,35 +92,7 @@ export function ScheduleDialog({ gameId, jeu, onSuccess }: ScheduleDialogProps) 
         </DialogHeader>
         
         <ScheduleFormProvider gameId={gameId}>
-          <Card className="border-none shadow-none">
-            <CardContent className="p-0 space-y-4">
-              <form
-                onSubmit={async (e) => {
-                  e.preventDefault();
-                  const form = e.currentTarget;
-                  const formElements = form.elements as HTMLFormControlsCollection;
-                  
-                  // Récupérer les données du contexte via l'attribut data
-                  const contextData = (form as any).dataset.formData;
-                  const formData = contextData ? JSON.parse(contextData) : {};
-                  
-                  try {
-                    const { data } = await handleSubmit(formData);
-                    toast.success("Planification créée avec succès !");
-                    // Après création réussie, l'interface de succès s'affichera
-                    // grâce au PIN stocké dans le contexte
-                  } catch (error) {
-                    toast.error("Erreur lors de la création de la planification");
-                  }
-                }}
-                className="space-y-4"
-              >
-                <ScheduleFormInputs />
-                <ScheduleSubmitButton />
-              </form>
-              <ScheduleSuccess gameId={gameId} onClose={handleClose} />
-            </CardContent>
-          </Card>
+          <ScheduleDialogContent gameId={gameId} onSuccess={onSuccess} />
         </ScheduleFormProvider>
       </DialogContent>
     </Dialog>
