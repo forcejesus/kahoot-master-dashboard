@@ -7,7 +7,7 @@ import { useEffect, useRef } from "react";
 
 export function ScheduleFormInputs() {
   const { formData, handleInputChange, handleSelectChange, submitForm } = useScheduleForm();
-  const formRef = useRef<HTMLFormElement>(null);
+  const formRef = useRef<HTMLDivElement>(null);
   
   // Sauvegarder les données du formulaire dans l'attribut data du formulaire
   useEffect(() => {
@@ -17,7 +17,7 @@ export function ScheduleFormInputs() {
   }, [formData]);
   
   return (
-    <form ref={formRef} onSubmit={submitForm} className="space-y-4">
+    <div ref={formRef} className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="date_debut">Date de début</Label>
@@ -115,6 +115,6 @@ export function ScheduleFormInputs() {
           </SelectContent>
         </Select>
       </div>
-    </form>
+    </div>
   );
 }
