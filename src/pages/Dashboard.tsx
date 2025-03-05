@@ -19,24 +19,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-
-interface Kahoot {
-  _id: string;
-  titre: string;
-  questions?: {
-    libelle: string;
-    reponses: string[];
-    reponse_correcte: string;
-  }[];
-  planifications?: {
-    _id: string;
-    pin: string;
-    participants: {
-      apprenant: string;
-      score: number;
-    }[];
-  }[];
-}
+import { Kahoot } from '@/types/game-details';
 
 export default function Dashboard() {
   const { token } = useAuth();
@@ -72,11 +55,36 @@ export default function Dashboard() {
     fetchData();
   }, [token]);
 
-  const handleKahootClick = (kahoot: Kahoot, e: React.MouseEvent) => {
+  const handleKahootClick = async (kahoot: Kahoot, e: React.MouseEvent) => {
     if (e.target instanceof HTMLElement && e.target.closest('.checkbox-cell')) {
       return; // Ne pas naviguer si on clique sur la case à cocher
     }
-    navigate(`/game/${kahoot._id}`, { state: { jeu: kahoot } });
+    
+    try {
+      // Afficher un toast de chargement
+      const loadingToast = toast.loading("Chargement des détails du jeu...");
+      
+      // Récupérer les détails complets du jeu
+      const response = await fetch(`http://kahoot.nos-apps.com/api/jeux/${kahoot._id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Erreur lors du chargement des détails du jeu');
+      }
+      
+      const gameDetails = await response.json();
+      
+      // Fermer le toast de chargement
+      toast.dismiss(loadingToast);
+      
+      // Naviguer vers la page de détails avec les données complètes
+      navigate(`/game/${kahoot._id}`, { state: { jeu: gameDetails.data } });
+    } catch (error) {
+      toast.error("Erreur lors du chargement des détails du jeu");
+    }
   };
 
   const handleSelectKahoot = (kahootId: string) => {

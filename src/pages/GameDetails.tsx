@@ -1,4 +1,3 @@
-
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Navbar } from '@/components/Navbar';
@@ -24,8 +23,8 @@ export default function GameDetails() {
     if (!jeu) return;
     
     try {
-      // Modification: Récupérer la liste des jeux et filtrer par ID
-      const response = await fetch(`http://kahoot.nos-apps.com/api/jeux`, {
+      // Récupérer les détails complets du jeu directement via son ID
+      const response = await fetch(`http://kahoot.nos-apps.com/api/jeux/${jeu._id}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -36,15 +35,7 @@ export default function GameDetails() {
       }
 
       const data = await response.json();
-      
-      // Trouver le jeu avec l'ID correspondant
-      const foundGame = data.data.find((game: Kahoot) => game._id === jeu._id);
-      
-      if (foundGame) {
-        setJeu(foundGame);
-      } else {
-        toast.error("Jeu non trouvé dans la liste");
-      }
+      setJeu(data.data);
     } catch (error) {
       toast.error("Erreur lors du rafraîchissement des données");
     }
