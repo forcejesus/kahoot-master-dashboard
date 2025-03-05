@@ -1,7 +1,6 @@
 
 import { Question } from "@/types/game-details";
-import { TypeQuestionDetails } from "./TypeQuestionDetails";
-import { PointsDetails } from "./PointsDetails";
+import { Calendar, Clock, FileText, Hash, HelpCircle } from "lucide-react";
 
 interface QuestionDetailsProps {
   question: Question;
@@ -9,28 +8,56 @@ interface QuestionDetailsProps {
 
 export function QuestionDetails({ question }: QuestionDetailsProps) {
   return (
-    <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-100">
-      <h3 className="font-medium text-base mb-2">Détails de la question:</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-        <div><span className="font-medium">ID:</span> {question._id}</div>
-        {question.type_fichier && (
-          <div><span className="font-medium">Type de fichier:</span> {question.type_fichier}</div>
+    <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
+      <h3 className="font-medium text-base mb-3 flex items-center gap-2">
+        <HelpCircle className="w-4 h-4" />
+        Détails de la question
+      </h3>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2 text-sm">
+        {question._id && (
+          <div className="flex items-center gap-1">
+            <Hash className="w-3 h-3 text-blue-500" />
+            <span className="font-medium">ID:</span> {question._id}
+          </div>
         )}
-        <div><span className="font-medium">Temps:</span> {question.temps || "30"} secondes</div>
-        <div><span className="font-medium">Limite de réponse:</span> {question.limite_response ? "Oui" : "Non"}</div>
         
-        <TypeQuestionDetails typeQuestion={question.typeQuestion} />
-        <PointsDetails point={question.point} />
+        <div className="flex items-center gap-1">
+          <FileText className="w-3 h-3 text-blue-500" />
+          <span className="font-medium">Libellé:</span> {question.libelle}
+        </div>
+        
+        <div className="flex items-center gap-1">
+          <Clock className="w-3 h-3 text-blue-500" />
+          <span className="font-medium">Temps:</span> {question.temps || "30"} secondes
+        </div>
+        
+        <div className="flex items-center gap-1">
+          <span className="font-medium">Chrono actif:</span> {question.limite_response ? "Oui" : "Non"}
+        </div>
         
         {question.date && (
-          <div className="col-span-2">
-            <span className="font-medium">Date de création:</span> {new Date(question.date).toLocaleDateString('fr-FR', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit'
-            })}
+          <div className="flex items-center gap-1">
+            <Calendar className="w-3 h-3 text-blue-500" />
+            <span className="font-medium">Date:</span> {new Date(question.date).toLocaleString()}
+          </div>
+        )}
+        
+        {question.typeQuestion && (
+          <div className="flex items-center gap-1">
+            <span className="font-medium">Type:</span> {question.typeQuestion.libelle}
+          </div>
+        )}
+        
+        {question.point && (
+          <div className="flex items-center gap-1">
+            <span className="font-medium">Points:</span> {question.point.valeur}
+          </div>
+        )}
+        
+        {question.type_fichier && (
+          <div className="flex items-center gap-1">
+            <span className="font-medium">Type de fichier:</span> {question.type_fichier}
           </div>
         )}
       </div>
