@@ -3,8 +3,6 @@ import { Question, QuestionReponse } from "@/types/game-details";
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ImageIcon, TimerIcon, Check, Clock } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { ResponseInput } from "./ResponseInput";
 import { Badge } from "@/components/ui/badge";
 
 interface QuestionCardProps {
@@ -14,8 +12,6 @@ interface QuestionCardProps {
 }
 
 export function QuestionCard({ question, index, token }: QuestionCardProps) {
-  const [selectedQuestion, setSelectedQuestion] = useState<boolean>(false);
-
   // Get the image URL
   const imageUrl = question.fichier 
     ? `http://kahoot.nos-apps.com/${question.fichier}`
@@ -131,25 +127,6 @@ export function QuestionCard({ question, index, token }: QuestionCardProps) {
               {question.point.valeur || 0} points
             </Badge>
           </div>
-        )}
-        
-        {/* Response input */}
-        {selectedQuestion ? (
-          <ResponseInput 
-            question={question} 
-            token={token} 
-            onResponseSubmitted={() => setSelectedQuestion(false)}
-          />
-        ) : (
-          question._id && (
-            <Button 
-              variant="outline" 
-              className="w-full mt-2"
-              onClick={() => setSelectedQuestion(true)}
-            >
-              Répondre à cette question
-            </Button>
-          )
         )}
       </CardContent>
     </Card>
