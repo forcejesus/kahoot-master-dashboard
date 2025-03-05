@@ -27,8 +27,13 @@ export function QuestionCard({ question, index, token }: QuestionCardProps) {
 
   // Debug the response format to console
   useEffect(() => {
-    console.log(`Question ${index + 1} responses:`, question.reponses);
-    console.log(`Question ${index + 1} format:`, isNewResponseFormat ? "New Object Format" : "Old String Format");
+    console.log(`Question ${index + 1} - Full question:`, question);
+    console.log(`Question ${index + 1} - Responses:`, question.reponses);
+    
+    // Check the first response to see if it has reponse_texte
+    if (isNewResponseFormat && question.reponses && question.reponses.length > 0) {
+      console.log(`First response details:`, question.reponses[0]);
+    }
   }, [question, index, isNewResponseFormat]);
 
   return (

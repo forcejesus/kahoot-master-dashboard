@@ -9,18 +9,23 @@ interface QuestionResponsesProps {
 }
 
 export function QuestionResponses({ question, isNewResponseFormat }: QuestionResponsesProps) {
+  // Debug to console to verify response format
+  console.log('Question responses:', question.reponses);
+  
   return (
     <div className="space-y-4 mt-4">
       <h3 className="font-medium text-base">Réponses possibles:</h3>
       {isNewResponseFormat ? (
         // New response format - reponses is an array of objects with reponse_texte property
-        (question.reponses as QuestionReponse[]).map((reponse, rIndex) => (
-          <NewFormatResponseItem 
-            key={reponse._id || rIndex} 
-            reponse={reponse} 
-            rIndex={rIndex} 
-          />
-        ))
+        <div className="space-y-3">
+          {(question.reponses as QuestionReponse[]).map((reponse, rIndex) => (
+            <NewFormatResponseItem 
+              key={reponse._id || rIndex} 
+              reponse={reponse} 
+              rIndex={rIndex} 
+            />
+          ))}
+        </div>
       ) : (
         // Old response format - reponses is an array of strings
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
