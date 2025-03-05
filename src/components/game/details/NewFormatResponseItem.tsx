@@ -38,9 +38,7 @@ export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItem
       </div>
       
       {/* Détails complets de la réponse */}
-      <div className="mt-3 text-sm text-gray-600 space-y-2 border-t pt-2 border-gray-200">
-        <h4 className="font-medium text-gray-700">Détails de la réponse #{rIndex + 1}</h4>
-        
+      <div className="mt-3 text-sm text-gray-600 grid grid-cols-1 md:grid-cols-2 gap-2 border-t pt-2 border-gray-200">
         {reponse._id && (
           <div className="flex items-center gap-1">
             <Hash className="w-3 h-3 text-blue-500" /> 
