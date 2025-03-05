@@ -117,7 +117,8 @@ export function ResponseInput({ question, token, onResponseSubmitted }: Response
   useEffect(() => {
     console.log("Question data:", question);
     console.log("Correct answer:", correctAnswer);
-  }, [question, correctAnswer]);
+    console.log("Response format:", isNewResponseFormat ? "New (Object with reponse_texte)" : "Old (String array)");
+  }, [question, correctAnswer, isNewResponseFormat]);
 
   return (
     <div className="mt-4 space-y-2">

@@ -1,6 +1,6 @@
 
 import { Question, QuestionReponse } from "@/types/game-details";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ImageIcon, TimerIcon, Check, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -28,9 +28,11 @@ export function QuestionCard({ question, index, token }: QuestionCardProps) {
     question.reponses.length > 0 && 
     typeof question.reponses[0] !== 'string';
 
-  // Debug to console
-  console.log("Question reponses format:", isNewResponseFormat ? "New Object Format" : "Old String Format");
-  console.log("Question reponses:", question.reponses);
+  // Debug the response format to console
+  useEffect(() => {
+    console.log(`Question ${index + 1} responses:`, question.reponses);
+    console.log(`Question ${index + 1} format:`, isNewResponseFormat ? "New Object Format" : "Old String Format");
+  }, [question, index, isNewResponseFormat]);
 
   return (
     <Card key={index} className="border border-gray-100 shadow-sm hover:shadow-md transition-all">
