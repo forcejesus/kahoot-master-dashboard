@@ -1,5 +1,5 @@
 
-import { Question } from "@/types/game-details";
+import { Question, QuestionReponse } from "@/types/game-details";
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ImageIcon, TimerIcon, Check, Clock } from "lucide-react";
@@ -15,6 +15,18 @@ interface QuestionCardProps {
 
 export function QuestionCard({ question, index, token }: QuestionCardProps) {
   const [selectedQuestion, setSelectedQuestion] = useState<boolean>(false);
+
+  // Get the image URL
+  const imageUrl = question.fichier 
+    ? `http://kahoot.nos-apps.com/${question.fichier}`
+    : question.image 
+      ? `http://kahoot.nos-apps.com/${question.image}`
+      : null;
+
+  // Check if reponses is an array of objects (new format) or array of strings (old format)
+  const isNewResponseFormat = question.reponses && 
+    question.reponses.length > 0 && 
+    typeof question.reponses[0] !== 'string';
 
   return (
     <Card key={index} className="border border-gray-100 shadow-sm hover:shadow-md transition-all">
@@ -41,10 +53,11 @@ export function QuestionCard({ question, index, token }: QuestionCardProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4 pt-4">
-        {question.image ? (
+        {/* Question Image */}
+        {imageUrl ? (
           <div className="relative w-full h-[200px] rounded-lg overflow-hidden border border-gray-100">
             <img
-              src={`http://kahoot.nos-apps.com/${question.image}`}
+              src={imageUrl}
               alt={`Image question ${index + 1}`}
               className="object-contain w-full h-full"
             />
@@ -58,26 +71,59 @@ export function QuestionCard({ question, index, token }: QuestionCardProps) {
           </div>
         )}
         
+        {/* Question Answers */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          {question.reponses.map((reponse, rIndex) => (
-            <div
-              key={rIndex}
-              className={`p-4 rounded-lg ${
-                reponse === question.reponse_correcte
-                  ? 'bg-green-50 border-green-200'
-                  : 'bg-gray-50 border-gray-100'
-              } border transition-colors flex items-center justify-between`}
-            >
-              <span className={`${reponse === question.reponse_correcte ? 'text-green-700 font-medium' : ''}`}>
-                {reponse}
-              </span>
-              {reponse === question.reponse_correcte && (
-                <Check className="w-5 h-5 text-green-600" />
-              )}
-            </div>
-          ))}
+          {isNewResponseFormat ? (
+            // New response format (array of objects)
+            question.reponses?.map((reponse: QuestionReponse, rIndex) => (
+              <div
+                key={rIndex}
+                className={`p-4 rounded-lg ${
+                  reponse.etat
+                    ? 'bg-green-50 border-green-200'
+                    : 'bg-gray-50 border-gray-100'
+                } border transition-colors flex items-center justify-between`}
+              >
+                <span className={`${reponse.etat ? 'text-green-700 font-medium' : ''}`}>
+                  {reponse.reponse_texte}
+                </span>
+                {reponse.etat && (
+                  <Check className="w-5 h-5 text-green-600" />
+                )}
+              </div>
+            ))
+          ) : (
+            // Old response format (array of strings)
+            Array.isArray(question.reponses) && question.reponses.map((reponse: string, rIndex) => (
+              <div
+                key={rIndex}
+                className={`p-4 rounded-lg ${
+                  reponse === question.reponse_correcte
+                    ? 'bg-green-50 border-green-200'
+                    : 'bg-gray-50 border-gray-100'
+                } border transition-colors flex items-center justify-between`}
+              >
+                <span className={`${reponse === question.reponse_correcte ? 'text-green-700 font-medium' : ''}`}>
+                  {reponse}
+                </span>
+                {reponse === question.reponse_correcte && (
+                  <Check className="w-5 h-5 text-green-600" />
+                )}
+              </div>
+            ))
+          )}
         </div>
         
+        {/* Point value if available */}
+        {question.point && (
+          <div className="mt-2">
+            <Badge variant="outline" className="bg-blue-50 text-blue-700">
+              {question.point.valeur || 0} points
+            </Badge>
+          </div>
+        )}
+        
+        {/* Response input */}
         {selectedQuestion ? (
           <ResponseInput 
             question={question} 

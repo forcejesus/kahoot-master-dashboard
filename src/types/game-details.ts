@@ -40,16 +40,50 @@ export interface PlanificationResponse {
   data: Planification;
 }
 
+export interface QuestionReponse {
+  _id: string;
+  etat: boolean;
+  reponse_texte: string;
+  question: string;
+  date: string;
+  __v: number;
+}
+
+export interface QuestionType {
+  _id: string;
+  libelle: string;
+  description: string;
+  reference: string;
+  date: string;
+  __v: number;
+}
+
+export interface QuestionPoint {
+  _id: string;
+  nature: string;
+  valeur: number;
+  description: string;
+  date: string;
+  __v: number;
+}
+
 export interface Question {
   _id?: string;
   libelle: string;
-  reponses: string[];
-  reponse_correcte: string;
-  image?: string;
+  fichier?: string;
+  type_fichier?: string;
   temps?: number;
   limite_response?: boolean;
-  typeQuestion?: string;
-  point?: string;
+  reponses?: QuestionReponse[];
+  typeQuestion?: QuestionType;
+  point?: QuestionPoint;
+  jeu?: string;
+  date?: string;
+  __v?: number;
+  
+  // For backward compatibility with older code
+  image?: string;
+  reponse_correcte?: string;
 }
 
 export interface QuestionResponse {
@@ -74,6 +108,7 @@ export interface Kahoot {
   _id: string;
   titre: string;
   image?: string;
+  fichier?: string;
   planifications?: Planification[];
   questions?: Question[];
   stats?: {

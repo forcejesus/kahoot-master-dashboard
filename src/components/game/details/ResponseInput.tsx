@@ -1,5 +1,5 @@
 
-import { Question, QuestionResponse } from "@/types/game-details";
+import { Question, QuestionResponse, QuestionReponse } from "@/types/game-details";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +20,17 @@ export function ResponseInput({ question, token, onResponseSubmitted }: Response
     submitted: false
   });
   
+  const getCorrectAnswer = (): string => {
+    // Check if we have new format responses (array of objects)
+    if (question.reponses && typeof question.reponses[0] !== 'string') {
+      const correctResponse = question.reponses?.find((r: QuestionReponse) => r.etat);
+      return correctResponse?.reponse_texte || "";
+    }
+    
+    // Old format (reponse_correcte string)
+    return question.reponse_correcte || "";
+  };
+  
   const handleSubmitResponse = async () => {
     if (!question._id) {
       toast.error("ID de question invalide");
@@ -32,11 +43,19 @@ export function ResponseInput({ question, token, onResponseSubmitted }: Response
     }
 
     setSubmitting(true);
-
+    
     try {
-      // Determine if the response is correct
-      const isCorrect = question.reponses.includes(responseText) && 
-                        responseText === question.reponse_correcte;
+      // Determine if the response is correct based on format
+      let isCorrect = false;
+      
+      if (question.reponses && typeof question.reponses[0] !== 'string') {
+        // New format (array of objects)
+        const correctAnswer = question.reponses?.find((r: QuestionReponse) => r.etat);
+        isCorrect = correctAnswer?.reponse_texte.toLowerCase() === responseText.toLowerCase();
+      } else {
+        // Old format (string array + reponse_correcte)
+        isCorrect = question.reponse_correcte?.toLowerCase() === responseText.toLowerCase();
+      }
       
       const responseData: QuestionResponse = {
         file: "Image vers le fichier image", // As specified
@@ -79,6 +98,8 @@ export function ResponseInput({ question, token, onResponseSubmitted }: Response
       setSubmitting(false);
     }
   };
+  
+  const correctAnswer = getCorrectAnswer();
 
   return (
     <div className="mt-4 space-y-2">
@@ -93,7 +114,7 @@ export function ResponseInput({ question, token, onResponseSubmitted }: Response
             <p className="text-sm mt-1">
               {responseStatus.isCorrect 
                 ? 'Correcte !' 
-                : `Incorrect. La bonne réponse est: ${question.reponse_correcte}`}
+                : `Incorrect. La bonne réponse est: ${correctAnswer}`}
             </p>
           </div>
           {responseStatus.isCorrect 
