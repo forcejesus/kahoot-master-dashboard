@@ -9,25 +9,30 @@ interface QuestionResponsesProps {
 }
 
 export function QuestionResponses({ question, isNewResponseFormat }: QuestionResponsesProps) {
-  // Debug to console to verify response format
-  console.log('Question responses:', question.reponses);
+  // Debug pour vérifier le format des réponses
+  console.log('Question responses format check:', {
+    isArray: Array.isArray(question.reponses),
+    length: question.reponses?.length,
+    firstItem: question.reponses?.[0],
+    isNewFormat: isNewResponseFormat
+  });
   
   return (
     <div className="space-y-4 mt-4">
       <h3 className="font-medium text-base">Réponses possibles:</h3>
       {isNewResponseFormat ? (
-        // New response format - reponses is an array of objects with reponse_texte property
+        // Nouveau format - reponses est un tableau d'objets avec propriété reponse_texte
         <div className="space-y-3">
           {(question.reponses as QuestionReponse[]).map((reponse, rIndex) => (
             <NewFormatResponseItem 
-              key={reponse._id || rIndex} 
+              key={rIndex} 
               reponse={reponse} 
               rIndex={rIndex} 
             />
           ))}
         </div>
       ) : (
-        // Old response format - reponses is an array of strings
+        // Ancien format - reponses est un tableau de chaînes
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {Array.isArray(question.reponses) && (question.reponses as string[]).map((reponse, rIndex) => (
             <OldFormatResponseItem

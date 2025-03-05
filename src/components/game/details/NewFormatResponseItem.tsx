@@ -1,7 +1,7 @@
 
 import { QuestionReponse } from "@/types/game-details";
 import { Badge } from "@/components/ui/badge";
-import { Check, Info, Calendar, Hash, ToggleLeft, ToggleRight, Clock } from "lucide-react";
+import { Check, ToggleLeft, ToggleRight } from "lucide-react";
 
 interface NewFormatResponseItemProps {
   reponse: QuestionReponse;
@@ -9,11 +9,13 @@ interface NewFormatResponseItemProps {
 }
 
 export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItemProps) {
+  // Ajouter un log pour vérifier l'objet de réponse
+  console.log(`Rendering response ${rIndex}:`, reponse);
+  
   if (!reponse) return null;
   
   return (
     <div
-      key={rIndex}
       className={`p-4 rounded-lg ${
         reponse.etat
           ? 'bg-green-50 border-green-200'
@@ -37,7 +39,6 @@ export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItem
         )}
       </div>
       
-      {/* Simplify the details display to focus on the response text */}
       <div className="mt-3 text-sm text-gray-600">
         <div className="flex items-center gap-1">
           <ToggleRight className="w-3 h-3" /> 
