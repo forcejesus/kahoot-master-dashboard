@@ -1,4 +1,3 @@
-
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Navbar } from '@/components/Navbar';
@@ -8,7 +7,6 @@ import { toast } from 'sonner';
 import { Kahoot } from '@/types/game-details';
 import { GameHeader } from '@/components/game/details/GameHeader';
 import { GameStats } from '@/components/game/details/GameStats';
-import { ActiveSessions } from '@/components/game/details/ActiveSessions';
 import { QuestionsDisplay } from '@/components/game/details/QuestionsDisplay';
 import { useEffect, useState } from 'react';
 
@@ -136,12 +134,6 @@ export default function GameDetails() {
               onCopyPin={handleCopyPin} 
             />
           </div>
-
-          <ActiveSessions 
-            planificationsEnCours={planificationsEnCours} 
-            onCopyPin={handleCopyPin}
-            gameId={jeu._id}
-          />
 
           <QuestionsDisplay questions={jeu.questions} />
         </main>
