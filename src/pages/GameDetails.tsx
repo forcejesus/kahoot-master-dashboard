@@ -24,8 +24,8 @@ export default function GameDetails() {
     if (!jeu) return;
     
     try {
-      // Modification: Récupérer la liste des jeux et filtrer par ID
-      const response = await fetch(`http://kahoot.nos-apps.com/api/jeux`, {
+      // Utilisation de l'endpoint direct avec l'ID du jeu
+      const response = await fetch(`http://kahoot.nos-apps.com/api/jeux/${jeu._id}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -37,13 +37,10 @@ export default function GameDetails() {
 
       const data = await response.json();
       
-      // Trouver le jeu avec l'ID correspondant
-      const foundGame = data.data.find((game: Kahoot) => game._id === jeu._id);
-      
-      if (foundGame) {
-        setJeu(foundGame);
+      if (data.data) {
+        setJeu(data.data);
       } else {
-        toast.error("Jeu non trouvé dans la liste");
+        toast.error("Jeu non trouvé");
       }
     } catch (error) {
       toast.error("Erreur lors du rafraîchissement des données");
@@ -130,7 +127,7 @@ export default function GameDetails() {
               jeu={jeu} 
               token={token} 
               onDelete={handleDeleteGame} 
-              onRefresh={refreshGameDetails}
+              onRefresh={refreshGameDetails} 
             />
 
             <GameStats 
