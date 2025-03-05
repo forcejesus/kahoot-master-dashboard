@@ -74,7 +74,7 @@ export interface Question {
   type_fichier?: string;
   temps?: number;
   limite_response?: boolean;
-  reponses?: QuestionReponse[];
+  reponses?: QuestionReponse[] | string[];
   typeQuestion?: QuestionType;
   point?: QuestionPoint;
   jeu?: string;

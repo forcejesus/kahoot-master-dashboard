@@ -94,7 +94,7 @@ export function QuestionCard({ question, index, token }: QuestionCardProps) {
             ))
           ) : (
             // Old response format (array of strings)
-            Array.isArray(question.reponses) && question.reponses.map((reponse: string, rIndex) => (
+            Array.isArray(question.reponses) && question.reponses.map((reponse, rIndex) => (
               <div
                 key={rIndex}
                 className={`p-4 rounded-lg ${
@@ -104,7 +104,7 @@ export function QuestionCard({ question, index, token }: QuestionCardProps) {
                 } border transition-colors flex items-center justify-between`}
               >
                 <span className={`${reponse === question.reponse_correcte ? 'text-green-700 font-medium' : ''}`}>
-                  {reponse}
+                  {String(reponse)}
                 </span>
                 {reponse === question.reponse_correcte && (
                   <Check className="w-5 h-5 text-green-600" />
