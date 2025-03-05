@@ -33,15 +33,21 @@ export function KahootTable({ kahoots, isLoading, onRefresh }: KahootTableProps)
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleKahootClick = async (kahoot: Kahoot, e: React.MouseEvent) => {
-    if (e.target instanceof HTMLElement && e.target.closest('.checkbox-cell')) {
-      return; // Ne pas naviguer si on clique sur la case à cocher
+    // Check if clicked on checkbox area
+    if (e.target instanceof HTMLElement && 
+       (e.target.closest('.checkbox-cell') || 
+        e.target.closest('button') || 
+        e.target.tagName === 'INPUT')) {
+      return; // Don't navigate if clicking on checkbox, button or input
     }
     
+    console.log(`Navigating to game details for game ID: ${kahoot._id}`);
+    
     try {
-      // Afficher un toast de chargement
+      // Show loading toast
       const loadingToast = toast.loading("Chargement des détails du jeu...");
       
-      // Récupérer les détails complets du jeu
+      // Fetch complete game details
       const response = await fetch(`http://kahoot.nos-apps.com/api/jeux/${kahoot._id}`, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -54,12 +60,13 @@ export function KahootTable({ kahoots, isLoading, onRefresh }: KahootTableProps)
       
       const gameDetails = await response.json();
       
-      // Fermer le toast de chargement
+      // Dismiss loading toast
       toast.dismiss(loadingToast);
       
-      // Naviguer vers la page de détails avec les données complètes
+      // Navigate to details page with complete data
       navigate(`/game/${kahoot._id}`, { state: { jeu: gameDetails.data } });
     } catch (error) {
+      console.error('Error loading game details:', error);
       toast.error("Erreur lors du chargement des détails du jeu");
     }
   };
