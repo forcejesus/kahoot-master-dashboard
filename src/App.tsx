@@ -14,12 +14,6 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-// Define the future flags to address the warnings
-const routerFutureConfig = {
-  v7_startTransition: true,
-  v7_relativeSplatPath: true
-};
-
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth();
   return isAuthenticated ? children : <Navigate to="/" replace />;
@@ -60,7 +54,7 @@ const App = () => (
       <AuthProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter future={routerFutureConfig}>
+        <BrowserRouter>
           <AppRoutes />
         </BrowserRouter>
       </AuthProvider>
