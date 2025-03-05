@@ -1,6 +1,6 @@
 
 import { Question } from "@/types/game-details";
-import { Calendar, Clock, FileText, Hash, HelpCircle } from "lucide-react";
+import { Calendar, Clock, FileText, Hash, HelpCircle, FileType, Timer, Award } from "lucide-react";
 
 interface QuestionDetailsProps {
   question: Question;
@@ -33,6 +33,7 @@ export function QuestionDetails({ question }: QuestionDetailsProps) {
         </div>
         
         <div className="flex items-center gap-1">
+          <Timer className="w-3 h-3 text-blue-500" />
           <span className="font-medium">Chrono actif:</span> {question.limite_response ? "Oui" : "Non"}
         </div>
         
@@ -45,19 +46,35 @@ export function QuestionDetails({ question }: QuestionDetailsProps) {
         
         {question.typeQuestion && (
           <div className="flex items-center gap-1">
+            <FileText className="w-3 h-3 text-blue-500" />
             <span className="font-medium">Type:</span> {question.typeQuestion.libelle}
+            {question.typeQuestion.description && (
+              <span className="text-xs text-gray-500 ml-1">({question.typeQuestion.description})</span>
+            )}
           </div>
         )}
         
         {question.point && (
           <div className="flex items-center gap-1">
+            <Award className="w-3 h-3 text-blue-500" />
             <span className="font-medium">Points:</span> {question.point.valeur}
+            {question.point.nature && (
+              <span className="text-xs text-gray-500 ml-1">({question.point.nature})</span>
+            )}
           </div>
         )}
         
         {question.type_fichier && (
           <div className="flex items-center gap-1">
+            <FileType className="w-3 h-3 text-blue-500" />
             <span className="font-medium">Type de fichier:</span> {question.type_fichier}
+          </div>
+        )}
+        
+        {question.jeu && (
+          <div className="flex items-center gap-1">
+            <Hash className="w-3 h-3 text-blue-500" />
+            <span className="font-medium">Jeu ID:</span> {question.jeu}
           </div>
         )}
       </div>

@@ -27,22 +27,6 @@ export function QuestionCard({ question, index, token }: QuestionCardProps) {
     typeof question.reponses[0] !== 'string' &&
     typeof question.reponses[0] === 'object';
 
-  // Debug le format de réponse dans la console
-  useEffect(() => {
-    console.log(`Question ${index + 1} - Question complète:`, question);
-    console.log(`Question ${index + 1} - Réponses:`, question.reponses);
-    console.log(`Question ${index + 1} - Format:`, isNewResponseFormat ? "Nouveau format" : "Ancien format");
-    
-    // Vérifier la première réponse pour voir si elle a reponse_texte
-    if (question.reponses && question.reponses.length > 0) {
-      console.log(`Première réponse:`, question.reponses[0]);
-      if (isNewResponseFormat) {
-        // @ts-ignore - Nous savons que c'est un objet à ce stade
-        console.log(`Texte de la première réponse:`, question.reponses[0].reponse_texte);
-      }
-    }
-  }, [question, index, isNewResponseFormat]);
-
   return (
     <Card key={index} className="border border-gray-100 shadow-sm hover:shadow-md transition-all">
       <QuestionHeader question={question} index={index} />
