@@ -28,6 +28,10 @@ export function QuestionCard({ question, index, token }: QuestionCardProps) {
     question.reponses.length > 0 && 
     typeof question.reponses[0] !== 'string';
 
+  // Debug to console
+  console.log("Question reponses format:", isNewResponseFormat ? "New Object Format" : "Old String Format");
+  console.log("Question reponses:", question.reponses);
+
   return (
     <Card key={index} className="border border-gray-100 shadow-sm hover:shadow-md transition-all">
       <CardHeader className="bg-gray-50 rounded-t-lg">
@@ -74,26 +78,30 @@ export function QuestionCard({ question, index, token }: QuestionCardProps) {
         {/* Question Answers */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
           {isNewResponseFormat ? (
-            // New response format (array of objects)
-            (question.reponses as QuestionReponse[]).map((reponse, rIndex) => (
-              <div
-                key={rIndex}
-                className={`p-4 rounded-lg ${
-                  reponse.etat
-                    ? 'bg-green-50 border-green-200'
-                    : 'bg-gray-50 border-gray-100'
-                } border transition-colors flex items-center justify-between`}
-              >
-                <span className={`${reponse.etat ? 'text-green-700 font-medium' : ''}`}>
-                  {reponse.reponse_texte}
-                </span>
-                {reponse.etat && (
-                  <Check className="w-5 h-5 text-green-600" />
-                )}
-              </div>
-            ))
+            // New response format - reponses is an array of objects with reponse_texte property
+            (question.reponses as QuestionReponse[]).map((reponse, rIndex) => {
+              if (!reponse) return null;
+              
+              return (
+                <div
+                  key={rIndex}
+                  className={`p-4 rounded-lg ${
+                    reponse.etat
+                      ? 'bg-green-50 border-green-200'
+                      : 'bg-gray-50 border-gray-100'
+                  } border transition-colors flex items-center justify-between`}
+                >
+                  <span className={`${reponse.etat ? 'text-green-700 font-medium' : ''}`}>
+                    {reponse.reponse_texte || "Réponse sans texte"}
+                  </span>
+                  {reponse.etat && (
+                    <Check className="w-5 h-5 text-green-600" />
+                  )}
+                </div>
+              );
+            })
           ) : (
-            // Old response format (array of strings)
+            // Old response format - reponses is an array of strings
             Array.isArray(question.reponses) && (question.reponses as string[]).map((reponse, rIndex) => (
               <div
                 key={rIndex}

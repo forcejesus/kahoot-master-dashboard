@@ -1,6 +1,6 @@
 
 import { Question, QuestionResponse, QuestionReponse } from "@/types/game-details";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Send, Check, X } from "lucide-react";
@@ -20,14 +20,20 @@ export function ResponseInput({ question, token, onResponseSubmitted }: Response
     submitted: false
   });
   
+  // Check if reponses is an array of objects (new format) or array of strings (old format)
+  const isNewResponseFormat = question.reponses && 
+    question.reponses.length > 0 && 
+    typeof question.reponses[0] !== 'string';
+  
+  // Get the correct answer based on response format
   const getCorrectAnswer = (): string => {
-    // Check if we have new format responses (array of objects)
-    if (question.reponses && typeof question.reponses[0] !== 'string') {
+    // New format (array of objects with reponse_texte)
+    if (isNewResponseFormat) {
       const correctResponse = (question.reponses as QuestionReponse[]).find(r => r.etat);
       return correctResponse?.reponse_texte || "";
     }
     
-    // Old format (reponse_correcte string)
+    // Old format (string array + reponse_correcte string)
     return question.reponse_correcte || "";
   };
   
@@ -48,14 +54,20 @@ export function ResponseInput({ question, token, onResponseSubmitted }: Response
       // Determine if the response is correct based on format
       let isCorrect = false;
       
-      if (question.reponses && typeof question.reponses[0] !== 'string') {
-        // New format (array of objects)
+      if (isNewResponseFormat) {
+        // New format (array of objects with reponse_texte)
         const correctAnswer = (question.reponses as QuestionReponse[]).find(r => r.etat);
         isCorrect = correctAnswer?.reponse_texte.toLowerCase() === responseText.toLowerCase();
       } else {
         // Old format (string array + reponse_correcte)
         isCorrect = question.reponse_correcte?.toLowerCase() === responseText.toLowerCase();
       }
+      
+      console.log("Submitting response:", {
+        questionId: question._id,
+        responseText,
+        isCorrect
+      });
       
       const responseData: QuestionResponse = {
         file: "Image vers le fichier image", // As specified
@@ -101,6 +113,12 @@ export function ResponseInput({ question, token, onResponseSubmitted }: Response
   
   const correctAnswer = getCorrectAnswer();
 
+  // Debug info
+  useEffect(() => {
+    console.log("Question data:", question);
+    console.log("Correct answer:", correctAnswer);
+  }, [question, correctAnswer]);
+
   return (
     <div className="mt-4 space-y-2">
       {responseStatus.submitted ? (
@@ -128,6 +146,11 @@ export function ResponseInput({ question, token, onResponseSubmitted }: Response
             onChange={(e) => setResponseText(e.target.value)}
             placeholder="Entrez votre réponse"
             className="flex-1"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleSubmitResponse();
+              }
+            }}
           />
           <Button 
             onClick={handleSubmitResponse}
