@@ -161,6 +161,7 @@ export function KahootTable({ kahoots, isLoading, onRefresh }: KahootTableProps)
                     <Checkbox 
                       checked={selectedKahoots.includes(kahoot._id)}
                       onCheckedChange={() => handleSelectKahoot(kahoot._id)}
+                      onClick={(e) => e.stopPropagation()}
                     />
                   </td>
                   <td className="py-4 px-6">
