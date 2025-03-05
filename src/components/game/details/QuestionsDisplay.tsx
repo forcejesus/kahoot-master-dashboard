@@ -12,7 +12,7 @@ export function QuestionsDisplay({ questions }: QuestionsDisplayProps) {
   const { token } = useAuth();
 
   return (
-    <Card className="backdrop-blur-sm bg-white/80 border-t border-white/50 shadow-lg">
+    <Card className="backdrop-blur-sm bg-white/80 border-t border-white/50 shadow-lg mt-6">
       <CardHeader>
         <CardTitle className="text-2xl font-bold text-primary">Questions</CardTitle>
       </CardHeader>

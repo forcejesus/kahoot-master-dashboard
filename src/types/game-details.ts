@@ -46,6 +46,10 @@ export interface Question {
   reponses: string[];
   reponse_correcte: string;
   image?: string;
+  temps?: number;
+  limite_response?: boolean;
+  typeQuestion?: string;
+  point?: string;
 }
 
 export interface QuestionResponse {
