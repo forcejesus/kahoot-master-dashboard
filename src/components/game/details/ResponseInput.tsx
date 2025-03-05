@@ -23,7 +23,7 @@ export function ResponseInput({ question, token, onResponseSubmitted }: Response
   const getCorrectAnswer = (): string => {
     // Check if we have new format responses (array of objects)
     if (question.reponses && typeof question.reponses[0] !== 'string') {
-      const correctResponse = question.reponses?.find((r: QuestionReponse) => r.etat);
+      const correctResponse = (question.reponses as QuestionReponse[]).find(r => r.etat);
       return correctResponse?.reponse_texte || "";
     }
     
@@ -50,7 +50,7 @@ export function ResponseInput({ question, token, onResponseSubmitted }: Response
       
       if (question.reponses && typeof question.reponses[0] !== 'string') {
         // New format (array of objects)
-        const correctAnswer = question.reponses?.find((r: QuestionReponse) => r.etat);
+        const correctAnswer = (question.reponses as QuestionReponse[]).find(r => r.etat);
         isCorrect = correctAnswer?.reponse_texte.toLowerCase() === responseText.toLowerCase();
       } else {
         // Old format (string array + reponse_correcte)
