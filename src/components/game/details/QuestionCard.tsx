@@ -2,7 +2,7 @@
 import { Question, QuestionReponse } from "@/types/game-details";
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ImageIcon, TimerIcon, Check, Clock, Info } from "lucide-react";
+import { ImageIcon, TimerIcon, Check, Clock, Info, User, Calendar, Hash, ToggleLeft, ToggleRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 interface QuestionCardProps {
@@ -94,30 +94,52 @@ export function QuestionCard({ question, index, token }: QuestionCardProps) {
                     <span className={`${reponse.etat ? 'text-green-700 font-medium' : 'font-medium'}`}>
                       {reponse.reponse_texte || "Réponse sans texte"}
                     </span>
-                    {reponse.etat && (
+                    {reponse.etat ? (
                       <Badge variant="success" className="flex items-center gap-1">
                         <Check className="w-3 h-3" />
                         <span>Correcte</span>
                       </Badge>
+                    ) : (
+                      <Badge variant="outline" className="flex items-center gap-1">
+                        <ToggleLeft className="w-3 h-3" />
+                        <span>Incorrecte</span>
+                      </Badge>
                     )}
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2 text-sm text-gray-600">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-3 text-sm text-gray-600">
+                    <div className="flex items-center gap-1">
+                      <Hash className="w-3 h-3" /> 
+                      <span className="font-medium">ID:</span> {reponse._id}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <ToggleRight className="w-3 h-3" /> 
+                      <span className="font-medium">État:</span> {reponse.etat ? "Correcte" : "Incorrecte"}
+                    </div>
                     <div className="flex items-center gap-1">
                       <Info className="w-3 h-3" /> 
-                      <span>ID: {reponse._id}</span>
+                      <span className="font-medium">Question ID:</span> {reponse.question}
                     </div>
-                    <div>État: {reponse.etat ? "Correcte" : "Incorrecte"}</div>
-                    <div>Question ID: {reponse.question}</div>
-                    <div>Date: {new Date(reponse.date).toLocaleDateString('fr-FR', {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}</div>
+                    <div className="flex items-center gap-1">
+                      <Calendar className="w-3 h-3" /> 
+                      <span className="font-medium">Créée le:</span> {new Date(reponse.date).toLocaleDateString('fr-FR', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                      })}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Clock className="w-3 h-3" /> 
+                      <span className="font-medium">Heure:</span> {new Date(reponse.date).toLocaleTimeString('fr-FR', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </div>
                     {reponse.__v !== undefined && (
-                      <div>Version: {reponse.__v}</div>
+                      <div className="flex items-center gap-1">
+                        <Info className="w-3 h-3" /> 
+                        <span className="font-medium">Version:</span> {reponse.__v}
+                      </div>
                     )}
                   </div>
                 </div>
