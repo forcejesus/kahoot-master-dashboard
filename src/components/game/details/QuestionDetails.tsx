@@ -1,5 +1,7 @@
 
 import { Question } from "@/types/game-details";
+import { TypeQuestionDetails } from "./TypeQuestionDetails";
+import { PointsDetails } from "./PointsDetails";
 
 interface QuestionDetailsProps {
   question: Question;
@@ -17,26 +19,8 @@ export function QuestionDetails({ question }: QuestionDetailsProps) {
         <div><span className="font-medium">Temps:</span> {question.temps || "30"} secondes</div>
         <div><span className="font-medium">Limite de réponse:</span> {question.limite_response ? "Oui" : "Non"}</div>
         
-        {question.typeQuestion && (
-          <div className="col-span-2">
-            <span className="font-medium">Type de question:</span> {question.typeQuestion.libelle}
-            {question.typeQuestion.description && (
-              <div className="text-xs text-gray-500 mt-1">{question.typeQuestion.description}</div>
-            )}
-          </div>
-        )}
-        
-        {question.point && (
-          <div className="col-span-2">
-            <span className="font-medium">Points:</span> {question.point.valeur || 0}
-            {question.point.nature && (
-              <span className="ml-2 text-xs">({question.point.nature})</span>
-            )}
-            {question.point.description && (
-              <div className="text-xs text-gray-500 mt-1">{question.point.description}</div>
-            )}
-          </div>
-        )}
+        <TypeQuestionDetails typeQuestion={question.typeQuestion} />
+        <PointsDetails point={question.point} />
         
         {question.date && (
           <div className="col-span-2">
