@@ -5,7 +5,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { QuestionHeader } from "./QuestionHeader";
 import { QuestionImage } from "./QuestionImage";
 import { QuestionResponses } from "./QuestionResponses";
-import { QuestionDetails } from "./QuestionDetails";
 
 interface QuestionCardProps {
   question: Question;
@@ -45,9 +44,6 @@ export function QuestionCard({ question, index, token }: QuestionCardProps) {
           question={question} 
           isNewResponseFormat={isNewResponseFormat} 
         />
-        
-        {/* Question details */}
-        <QuestionDetails question={question} />
       </CardContent>
     </Card>
   );
