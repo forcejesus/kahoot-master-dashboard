@@ -58,17 +58,19 @@ export function QuestionCard({ question, index, token }: QuestionCardProps) {
           </div>
         )}
         
-        <div className="grid grid-cols-2 gap-4 mt-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
           {question.reponses.map((reponse, rIndex) => (
             <div
               key={rIndex}
               className={`p-4 rounded-lg ${
                 reponse === question.reponse_correcte
-                  ? 'bg-green-100 border-green-200'
+                  ? 'bg-green-50 border-green-200'
                   : 'bg-gray-50 border-gray-100'
               } border transition-colors flex items-center justify-between`}
             >
-              <span>{reponse}</span>
+              <span className={`${reponse === question.reponse_correcte ? 'text-green-700 font-medium' : ''}`}>
+                {reponse}
+              </span>
               {reponse === question.reponse_correcte && (
                 <Check className="w-5 h-5 text-green-600" />
               )}
