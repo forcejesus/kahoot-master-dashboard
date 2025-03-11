@@ -3,7 +3,7 @@ import { Planification } from "@/types/game-details";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
-import { Search, Loader2, ExternalLink, Filter } from "lucide-react";
+import { Search, Loader2, ExternalLink, Filter, Copy } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
@@ -29,7 +29,8 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
     const fetchPlanifications = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`http://kahoot.nos-apps.com/api/planification/jeu/${jeuId}`, {
+        console.log("Fetching planifications for jeuId:", jeuId);
+        const response = await fetch(`https://kahoot.nos-apps.com/api/planification/jeu/${jeuId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -40,6 +41,7 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
         }
         
         const data = await response.json();
+        console.log("Planifications fetched:", data);
         setPlanifications(data);
       } catch (error) {
         console.error('Error fetching planifications:', error);
@@ -49,8 +51,10 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
       }
     };
     
-    if (jeuId) {
+    if (jeuId && token) {
       fetchPlanifications();
+    } else {
+      console.log("Missing jeuId or token for fetching planifications:", { jeuId, hasToken: !!token });
     }
   }, [jeuId, token]);
   
@@ -96,7 +100,8 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
   const typeLabels: Record<string, string> = {
     "all": "Tous les types",
     "public": "Public",
-    "attribué": "Attribué"
+    "attribué": "Attribué",
+    "attribuer": "Attribué"
   };
 
   return (
@@ -180,12 +185,12 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
                       className="h-8 w-8 p-0"
                     >
                       <span className="sr-only">Copier le PIN</span>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                      <Copy className="h-4 w-4" />
                     </Button>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 text-sm">
-                    <div><span className="font-medium">Début:</span> {planif.date_debut} {planif.heure_debut || ""}</div>
-                    <div><span className="font-medium">Fin:</span> {planif.date_fin} {planif.heure_fin || ""}</div>
+                    <div><span className="font-medium">Début:</span> {new Date(planif.date_debut || planif.date_fin).toLocaleDateString()} {planif.heure_debut || ""}</div>
+                    <div><span className="font-medium">Fin:</span> {new Date(planif.date_fin).toLocaleDateString()} {planif.heure_fin || ""}</div>
                     <div><span className="font-medium">Type:</span> {planif.type || "Standard"}</div>
                     <div><span className="font-medium">Statut:</span> {planif.statut || "Non défini"}</div>
                     <div><span className="font-medium">Limite:</span> {planif.limite_participation || "∞"} participations</div>
@@ -194,17 +199,11 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
                 </div>
                 
                 {/* Meilleur score */}
-                {planif.participants && planif.participants.length > 0 && (
+                {planif.meilleur_score && (
                   <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-center min-w-[200px]">
-                    <div className="text-xs text-yellow-600 uppercase font-semibold">Meilleur participant</div>
-                    <div className="font-bold text-lg">
-                      {typeof planif.participants[0]?.apprenant === 'string' 
-                        ? planif.participants[0]?.apprenant 
-                        : planif.participants[0]?.apprenant 
-                          ? (planif.participants[0]?.apprenant as any).prenom + ' ' + (planif.participants[0]?.apprenant as any).nom
-                          : 'N/A'}
-                    </div>
-                    <div className="text-yellow-600 font-medium">{planif.participants[0]?.score || 0} points</div>
+                    <div className="text-xs text-yellow-600 uppercase font-semibold">Meilleur score</div>
+                    <div className="font-bold text-lg">{planif.meilleur_score.apprenant}</div>
+                    <div className="text-yellow-600 font-medium">{planif.meilleur_score.score} points</div>
                   </div>
                 )}
               </div>
@@ -213,9 +212,9 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
               <div className="mt-3 flex justify-between items-center">
                 <div className="text-xs text-gray-500">
                   {new Date(planif.date_fin) > new Date() ? (
-                    <span className="text-green-600 font-medium">Session active jusqu'au {planif.date_fin} {planif.heure_fin}</span>
+                    <span className="text-green-600 font-medium">Session active jusqu'au {new Date(planif.date_fin).toLocaleDateString()} {planif.heure_fin}</span>
                   ) : (
-                    <span>Session terminée le {planif.date_fin} {planif.heure_fin}</span>
+                    <span>Session terminée le {new Date(planif.date_fin).toLocaleDateString()} {planif.heure_fin}</span>
                   )}
                 </div>
                 <Button 
