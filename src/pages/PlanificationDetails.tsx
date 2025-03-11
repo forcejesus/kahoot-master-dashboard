@@ -46,13 +46,18 @@ export default function PlanificationDetails() {
         if (data.participants && data.participants.length > 0) {
           const sortedParticipants = [...data.participants].sort((a, b) => b.score - a.score);
           
+          const bestScore = {
+            participant: sortedParticipants[0]
+          };
+          
+          // Worst score only if there's more than one participant
+          const worstScore = sortedParticipants.length > 1 
+            ? { participant: sortedParticipants[sortedParticipants.length - 1] }
+            : null;
+          
           setStats({
-            bestScore: {
-              participant: sortedParticipants[0]
-            },
-            worstScore: {
-              participant: sortedParticipants[sortedParticipants.length - 1]
-            },
+            bestScore,
+            worstScore,
             totalParticipants: data.participants.length
           });
         }
@@ -74,9 +79,13 @@ export default function PlanificationDetails() {
     toast.success("PIN copié !");
   };
 
+  const handleGoBack = () => {
+    navigate(-1); // Go back to previous page
+  };
+
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100">
         <Navbar />
         <div className="flex flex-col items-center justify-center h-[calc(100vh-5rem)]">
           <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
@@ -88,7 +97,7 @@ export default function PlanificationDetails() {
 
   if (!planification) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100">
         <Navbar />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center py-12">
@@ -104,7 +113,7 @@ export default function PlanificationDetails() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100">
       <Navbar />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -126,14 +135,24 @@ export default function PlanificationDetails() {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <Button
-          variant="navigation"
-          className="mb-6"
-          onClick={() => navigate(`/game/${planification.jeu._id}`)}
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Retour aux détails du jeu
-        </Button>
+        <div className="flex items-center gap-4 mb-6">
+          <Button
+            variant="outline"
+            onClick={handleGoBack}
+            className="bg-white shadow-sm hover:bg-gray-50"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Retour
+          </Button>
+          
+          <Button
+            variant="outline"
+            className="bg-white shadow-sm hover:bg-gray-50"
+            onClick={() => navigate(`/game/${planification.jeu._id}`)}
+          >
+            Retour aux détails du jeu
+          </Button>
+        </div>
 
         <div className="space-y-8 animate-fade-in">
           {/* En-tête de la planification */}
@@ -149,7 +168,16 @@ export default function PlanificationDetails() {
           </div>
 
           {/* Liste des participants */}
-          <ParticipantsList participants={planification.participants} />
+          <div className="bg-white/90 backdrop-blur-sm rounded-lg shadow-md p-6 border border-gray-200">
+            <h2 className="text-xl font-bold text-primary mb-4">Participants</h2>
+            {planification.participants && planification.participants.length > 0 ? (
+              <ParticipantsList participants={planification.participants} />
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                <p>Aucun participant pour cette planification.</p>
+              </div>
+            )}
+          </div>
         </div>
       </main>
     </div>

@@ -118,7 +118,13 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
                 {planif.participants && planif.participants.length > 0 && (
                   <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-center min-w-[200px]">
                     <div className="text-xs text-yellow-600 uppercase font-semibold">Meilleur participant</div>
-                    <div className="font-bold text-lg">{typeof planif.participants[0]?.apprenant === 'string' ? planif.participants[0]?.apprenant : planif.participants[0]?.apprenant?.nom || 'N/A'}</div>
+                    <div className="font-bold text-lg">
+                      {typeof planif.participants[0]?.apprenant === 'string' 
+                        ? planif.participants[0]?.apprenant 
+                        : planif.participants[0]?.apprenant 
+                          ? planif.participants[0]?.apprenant.nom 
+                          : 'N/A'}
+                    </div>
                     <div className="text-yellow-600 font-medium">{planif.participants[0]?.score || 0} points</div>
                   </div>
                 )}
