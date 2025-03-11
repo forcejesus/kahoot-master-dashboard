@@ -1,6 +1,9 @@
 
 import { Planification } from "@/types/game-details";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
 
 interface PlanificationsTabContentProps {
   planifications: Planification[];
@@ -8,13 +11,39 @@ interface PlanificationsTabContentProps {
 }
 
 export function PlanificationsTabContent({ planifications, onCopyPin }: PlanificationsTabContentProps) {
+  const [searchQuery, setSearchQuery] = useState("");
+  
+  // Filter planifications based on search query
+  const filteredPlanifications = planifications.filter((planif) => {
+    // Search by PIN or if available, by any identifier like meilleur_score.apprenant
+    const searchableText = [
+      planif.pin,
+      planif.meilleur_score?.apprenant,
+      // Add any other searchable fields here
+    ].filter(Boolean).join(" ").toLowerCase();
+    
+    return searchableText.includes(searchQuery.toLowerCase());
+  });
+
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-lg shadow-sm p-6 border border-gray-100">
       <h2 className="text-xl font-bold text-primary mb-4">Toutes les planifications</h2>
       
-      {planifications && planifications.length > 0 ? (
+      {/* Search input */}
+      <div className="relative mb-6">
+        <Input
+          type="text"
+          placeholder="Rechercher par PIN ou nom d'apprenant..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-10"
+        />
+        <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+      </div>
+      
+      {filteredPlanifications && filteredPlanifications.length > 0 ? (
         <div className="space-y-4">
-          {planifications.map((planif) => (
+          {filteredPlanifications.map((planif) => (
             <div key={planif._id} className="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="space-y-2">
@@ -64,7 +93,11 @@ export function PlanificationsTabContent({ planifications, onCopyPin }: Planific
         </div>
       ) : (
         <div className="text-center py-8 text-gray-500">
-          <p>Aucune planification n'a encore été créée pour ce jeu.</p>
+          {searchQuery ? (
+            <p>Aucune planification ne correspond à votre recherche.</p>
+          ) : (
+            <p>Aucune planification n'a encore été créée pour ce jeu.</p>
+          )}
         </div>
       )}
     </div>
