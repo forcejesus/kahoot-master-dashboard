@@ -3,6 +3,9 @@ import { Planification } from "@/types/game-details";
 import { Button } from "@/components/ui/button";
 import { Copy, ExternalLink } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
 
 interface SessionsTabContentProps {
   planificationsEnCours: Planification[];
@@ -11,6 +14,18 @@ interface SessionsTabContentProps {
 
 export function SessionsTabContent({ planificationsEnCours, onCopyPin }: SessionsTabContentProps) {
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
+  
+  const filteredPlanifications = planificationsEnCours.filter((planif) => {
+    const searchableText = [
+      planif.pin,
+      planif.meilleur_score?.apprenant,
+      planif.type,
+      planif.statut
+    ].filter(Boolean).join(" ").toLowerCase();
+    
+    return searchableText.includes(searchQuery.toLowerCase());
+  });
 
   const handleViewPlanification = (planificationId: string) => {
     navigate(`/planification/${planificationId}`);
@@ -20,9 +35,21 @@ export function SessionsTabContent({ planificationsEnCours, onCopyPin }: Session
     <div className="bg-white/80 backdrop-blur-sm rounded-lg shadow-sm p-6 border border-gray-100">
       <h2 className="text-xl font-bold text-primary mb-4">Sessions en cours</h2>
       
-      {planificationsEnCours.length > 0 ? (
+      {/* Search bar */}
+      <div className="relative mb-6">
+        <Input
+          type="text"
+          placeholder="Rechercher par PIN..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-10"
+        />
+        <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+      </div>
+      
+      {filteredPlanifications.length > 0 ? (
         <div className="space-y-4">
-          {planificationsEnCours.map((planif) => (
+          {filteredPlanifications.map((planif) => (
             <div key={planif._id} className="bg-green-50 rounded-lg shadow-sm p-4 border border-green-100">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="space-y-2">
@@ -78,7 +105,11 @@ export function SessionsTabContent({ planificationsEnCours, onCopyPin }: Session
         </div>
       ) : (
         <div className="text-center py-8 text-gray-500">
-          <p>Aucune session n'est actuellement en cours.</p>
+          {searchQuery ? (
+            <p>Aucune session en cours ne correspond à votre recherche.</p>
+          ) : (
+            <p>Aucune session n'est actuellement en cours.</p>
+          )}
         </div>
       )}
     </div>

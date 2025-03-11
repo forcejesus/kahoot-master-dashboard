@@ -3,10 +3,12 @@ import { Planification } from "@/types/game-details";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
-import { Search, Loader2, ExternalLink } from "lucide-react";
+import { Search, Loader2, ExternalLink, Filter } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 
 interface PlanificationsTabContentProps {
   jeuId: string;
@@ -15,6 +17,8 @@ interface PlanificationsTabContentProps {
 
 export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTabContentProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [typeFilter, setTypeFilter] = useState<string>("all");
   const [planifications, setPlanifications] = useState<Planification[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { token } = useAuth();
@@ -51,6 +55,7 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
   }, [jeuId, token]);
   
   const filteredPlanifications = planifications.filter((planif) => {
+    // Text search filter
     const searchableText = [
       planif.pin,
       planif.meilleur_score?.apprenant,
@@ -58,26 +63,100 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
       planif.statut
     ].filter(Boolean).join(" ").toLowerCase();
     
-    return searchableText.includes(searchQuery.toLowerCase());
+    const matchesSearch = searchableText.includes(searchQuery.toLowerCase());
+    
+    // Status filter
+    const matchesStatus = statusFilter === "all" || 
+      (planif.statut?.toLowerCase() === statusFilter.toLowerCase());
+    
+    // Type filter
+    const matchesType = typeFilter === "all" || 
+      (planif.type?.toLowerCase() === typeFilter.toLowerCase());
+    
+    return matchesSearch && matchesStatus && matchesType;
   });
 
   const handleViewPlanification = (planificationId: string) => {
     navigate(`/planification/${planificationId}`);
   };
 
+  // Get unique statuses and types for dropdowns
+  const statuses = ["all", ...new Set(planifications.map(p => p.statut?.toLowerCase()).filter(Boolean))] as string[];
+  const types = ["all", ...new Set(planifications.map(p => p.type?.toLowerCase()).filter(Boolean))] as string[];
+
+  // Status display mapping
+  const statusLabels: Record<string, string> = {
+    "all": "Tous les statuts",
+    "en attente": "En attente",
+    "en cours": "En cours",
+    "terminé": "Terminé"
+  };
+
+  // Type display mapping
+  const typeLabels: Record<string, string> = {
+    "all": "Tous les types",
+    "public": "Public",
+    "attribué": "Attribué"
+  };
+
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-lg shadow-sm p-6 border border-gray-100">
       <h2 className="text-xl font-bold text-primary mb-4">Toutes les planifications</h2>
       
-      <div className="relative mb-6">
-        <Input
-          type="text"
-          placeholder="Rechercher par PIN, statut ou type..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10"
-        />
-        <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+      {/* Search and filter section */}
+      <div className="space-y-4 mb-6">
+        {/* Search bar */}
+        <div className="relative">
+          <Input
+            type="text"
+            placeholder="Rechercher par PIN, statut ou type..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
+          <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+        </div>
+        
+        {/* Filters */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Status filter */}
+          <div className="space-y-2">
+            <Label htmlFor="status-filter" className="text-sm font-medium flex items-center gap-1">
+              <Filter className="h-3.5 w-3.5" /> Statut
+            </Label>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger id="status-filter" className="w-full">
+                <SelectValue placeholder="Filtrer par statut" />
+              </SelectTrigger>
+              <SelectContent>
+                {statuses.map((status) => (
+                  <SelectItem key={status} value={status}>
+                    {statusLabels[status] || status}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          
+          {/* Type filter */}
+          <div className="space-y-2">
+            <Label htmlFor="type-filter" className="text-sm font-medium flex items-center gap-1">
+              <Filter className="h-3.5 w-3.5" /> Type
+            </Label>
+            <Select value={typeFilter} onValueChange={setTypeFilter}>
+              <SelectTrigger id="type-filter" className="w-full">
+                <SelectValue placeholder="Filtrer par type" />
+              </SelectTrigger>
+              <SelectContent>
+                {types.map((type) => (
+                  <SelectItem key={type} value={type}>
+                    {typeLabels[type] || type}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
       </div>
       
       {isLoading ? (
@@ -154,7 +233,7 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
         </div>
       ) : (
         <div className="text-center py-8 text-gray-500">
-          {searchQuery ? (
+          {searchQuery || statusFilter !== "all" || typeFilter !== "all" ? (
             <p>Aucune planification ne correspond à votre recherche.</p>
           ) : (
             <p>Aucune planification n'a encore été créée pour ce jeu.</p>
