@@ -15,24 +15,24 @@ interface GameDetailsTabsProps {
 export function GameDetailsTabs({ jeu, planificationsEnCours, onCopyPin }: GameDetailsTabsProps) {
   return (
     <Tabs defaultValue="planifications" className="w-full">
-      <TabsList className="mb-8 flex items-center justify-start w-full p-1 bg-transparent backdrop-blur-sm rounded-full shadow-lg border border-white/20">
+      <TabsList className="mb-8 flex items-center justify-start w-full p-1 bg-gray-800/30 backdrop-blur-md rounded-full shadow-lg border border-white/20">
         <TabsTrigger 
           value="planifications" 
-          className="flex-1 rounded-full py-3 px-6 font-medium text-sm text-gray-600 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-blue-400 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 ease-out hover:bg-white/10"
+          className="flex-1 rounded-full py-3 px-6 font-medium text-sm text-white/60 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-blue-400 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 ease-out hover:text-white"
         >
           <Calendar className="w-4 h-4 mr-2" />
           Planifications ({jeu.planifications?.length || 0})
         </TabsTrigger>
         <TabsTrigger 
           value="questions" 
-          className="flex-1 rounded-full py-3 px-6 font-medium text-sm text-gray-600 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-blue-400 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 ease-out hover:bg-white/10"
+          className="flex-1 rounded-full py-3 px-6 font-medium text-sm text-white/60 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-blue-400 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 ease-out hover:text-white"
         >
           <List className="w-4 h-4 mr-2" />
           Questions ({jeu.questions?.length || 0})
         </TabsTrigger>
         <TabsTrigger 
           value="sessions" 
-          className="flex-1 rounded-full py-3 px-6 font-medium text-sm text-gray-600 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-blue-400 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 ease-out hover:bg-white/10"
+          className="flex-1 rounded-full py-3 px-6 font-medium text-sm text-white/60 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-blue-400 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 ease-out hover:text-white"
         >
           <PlayCircle className="w-4 h-4 mr-2" />
           Sessions ({planificationsEnCours.length})
