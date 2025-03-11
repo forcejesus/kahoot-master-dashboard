@@ -109,7 +109,7 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
                     <div><span className="font-medium">Fin:</span> {planif.date_fin} {planif.heure_fin || ""}</div>
                     <div><span className="font-medium">Type:</span> {planif.type || "Standard"}</div>
                     <div><span className="font-medium">Statut:</span> {planif.statut || "Non défini"}</div>
-                    <div><span className="font-medium">Limite:</span> {planif.limite_participant || "∞"} participations</div>
+                    <div><span className="font-medium">Limite:</span> {planif.limite_participation || "∞"} participations</div>
                     <div><span className="font-medium">Participants:</span> {planif.participants?.length || 0}</div>
                   </div>
                 </div>
@@ -118,7 +118,7 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
                 {planif.participants && planif.participants.length > 0 && (
                   <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-center min-w-[200px]">
                     <div className="text-xs text-yellow-600 uppercase font-semibold">Meilleur participant</div>
-                    <div className="font-bold text-lg">{planif.participants[0]?.apprenant?.nom || 'N/A'}</div>
+                    <div className="font-bold text-lg">{typeof planif.participants[0]?.apprenant === 'string' ? planif.participants[0]?.apprenant : planif.participants[0]?.apprenant?.nom || 'N/A'}</div>
                     <div className="text-yellow-600 font-medium">{planif.participants[0]?.score || 0} points</div>
                   </div>
                 )}
