@@ -8,6 +8,14 @@ interface SessionCardProps {
 }
 
 export function SessionCard({ planification, onCopyPin }: SessionCardProps) {
+  // Fonction pour formater le nom du participant
+  const getParticipantName = (participant: any) => {
+    if (participant?.apprenant?.nom && participant?.apprenant?.prenom) {
+      return `${participant.apprenant.nom} ${participant.apprenant.prenom}`;
+    }
+    return 'N/A';
+  };
+
   return (
     <div className="bg-green-50 rounded-lg shadow-sm p-4 border border-green-100">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -40,7 +48,7 @@ export function SessionCard({ planification, onCopyPin }: SessionCardProps) {
         {planification.meilleur_score && (
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-center min-w-[200px]">
             <div className="text-xs text-yellow-600 uppercase font-semibold">Meilleur score</div>
-            <div className="font-bold text-lg">{planification.meilleur_score.apprenant}</div>
+            <div className="font-bold text-lg">{getParticipantName(planification.meilleur_score)}</div>
             <div className="text-yellow-600 font-medium">{planification.meilleur_score.score} points</div>
           </div>
         )}
