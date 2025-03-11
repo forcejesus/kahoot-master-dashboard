@@ -257,7 +257,8 @@ export default function GameDetails() {
                                 <div><span className="font-medium">Fin:</span> {new Date(planif.date_fin).toLocaleDateString()} {planif.heure_fin || ""}</div>
                                 <div><span className="font-medium">Type:</span> {planif.type || "Standard"}</div>
                                 <div><span className="font-medium">Limite:</span> {planif.limite_participation || "∞"} participations</div>
-                                <div colSpan={2}><span className="font-medium">Participants actifs:</span> {planif.participants_actifs || 0}/{planif.total_participants || 0}</div>
+                                {/* Fixed: Removed colSpan attribute from div element */}
+                                <div className="md:col-span-2"><span className="font-medium">Participants actifs:</span> {planif.participants_actifs || 0}/{planif.total_participants || 0}</div>
                               </div>
                             </div>
                             
