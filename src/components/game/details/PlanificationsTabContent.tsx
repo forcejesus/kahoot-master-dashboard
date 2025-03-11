@@ -1,4 +1,3 @@
-
 import { Planification } from "@/types/game-details";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -13,13 +12,10 @@ interface PlanificationsTabContentProps {
 export function PlanificationsTabContent({ planifications, onCopyPin }: PlanificationsTabContentProps) {
   const [searchQuery, setSearchQuery] = useState("");
   
-  // Filter planifications based on search query
   const filteredPlanifications = planifications.filter((planif) => {
-    // Search by PIN or if available, by any identifier like meilleur_score.apprenant
     const searchableText = [
       planif.pin,
       planif.meilleur_score?.apprenant,
-      // Add any other searchable fields here
     ].filter(Boolean).join(" ").toLowerCase();
     
     return searchableText.includes(searchQuery.toLowerCase());
@@ -29,7 +25,6 @@ export function PlanificationsTabContent({ planifications, onCopyPin }: Planific
     <div className="bg-white/80 backdrop-blur-sm rounded-lg shadow-sm p-6 border border-gray-100">
       <h2 className="text-xl font-bold text-primary mb-4">Toutes les planifications</h2>
       
-      {/* Search input */}
       <div className="relative mb-6">
         <Input
           type="text"
