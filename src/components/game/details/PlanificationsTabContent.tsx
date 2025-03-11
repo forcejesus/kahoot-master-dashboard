@@ -1,21 +1,59 @@
+
 import { Planification } from "@/types/game-details";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, Loader2 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 interface PlanificationsTabContentProps {
-  planifications: Planification[];
+  jeuId: string;
   onCopyPin: (pin: string) => void;
 }
 
-export function PlanificationsTabContent({ planifications, onCopyPin }: PlanificationsTabContentProps) {
+export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTabContentProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [planifications, setPlanifications] = useState<Planification[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const { token } = useAuth();
+  
+  // Fetch planifications from API
+  useEffect(() => {
+    const fetchPlanifications = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(`http://kahoot.nos-apps.com/api/planification/jeu/${jeuId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error('Erreur lors du chargement des planifications');
+        }
+        
+        const data = await response.json();
+        setPlanifications(data);
+      } catch (error) {
+        console.error('Error fetching planifications:', error);
+        toast.error("Impossible de charger les planifications");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    if (jeuId) {
+      fetchPlanifications();
+    }
+  }, [jeuId, token]);
   
   const filteredPlanifications = planifications.filter((planif) => {
     const searchableText = [
       planif.pin,
       planif.meilleur_score?.apprenant,
+      planif.type,
+      planif.statut
     ].filter(Boolean).join(" ").toLowerCase();
     
     return searchableText.includes(searchQuery.toLowerCase());
@@ -28,7 +66,7 @@ export function PlanificationsTabContent({ planifications, onCopyPin }: Planific
       <div className="relative mb-6">
         <Input
           type="text"
-          placeholder="Rechercher par PIN ou nom d'apprenant..."
+          placeholder="Rechercher par PIN, statut ou type..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="pl-10"
@@ -36,7 +74,12 @@ export function PlanificationsTabContent({ planifications, onCopyPin }: Planific
         <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
       </div>
       
-      {filteredPlanifications && filteredPlanifications.length > 0 ? (
+      {isLoading ? (
+        <div className="flex justify-center items-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <span className="ml-2 text-primary">Chargement des planifications...</span>
+        </div>
+      ) : filteredPlanifications && filteredPlanifications.length > 0 ? (
         <div className="space-y-4">
           {filteredPlanifications.map((planif) => (
             <div key={planif._id} className="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
@@ -56,21 +99,21 @@ export function PlanificationsTabContent({ planifications, onCopyPin }: Planific
                     </Button>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 text-sm">
-                    <div><span className="font-medium">Début:</span> {new Date(planif.date_debut || planif.date_fin).toLocaleDateString()} {planif.heure_debut || ""}</div>
-                    <div><span className="font-medium">Fin:</span> {new Date(planif.date_fin).toLocaleDateString()} {planif.heure_fin || ""}</div>
+                    <div><span className="font-medium">Début:</span> {planif.date_debut} {planif.heure_debut || ""}</div>
+                    <div><span className="font-medium">Fin:</span> {planif.date_fin} {planif.heure_fin || ""}</div>
                     <div><span className="font-medium">Type:</span> {planif.type || "Standard"}</div>
                     <div><span className="font-medium">Statut:</span> {planif.statut || "Non défini"}</div>
-                    <div><span className="font-medium">Limite:</span> {planif.limite_participation || "∞"} participations</div>
-                    <div><span className="font-medium">Participants:</span> {planif.participants_actifs || 0}/{planif.total_participants || 0}</div>
+                    <div><span className="font-medium">Limite:</span> {planif.limite_participant || "∞"} participations</div>
+                    <div><span className="font-medium">Participants:</span> {planif.participants?.length || 0}</div>
                   </div>
                 </div>
                 
                 {/* Meilleur score */}
-                {planif.meilleur_score && (
+                {planif.participants && planif.participants.length > 0 && (
                   <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-center min-w-[200px]">
-                    <div className="text-xs text-yellow-600 uppercase font-semibold">Meilleur score</div>
-                    <div className="font-bold text-lg">{planif.meilleur_score.apprenant}</div>
-                    <div className="text-yellow-600 font-medium">{planif.meilleur_score.score} points</div>
+                    <div className="text-xs text-yellow-600 uppercase font-semibold">Meilleur participant</div>
+                    <div className="font-bold text-lg">{planif.participants[0]?.apprenant?.nom || 'N/A'}</div>
+                    <div className="text-yellow-600 font-medium">{planif.participants[0]?.score || 0} points</div>
                   </div>
                 )}
               </div>
@@ -78,9 +121,9 @@ export function PlanificationsTabContent({ planifications, onCopyPin }: Planific
               {/* Date de la session */}
               <div className="mt-3 text-xs text-gray-500">
                 {new Date(planif.date_fin) > new Date() ? (
-                  <span className="text-green-600 font-medium">Session active jusqu'au {new Date(planif.date_fin).toLocaleString()}</span>
+                  <span className="text-green-600 font-medium">Session active jusqu'au {planif.date_fin} {planif.heure_fin}</span>
                 ) : (
-                  <span>Session terminée le {new Date(planif.date_fin).toLocaleString()}</span>
+                  <span>Session terminée le {planif.date_fin} {planif.heure_fin}</span>
                 )}
               </div>
             </div>

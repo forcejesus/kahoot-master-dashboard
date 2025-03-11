@@ -21,7 +21,7 @@ export function GameDetailsTabs({ jeu, planificationsEnCours, onCopyPin }: GameD
           className="flex-1 rounded-full py-3 px-6 font-medium text-sm text-white/60 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-blue-400 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 ease-out hover:text-white"
         >
           <Calendar className="w-4 h-4 mr-2" />
-          Planifications ({jeu.planifications?.length || 0})
+          Planifications
         </TabsTrigger>
         <TabsTrigger 
           value="questions" 
@@ -42,7 +42,7 @@ export function GameDetailsTabs({ jeu, planificationsEnCours, onCopyPin }: GameD
       {/* Planifications Tab Content */}
       <TabsContent value="planifications" className="mt-0 animate-fade-in">
         <PlanificationsTabContent 
-          planifications={jeu.planifications || []} 
+          jeuId={jeu._id}
           onCopyPin={onCopyPin} 
         />
       </TabsContent>
