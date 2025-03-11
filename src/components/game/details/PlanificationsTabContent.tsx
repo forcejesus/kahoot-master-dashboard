@@ -3,10 +3,17 @@ import { Planification } from "@/types/game-details";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
-import { Search, Loader2, ExternalLink } from "lucide-react";
+import { Search, Loader2, ExternalLink, Filter } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue 
+} from "@/components/ui/select";
 
 interface PlanificationsTabContentProps {
   jeuId: string;
@@ -15,6 +22,8 @@ interface PlanificationsTabContentProps {
 
 export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTabContentProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [typeFilter, setTypeFilter] = useState("");
   const [planifications, setPlanifications] = useState<Planification[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { token } = useAuth();
@@ -50,15 +59,27 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
     }
   }, [jeuId, token]);
   
+  // Get unique status values for the dropdown
+  const statusOptions = Array.from(new Set(planifications.map(p => p.statut || "Non défini"))).sort();
+  
+  // Get unique type values for the dropdown
+  const typeOptions = Array.from(new Set(planifications.map(p => p.type || "Standard"))).sort();
+  
   const filteredPlanifications = planifications.filter((planif) => {
-    const searchableText = [
+    const matchesSearch = [
       planif.pin,
       planif.meilleur_score?.apprenant,
       planif.type,
       planif.statut
-    ].filter(Boolean).join(" ").toLowerCase();
+    ].filter(Boolean).join(" ").toLowerCase().includes(searchQuery.toLowerCase());
     
-    return searchableText.includes(searchQuery.toLowerCase());
+    const matchesStatus = !statusFilter || planif.statut === statusFilter || 
+      (!planif.statut && statusFilter === "Non défini");
+    
+    const matchesType = !typeFilter || planif.type === typeFilter || 
+      (!planif.type && typeFilter === "Standard");
+    
+    return matchesSearch && matchesStatus && matchesType;
   });
 
   const handleViewPlanification = (planificationId: string) => {
@@ -69,15 +90,64 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
     <div className="bg-white/80 backdrop-blur-sm rounded-lg shadow-sm p-6 border border-gray-100">
       <h2 className="text-xl font-bold text-primary mb-4">Toutes les planifications</h2>
       
-      <div className="relative mb-6">
-        <Input
-          type="text"
-          placeholder="Rechercher par PIN, statut ou type..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10"
-        />
-        <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        {/* Search input */}
+        <div className="relative col-span-1 md:col-span-3 lg:col-span-1">
+          <Input
+            type="text"
+            placeholder="Rechercher par PIN, statut ou type..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
+          <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+        </div>
+        
+        {/* Status filter */}
+        <div className="col-span-1">
+          <Select 
+            value={statusFilter} 
+            onValueChange={setStatusFilter}
+          >
+            <SelectTrigger className="w-full">
+              <div className="flex items-center gap-2">
+                <Filter className="h-4 w-4 text-gray-400" />
+                <SelectValue placeholder="Statut : Tous" />
+              </div>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">Tous les statuts</SelectItem>
+              {statusOptions.map(status => (
+                <SelectItem key={status} value={status}>
+                  {status}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        
+        {/* Type filter */}
+        <div className="col-span-1">
+          <Select 
+            value={typeFilter} 
+            onValueChange={setTypeFilter}
+          >
+            <SelectTrigger className="w-full">
+              <div className="flex items-center gap-2">
+                <Filter className="h-4 w-4 text-gray-400" />
+                <SelectValue placeholder="Type : Tous" />
+              </div>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">Tous les types</SelectItem>
+              {typeOptions.map(type => (
+                <SelectItem key={type} value={type}>
+                  {type}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
       
       {isLoading ? (
@@ -154,8 +224,8 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
         </div>
       ) : (
         <div className="text-center py-8 text-gray-500">
-          {searchQuery ? (
-            <p>Aucune planification ne correspond à votre recherche.</p>
+          {searchQuery || statusFilter || typeFilter ? (
+            <p>Aucune planification ne correspond à vos critères de recherche.</p>
           ) : (
             <p>Aucune planification n'a encore été créée pour ce jeu.</p>
           )}
