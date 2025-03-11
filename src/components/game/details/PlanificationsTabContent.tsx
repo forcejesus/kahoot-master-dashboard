@@ -122,7 +122,7 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
                       {typeof planif.participants[0]?.apprenant === 'string' 
                         ? planif.participants[0]?.apprenant 
                         : planif.participants[0]?.apprenant 
-                          ? planif.participants[0]?.apprenant.nom 
+                          ? (planif.participants[0]?.apprenant as any).prenom + ' ' + (planif.participants[0]?.apprenant as any).nom
                           : 'N/A'}
                     </div>
                     <div className="text-yellow-600 font-medium">{planif.participants[0]?.score || 0} points</div>

@@ -50,8 +50,8 @@ export default function PlanificationDetails() {
             participant: sortedParticipants[0]
           };
           
-          // Worst score only if there's more than one participant
-          const worstScore = sortedParticipants.length > 1 
+          // Worst score only if there's more than one participant and the worst score is different from the best score
+          const worstScore = sortedParticipants.length > 1 && sortedParticipants[0].score > sortedParticipants[sortedParticipants.length - 1].score
             ? { participant: sortedParticipants[sortedParticipants.length - 1] }
             : null;
           
@@ -81,6 +81,14 @@ export default function PlanificationDetails() {
 
   const handleGoBack = () => {
     navigate(-1); // Go back to previous page
+  };
+
+  const handleBackToGame = () => {
+    if (planification && planification.jeu) {
+      navigate(`/game/${planification.jeu._id}`);
+    } else {
+      navigate('/dashboard');
+    }
   };
 
   if (isLoading) {
@@ -113,7 +121,7 @@ export default function PlanificationDetails() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-purple-100 to-blue-50">
       <Navbar />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -148,7 +156,7 @@ export default function PlanificationDetails() {
           <Button
             variant="outline"
             className="bg-white shadow-sm hover:bg-gray-50"
-            onClick={() => navigate(`/game/${planification.jeu._id}`)}
+            onClick={handleBackToGame}
           >
             Retour aux détails du jeu
           </Button>

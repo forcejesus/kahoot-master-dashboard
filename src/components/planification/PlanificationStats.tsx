@@ -11,7 +11,7 @@ export function PlanificationStats({ stats }: PlanificationStatsProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       {/* Meilleur Score */}
-      <Card className="border-2 border-yellow-200">
+      <Card className="border-2 border-yellow-200 bg-gradient-to-br from-yellow-50 to-yellow-100/30">
         <CardHeader className="pb-2">
           <CardTitle className="text-lg flex items-center text-yellow-700">
             <Trophy className="h-5 w-5 mr-2 text-yellow-500" />
@@ -36,7 +36,7 @@ export function PlanificationStats({ stats }: PlanificationStatsProps) {
       </Card>
 
       {/* Score le plus faible */}
-      <Card className="border-2 border-gray-200">
+      <Card className="border-2 border-gray-200 bg-gradient-to-br from-gray-50 to-gray-100/30">
         <CardHeader className="pb-2">
           <CardTitle className="text-lg flex items-center text-gray-700">
             <TrendingDown className="h-5 w-5 mr-2 text-gray-500" />
@@ -55,13 +55,17 @@ export function PlanificationStats({ stats }: PlanificationStatsProps) {
               </div>
             </div>
           ) : (
-            <div className="text-sm text-gray-500 italic">Aucun participant</div>
+            <div className="text-sm text-gray-500 italic">
+              {stats.totalParticipants > 0 
+                ? "Score unique ou identique au meilleur score" 
+                : "Aucun participant"}
+            </div>
           )}
         </CardContent>
       </Card>
 
       {/* Total des participants */}
-      <Card className="border-2 border-blue-200">
+      <Card className="border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100/30">
         <CardHeader className="pb-2">
           <CardTitle className="text-lg flex items-center text-blue-700">
             <Users className="h-5 w-5 mr-2 text-blue-500" />
