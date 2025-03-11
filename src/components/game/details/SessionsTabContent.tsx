@@ -1,7 +1,8 @@
 
 import { Planification } from "@/types/game-details";
 import { Button } from "@/components/ui/button";
-import { Copy } from "lucide-react";
+import { Copy, ExternalLink } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface SessionsTabContentProps {
   planificationsEnCours: Planification[];
@@ -9,6 +10,12 @@ interface SessionsTabContentProps {
 }
 
 export function SessionsTabContent({ planificationsEnCours, onCopyPin }: SessionsTabContentProps) {
+  const navigate = useNavigate();
+
+  const handleViewPlanification = (planificationId: string) => {
+    navigate(`/planification/${planificationId}`);
+  };
+
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-lg shadow-sm p-6 border border-gray-100">
       <h2 className="text-xl font-bold text-primary mb-4">Sessions en cours</h2>
@@ -51,9 +58,20 @@ export function SessionsTabContent({ planificationsEnCours, onCopyPin }: Session
                 )}
               </div>
               
-              {/* Temps restant */}
-              <div className="mt-3 text-xs text-green-600 font-medium">
-                Session active jusqu'au {new Date(planif.date_fin).toLocaleString()}
+              {/* Temps restant et bouton consulter */}
+              <div className="mt-3 flex justify-between items-center">
+                <div className="text-xs text-green-600 font-medium">
+                  Session active jusqu'au {new Date(planif.date_fin).toLocaleString()}
+                </div>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="text-xs" 
+                  onClick={() => handleViewPlanification(planif._id)}
+                >
+                  <ExternalLink className="mr-1 h-3 w-3" />
+                  Consulter la planification
+                </Button>
               </div>
             </div>
           ))}

@@ -3,9 +3,10 @@ import { Planification } from "@/types/game-details";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
-import { Search, Loader2 } from "lucide-react";
+import { Search, Loader2, ExternalLink } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 interface PlanificationsTabContentProps {
   jeuId: string;
@@ -17,6 +18,7 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
   const [planifications, setPlanifications] = useState<Planification[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { token } = useAuth();
+  const navigate = useNavigate();
   
   // Fetch planifications from API
   useEffect(() => {
@@ -58,6 +60,10 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
     
     return searchableText.includes(searchQuery.toLowerCase());
   });
+
+  const handleViewPlanification = (planificationId: string) => {
+    navigate(`/planification/${planificationId}`);
+  };
 
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-lg shadow-sm p-6 border border-gray-100">
@@ -118,13 +124,24 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
                 )}
               </div>
               
-              {/* Date de la session */}
-              <div className="mt-3 text-xs text-gray-500">
-                {new Date(planif.date_fin) > new Date() ? (
-                  <span className="text-green-600 font-medium">Session active jusqu'au {planif.date_fin} {planif.heure_fin}</span>
-                ) : (
-                  <span>Session terminée le {planif.date_fin} {planif.heure_fin}</span>
-                )}
+              {/* Date de la session et bouton consulter */}
+              <div className="mt-3 flex justify-between items-center">
+                <div className="text-xs text-gray-500">
+                  {new Date(planif.date_fin) > new Date() ? (
+                    <span className="text-green-600 font-medium">Session active jusqu'au {planif.date_fin} {planif.heure_fin}</span>
+                  ) : (
+                    <span>Session terminée le {planif.date_fin} {planif.heure_fin}</span>
+                  )}
+                </div>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="text-xs" 
+                  onClick={() => handleViewPlanification(planif._id)}
+                >
+                  <ExternalLink className="mr-1 h-3 w-3" />
+                  Consulter la planification
+                </Button>
               </div>
             </div>
           ))}
