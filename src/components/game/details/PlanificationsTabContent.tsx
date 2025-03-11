@@ -69,7 +69,7 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
     
     // Filter by type
     const matchesType = typeFilter 
-      ? planif.type === typeFilter 
+      ? planif.type.toLowerCase() === typeFilter.toLowerCase() 
       : true;
     
     return matchesSearch && matchesStatus && matchesType;
@@ -180,7 +180,7 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
                     <div><span className="font-medium">Fin:</span> {planif.date_fin} {planif.heure_fin}</div>
                     <div><span className="font-medium">Type:</span> {planif.type}</div>
                     <div><span className="font-medium">Statut:</span> {planif.statut}</div>
-                    <div><span className="font-medium">Limite:</span> {planif.limite_participation} participations</div>
+                    <div><span className="font-medium">Limite:</span> {planif.limite_participation || planif.limite_participant || 0} participations</div>
                     <div><span className="font-medium">Participants:</span> {planif.participants?.length || 0}</div>
                   </div>
                 </div>

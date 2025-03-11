@@ -1,3 +1,4 @@
+
 export interface Participant {
   _id: string;
   score: number;
@@ -33,6 +34,15 @@ export interface Planification {
   jeu: string;
   date: string;
   __v: number;
+  
+  // Added properties being used in components
+  meilleur_score?: {
+    apprenant: string;
+    score: number;
+  };
+  participants_actifs?: number;
+  total_participants?: number;
+  limite_participant?: number; // Alternative name used in API
 }
 
 export interface PlanificationFormData {

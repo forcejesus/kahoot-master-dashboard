@@ -36,8 +36,10 @@ export function SessionsTabContent({ planificationsEnCours, onCopyPin }: Session
                     <div><span className="font-medium">Début:</span> {new Date(planif.date_debut || planif.date_fin).toLocaleDateString()} {planif.heure_debut || ""}</div>
                     <div><span className="font-medium">Fin:</span> {new Date(planif.date_fin).toLocaleDateString()} {planif.heure_fin || ""}</div>
                     <div><span className="font-medium">Type:</span> {planif.type || "Standard"}</div>
-                    <div><span className="font-medium">Limite:</span> {planif.limite_participation || "∞"} participations</div>
-                    <div className="md:col-span-2"><span className="font-medium">Participants actifs:</span> {planif.participants_actifs || 0}/{planif.total_participants || 0}</div>
+                    <div><span className="font-medium">Limite:</span> {planif.limite_participation || planif.limite_participant || "∞"} participations</div>
+                    <div className="md:col-span-2">
+                      <span className="font-medium">Participants actifs:</span> {planif.participants_actifs || 0}/{planif.total_participants || planif.participants?.length || 0}
+                    </div>
                   </div>
                 </div>
                 
