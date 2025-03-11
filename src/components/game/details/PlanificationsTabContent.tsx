@@ -3,9 +3,16 @@ import { Planification } from "@/types/game-details";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
-import { Search, Loader2 } from "lucide-react";
+import { Search, Filter, Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
 
 interface PlanificationsTabContentProps {
   jeuId: string;
@@ -14,6 +21,8 @@ interface PlanificationsTabContentProps {
 
 export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTabContentProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [typeFilter, setTypeFilter] = useState("");
   const [planifications, setPlanifications] = useState<Planification[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { token } = useAuth();
@@ -48,28 +57,98 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
   }, [jeuId, token]);
   
   const filteredPlanifications = planifications.filter((planif) => {
-    const searchableText = [
-      planif.pin,
-      planif.type,
-      planif.statut
-    ].filter(Boolean).join(" ").toLowerCase();
+    // Filter by PIN search
+    const matchesSearch = searchQuery 
+      ? planif.pin.toLowerCase().includes(searchQuery.toLowerCase())
+      : true;
     
-    return searchableText.includes(searchQuery.toLowerCase());
+    // Filter by status
+    const matchesStatus = statusFilter 
+      ? planif.statut === statusFilter 
+      : true;
+    
+    // Filter by type
+    const matchesType = typeFilter 
+      ? planif.type === typeFilter 
+      : true;
+    
+    return matchesSearch && matchesStatus && matchesType;
   });
+
+  const handleClearFilters = () => {
+    setSearchQuery("");
+    setStatusFilter("");
+    setTypeFilter("");
+  };
 
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-lg shadow-sm p-6 border border-gray-100">
       <h2 className="text-xl font-bold text-primary mb-4">Toutes les planifications</h2>
       
-      <div className="relative mb-6">
-        <Input
-          type="text"
-          placeholder="Rechercher par PIN, statut ou type..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10"
-        />
-        <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+      <div className="space-y-4 mb-6">
+        {/* PIN Search */}
+        <div className="relative">
+          <Input
+            type="text"
+            placeholder="Rechercher par PIN..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
+          <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+        </div>
+        
+        {/* Filters */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Status Filter */}
+          <div>
+            <Select
+              value={statusFilter}
+              onValueChange={setStatusFilter}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Filtrer par statut" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="">Tous les statuts</SelectItem>
+                <SelectItem value="en cours">En cours</SelectItem>
+                <SelectItem value="en attente">En attente</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          {/* Type Filter */}
+          <div>
+            <Select
+              value={typeFilter}
+              onValueChange={setTypeFilter}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Filtrer par type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="">Tous les types</SelectItem>
+                <SelectItem value="attribuer">Attribuer</SelectItem>
+                <SelectItem value="public">Public</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        
+        {/* Clear filters button */}
+        {(searchQuery || statusFilter || typeFilter) && (
+          <div className="flex justify-end">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleClearFilters}
+              className="text-xs"
+            >
+              Effacer les filtres
+              <Filter className="ml-1 h-3 w-3" />
+            </Button>
+          </div>
+        )}
       </div>
       
       {isLoading ? (
@@ -129,8 +208,8 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
         </div>
       ) : (
         <div className="text-center py-8 text-gray-500">
-          {searchQuery ? (
-            <p>Aucune planification ne correspond à votre recherche.</p>
+          {searchQuery || statusFilter || typeFilter ? (
+            <p>Aucune planification ne correspond à vos critères de recherche.</p>
           ) : (
             <p>Aucune planification n'a encore été créée pour ce jeu.</p>
           )}
