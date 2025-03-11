@@ -1,14 +1,13 @@
 
 import { Planification } from "@/types/game-details";
-import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
-import { Input } from "@/components/ui/input";
-import { Search, Loader2, ExternalLink, Filter, Copy } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
+import { PlanificationsFilters } from "./planifications/PlanificationsFilters";
+import { PlanificationCard } from "./planifications/PlanificationCard";
+import { PlanificationsLoading } from "./planifications/PlanificationsLoading";
+import { PlanificationsEmpty } from "./planifications/PlanificationsEmpty";
 
 interface PlanificationsTabContentProps {
   jeuId: string;
@@ -23,8 +22,7 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
   const [isLoading, setIsLoading] = useState(true);
   const { token } = useAuth();
   const navigate = useNavigate();
-  
-  // Fetch planifications from API
+
   useEffect(() => {
     const fetchPlanifications = async () => {
       setIsLoading(true);
@@ -57,9 +55,8 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
       console.log("Missing jeuId or token for fetching planifications:", { jeuId, hasToken: !!token });
     }
   }, [jeuId, token]);
-  
+
   const filteredPlanifications = planifications.filter((planif) => {
-    // Text search filter
     const searchableText = [
       planif.pin,
       planif.meilleur_score?.apprenant,
@@ -68,14 +65,8 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
     ].filter(Boolean).join(" ").toLowerCase();
     
     const matchesSearch = searchableText.includes(searchQuery.toLowerCase());
-    
-    // Status filter
-    const matchesStatus = statusFilter === "all" || 
-      (planif.statut?.toLowerCase() === statusFilter.toLowerCase());
-    
-    // Type filter
-    const matchesType = typeFilter === "all" || 
-      (planif.type?.toLowerCase() === typeFilter.toLowerCase());
+    const matchesStatus = statusFilter === "all" || (planif.statut?.toLowerCase() === statusFilter.toLowerCase());
+    const matchesType = typeFilter === "all" || (planif.type?.toLowerCase() === typeFilter.toLowerCase());
     
     return matchesSearch && matchesStatus && matchesType;
   });
@@ -84,160 +75,41 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
     navigate(`/planification/${planificationId}`);
   };
 
-  // Get unique statuses and types for dropdowns
   const statuses = ["all", ...new Set(planifications.map(p => p.statut?.toLowerCase()).filter(Boolean))] as string[];
   const types = ["all", ...new Set(planifications.map(p => p.type?.toLowerCase()).filter(Boolean))] as string[];
-
-  // Status display mapping
-  const statusLabels: Record<string, string> = {
-    "all": "Tous les statuts",
-    "en attente": "En attente",
-    "en cours": "En cours",
-    "terminé": "Terminé"
-  };
-
-  // Type display mapping
-  const typeLabels: Record<string, string> = {
-    "all": "Tous les types",
-    "public": "Public",
-    "attribué": "Attribué",
-    "attribuer": "Attribué"
-  };
 
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-lg shadow-sm p-6 border border-gray-100">
       <h2 className="text-xl font-bold text-primary mb-4">Toutes les planifications</h2>
       
-      {/* Search and filter section */}
-      <div className="space-y-4 mb-6">
-        {/* Search bar */}
-        <div className="relative">
-          <Input
-            type="text"
-            placeholder="Rechercher par PIN, statut ou type..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
-          />
-          <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-        </div>
-        
-        {/* Filters */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Status filter */}
-          <div className="space-y-2">
-            <Label htmlFor="status-filter" className="text-sm font-medium flex items-center gap-1">
-              <Filter className="h-3.5 w-3.5" /> Statut
-            </Label>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger id="status-filter" className="w-full">
-                <SelectValue placeholder="Filtrer par statut" />
-              </SelectTrigger>
-              <SelectContent>
-                {statuses.map((status) => (
-                  <SelectItem key={status} value={status}>
-                    {statusLabels[status] || status}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          
-          {/* Type filter */}
-          <div className="space-y-2">
-            <Label htmlFor="type-filter" className="text-sm font-medium flex items-center gap-1">
-              <Filter className="h-3.5 w-3.5" /> Type
-            </Label>
-            <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger id="type-filter" className="w-full">
-                <SelectValue placeholder="Filtrer par type" />
-              </SelectTrigger>
-              <SelectContent>
-                {types.map((type) => (
-                  <SelectItem key={type} value={type}>
-                    {typeLabels[type] || type}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-      </div>
+      <PlanificationsFilters
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        statusFilter={statusFilter}
+        onStatusChange={setStatusFilter}
+        typeFilter={typeFilter}
+        onTypeFilter={setTypeFilter}
+        availableStatuses={statuses}
+        availableTypes={types}
+      />
       
       {isLoading ? (
-        <div className="flex justify-center items-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <span className="ml-2 text-primary">Chargement des planifications...</span>
-        </div>
-      ) : filteredPlanifications && filteredPlanifications.length > 0 ? (
+        <PlanificationsLoading />
+      ) : filteredPlanifications.length > 0 ? (
         <div className="space-y-4">
           {filteredPlanifications.map((planif) => (
-            <div key={planif._id} className="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold">PIN:</span>
-                    <code className="bg-gray-100 px-2 py-1 rounded">{planif.pin}</code>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => onCopyPin(planif.pin)}
-                      className="h-8 w-8 p-0"
-                    >
-                      <span className="sr-only">Copier le PIN</span>
-                      <Copy className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 text-sm">
-                    <div><span className="font-medium">Début:</span> {new Date(planif.date_debut || planif.date_fin).toLocaleDateString()} {planif.heure_debut || ""}</div>
-                    <div><span className="font-medium">Fin:</span> {new Date(planif.date_fin).toLocaleDateString()} {planif.heure_fin || ""}</div>
-                    <div><span className="font-medium">Type:</span> {planif.type || "Standard"}</div>
-                    <div><span className="font-medium">Statut:</span> {planif.statut || "Non défini"}</div>
-                    <div><span className="font-medium">Limite:</span> {planif.limite_participation || "∞"} participations</div>
-                    <div><span className="font-medium">Participants:</span> {planif.participants?.length || 0}</div>
-                  </div>
-                </div>
-                
-                {/* Meilleur score */}
-                {planif.meilleur_score && (
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-center min-w-[200px]">
-                    <div className="text-xs text-yellow-600 uppercase font-semibold">Meilleur score</div>
-                    <div className="font-bold text-lg">{planif.meilleur_score.apprenant}</div>
-                    <div className="text-yellow-600 font-medium">{planif.meilleur_score.score} points</div>
-                  </div>
-                )}
-              </div>
-              
-              {/* Date de la session et bouton consulter */}
-              <div className="mt-3 flex justify-between items-center">
-                <div className="text-xs text-gray-500">
-                  {new Date(planif.date_fin) > new Date() ? (
-                    <span className="text-green-600 font-medium">Session active jusqu'au {new Date(planif.date_fin).toLocaleDateString()} {planif.heure_fin}</span>
-                  ) : (
-                    <span>Session terminée le {new Date(planif.date_fin).toLocaleDateString()} {planif.heure_fin}</span>
-                  )}
-                </div>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="text-xs" 
-                  onClick={() => handleViewPlanification(planif._id)}
-                >
-                  <ExternalLink className="mr-1 h-3 w-3" />
-                  Consulter la planification
-                </Button>
-              </div>
-            </div>
+            <PlanificationCard
+              key={planif._id}
+              planification={planif}
+              onCopyPin={onCopyPin}
+              onViewPlanification={handleViewPlanification}
+            />
           ))}
         </div>
       ) : (
-        <div className="text-center py-8 text-gray-500">
-          {searchQuery || statusFilter !== "all" || typeFilter !== "all" ? (
-            <p>Aucune planification ne correspond à votre recherche.</p>
-          ) : (
-            <p>Aucune planification n'a encore été créée pour ce jeu.</p>
-          )}
-        </div>
+        <PlanificationsEmpty 
+          hasFilters={searchQuery !== "" || statusFilter !== "all" || typeFilter !== "all"} 
+        />
       )}
     </div>
   );
