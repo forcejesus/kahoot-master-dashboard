@@ -18,7 +18,6 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
   const [isLoading, setIsLoading] = useState(true);
   const { token } = useAuth();
   
-  // Fetch planifications from API
   useEffect(() => {
     const fetchPlanifications = async () => {
       setIsLoading(true);
@@ -51,7 +50,6 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
   const filteredPlanifications = planifications.filter((planif) => {
     const searchableText = [
       planif.pin,
-      planif.meilleur_score?.apprenant,
       planif.type,
       planif.statut
     ].filter(Boolean).join(" ").toLowerCase();
@@ -99,11 +97,11 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
                     </Button>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 text-sm">
-                    <div><span className="font-medium">Début:</span> {planif.date_debut} {planif.heure_debut || ""}</div>
-                    <div><span className="font-medium">Fin:</span> {planif.date_fin} {planif.heure_fin || ""}</div>
-                    <div><span className="font-medium">Type:</span> {planif.type || "Standard"}</div>
-                    <div><span className="font-medium">Statut:</span> {planif.statut || "Non défini"}</div>
-                    <div><span className="font-medium">Limite:</span> {planif.limite_participant || "∞"} participations</div>
+                    <div><span className="font-medium">Début:</span> {planif.date_debut} {planif.heure_debut}</div>
+                    <div><span className="font-medium">Fin:</span> {planif.date_fin} {planif.heure_fin}</div>
+                    <div><span className="font-medium">Type:</span> {planif.type}</div>
+                    <div><span className="font-medium">Statut:</span> {planif.statut}</div>
+                    <div><span className="font-medium">Limite:</span> {planif.limite_participation} participations</div>
                     <div><span className="font-medium">Participants:</span> {planif.participants?.length || 0}</div>
                   </div>
                 </div>

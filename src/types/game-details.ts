@@ -1,26 +1,38 @@
-
 export interface Participant {
-  apprenant: string;
+  _id: string;
   score: number;
+  reponses: string[];
+  apprenant: {
+    _id: string;
+    nom: string;
+    prenom: string;
+    avatar: string;
+    matricule: string;
+    phone: string;
+    email: string;
+    ecole: string;
+    date: string;
+    __v: number;
+  };
+  planification: string;
+  date: string;
+  __v: number;
 }
 
 export interface Planification {
   _id: string;
   pin: string;
+  statut: string;
+  date_debut: string;
   date_fin: string;
-  date_debut?: string;
-  heure_debut?: string;
-  heure_fin?: string;
-  statut?: string;
-  type?: string;
+  heure_debut: string;
+  heure_fin: string;
+  type: string;
   limite_participation: number;
   participants: Participant[];
-  total_participants: number;
-  participants_actifs: number;
-  meilleur_score?: {
-    apprenant: string;
-    score: number;
-  };
+  jeu: string;
+  date: string;
+  __v: number;
 }
 
 export interface PlanificationFormData {
