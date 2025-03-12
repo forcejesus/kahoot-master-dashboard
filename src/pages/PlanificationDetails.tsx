@@ -1,4 +1,3 @@
-
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -83,14 +82,6 @@ export default function PlanificationDetails() {
     navigate(-1); // Go back to previous page
   };
 
-  const handleBackToGame = () => {
-    if (planification && planification.jeu) {
-      navigate(`/game/${planification.jeu._id}`);
-    } else {
-      navigate('/dashboard');
-    }
-  };
-
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100">
@@ -151,14 +142,6 @@ export default function PlanificationDetails() {
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Retour
-          </Button>
-          
-          <Button
-            variant="outline"
-            className="bg-white shadow-sm hover:bg-gray-50"
-            onClick={handleBackToGame}
-          >
-            Retour aux détails du jeu
           </Button>
         </div>
 
