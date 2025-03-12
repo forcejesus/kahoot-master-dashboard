@@ -21,7 +21,7 @@ export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItem
     >
       <div className="flex items-center justify-between">
         <span className={`${reponse.etat ? 'text-green-700 font-medium' : ''} text-base`}>
-          {reponse.reponse_texte || "Réponse sans texte"}
+          {reponse.reponse_texte}
         </span>
         {reponse.etat ? (
           <Badge variant="success" className="flex items-center gap-1">
