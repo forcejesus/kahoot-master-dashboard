@@ -1,15 +1,17 @@
+
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { PlanificationDetail, StatisticsData } from "@/types/planification-details";
 import { PlanificationHeader } from "@/components/planification/PlanificationHeader";
 import { PlanificationStats } from "@/components/planification/PlanificationStats";
 import { ParticipantsList } from "@/components/planification/ParticipantsList";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 
 export default function PlanificationDetails() {
   const { id } = useParams<{ id: string }>();
@@ -17,6 +19,8 @@ export default function PlanificationDetails() {
   const { token } = useAuth();
   const [planification, setPlanification] = useState<PlanificationDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [stats, setStats] = useState<StatisticsData>({
     bestScore: null,
     worstScore: null,
@@ -82,6 +86,47 @@ export default function PlanificationDetails() {
     navigate(-1); // Go back to previous page
   };
 
+  const handleDeleteClick = () => {
+    setShowDeleteDialog(true);
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteDialog(false);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!id) return;
+    
+    setIsDeleting(true);
+    try {
+      const response = await fetch(`http://kahoot.nos-apps.com/api/planification/delete/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Erreur lors de la suppression de la planification');
+      }
+
+      toast.success("Planification supprimée avec succès");
+      
+      // Redirect to the game details page or dashboard
+      if (planification?.jeu?._id) {
+        navigate(`/game/${planification.jeu._id}`);
+      } else {
+        navigate('/dashboard');
+      }
+    } catch (error) {
+      console.error('Error deleting planification:', error);
+      toast.error("Impossible de supprimer la planification");
+    } finally {
+      setIsDeleting(false);
+      setShowDeleteDialog(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100">
@@ -134,7 +179,7 @@ export default function PlanificationDetails() {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <div className="flex items-center gap-4 mb-6">
+        <div className="flex items-center justify-between mb-6">
           <Button
             variant="outline"
             onClick={handleGoBack}
@@ -142,6 +187,15 @@ export default function PlanificationDetails() {
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Retour
+          </Button>
+          
+          <Button
+            variant="destructive"
+            onClick={handleDeleteClick}
+            className="shadow-sm"
+          >
+            <Trash2 className="mr-2 h-4 w-4" />
+            Supprimer la planification
           </Button>
         </div>
 
@@ -171,6 +225,41 @@ export default function PlanificationDetails() {
           </div>
         </div>
       </main>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirmer la suppression</DialogTitle>
+            <DialogDescription>
+              Êtes-vous sûr de vouloir supprimer cette planification ? 
+              Cette action est irréversible et supprimera toutes les données associées.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex flex-col sm:flex-row sm:justify-end gap-2 mt-4">
+            <Button variant="outline" onClick={handleCancelDelete}>
+              Annuler
+            </Button>
+            <Button 
+              variant="destructive" 
+              onClick={handleConfirmDelete}
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Suppression en cours...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Supprimer
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
