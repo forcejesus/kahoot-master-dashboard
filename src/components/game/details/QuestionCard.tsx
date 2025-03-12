@@ -19,11 +19,15 @@ export function QuestionCard({ question, index, token }: QuestionCardProps) {
       ? `http://kahoot.nos-apps.com/${question.image}`
       : null;
 
-  // Vérifier si reponses est un tableau d'objets (nouveau format) ou un tableau de chaînes (ancien format)
-  const isNewResponseFormat = question.reponses && 
+  // Vérifier si reponses est un tableau d'objets avec etat et reponse_texte (nouveau format)
+  // ou un tableau de chaînes (ancien format)
+  const isNewResponseFormat = 
+    question.reponses && 
+    Array.isArray(question.reponses) &&
     question.reponses.length > 0 && 
-    typeof question.reponses[0] !== 'string' &&
-    typeof question.reponses[0] === 'object';
+    typeof question.reponses[0] === 'object' &&
+    'etat' in question.reponses[0] &&
+    'reponse_texte' in question.reponses[0];
 
   return (
     <Card key={index} className="border border-gray-100 shadow-sm hover:shadow-md transition-all">

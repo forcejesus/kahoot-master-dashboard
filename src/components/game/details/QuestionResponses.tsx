@@ -18,7 +18,7 @@ export function QuestionResponses({ question, isNewResponseFormat }: QuestionRes
       </h3>
       
       {isNewResponseFormat ? (
-        // Nouveau format - reponses est un tableau d'objets avec propriété reponse_texte
+        // Nouveau format - reponses est un tableau d'objets avec propriété reponse_texte et etat
         <div className="space-y-3">
           {(question.reponses as QuestionReponse[]).map((reponse, rIndex) => (
             <NewFormatResponseItem 
