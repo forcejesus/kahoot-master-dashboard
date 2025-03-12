@@ -12,20 +12,30 @@ interface QuestionCardProps {
 }
 
 export function QuestionCard({ question, index, token }: QuestionCardProps) {
-  // Get the image URL
+  // Obtenir l'URL de l'image
   const imageUrl = question.fichier 
     ? `http://kahoot.nos-apps.com/${question.fichier}`
     : question.image 
       ? `http://kahoot.nos-apps.com/${question.image}`
       : null;
 
-  // Check if responses is an array of complete objects (with properties like etat, reponse_texte)
-  const isNewResponseFormat = 
-    question.reponses && 
-    Array.isArray(question.reponses) &&
-    question.reponses.length > 0 && 
-    typeof question.reponses[0] === 'object' &&
-    (question.reponses[0] as any).reponse_texte !== undefined;
+  // Vérifier si les réponses sont dans le nouveau format (tableau d'objets avec propriétés)
+  const determineResponseFormat = () => {
+    if (!question.reponses || !Array.isArray(question.reponses) || question.reponses.length === 0) {
+      return false;
+    }
+    
+    const firstResponse = question.reponses[0];
+    
+    // Vérifier si c'est un objet avec la propriété etat ou reponse_texte
+    if (typeof firstResponse === 'object' && firstResponse !== null) {
+      return 'etat' in firstResponse || 'reponse_texte' in firstResponse;
+    }
+    
+    return false;
+  };
+  
+  const isNewResponseFormat = determineResponseFormat();
 
   return (
     <Card key={index} className="border border-gray-100 shadow-sm hover:shadow-md transition-all">
