@@ -19,30 +19,15 @@ export function QuestionResponses({ question, isNewResponseFormat }: QuestionRes
         Réponses possibles: {Array.isArray(question.reponses) ? question.reponses.length : 0}
       </h3>
       
-      {isNewResponseFormat ? (
-        // Nouveau format - reponses est un tableau d'objets avec propriété reponse_texte et etat
-        <div className="space-y-3">
-          {(question.reponses as QuestionReponse[]).map((reponse, rIndex) => (
-            <NewFormatResponseItem 
-              key={reponse._id || rIndex} 
-              reponse={reponse} 
-              rIndex={rIndex} 
-            />
-          ))}
-        </div>
-      ) : (
-        // Ancien format - reponses est un tableau de chaînes
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {Array.isArray(question.reponses) && (question.reponses as string[]).map((reponse, rIndex) => (
-            <OldFormatResponseItem
-              key={rIndex}
-              reponse={reponse}
-              isCorrect={reponse === question.reponse_correcte}
-              rIndex={rIndex}
-            />
-          ))}
-        </div>
-      )}
+      <div className="space-y-3">
+        {Array.isArray(question.reponses) && question.reponses.map((reponse, rIndex) => (
+          <NewFormatResponseItem 
+            key={typeof reponse === 'object' ? reponse._id : rIndex} 
+            reponse={reponse as QuestionReponse} 
+            rIndex={rIndex} 
+          />
+        ))}
+      </div>
     </div>
   );
 }

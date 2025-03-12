@@ -1,4 +1,3 @@
-
 import { Question } from "@/types/game-details";
 import { Card, CardContent } from "@/components/ui/card";
 import { QuestionHeader } from "./QuestionHeader";
@@ -12,37 +11,23 @@ interface QuestionCardProps {
 }
 
 export function QuestionCard({ question, index, token }: QuestionCardProps) {
-  // Get the image URL
   const imageUrl = question.fichier 
     ? `http://kahoot.nos-apps.com/${question.fichier}`
     : question.image 
       ? `http://kahoot.nos-apps.com/${question.image}`
       : null;
 
-  // Debugging
   console.log("Question data:", question);
-  
-  // Vérifier si reponses est un tableau d'objets avec etat et reponse_texte (nouveau format)
-  // ou un tableau de chaînes (ancien format)
-  const isNewResponseFormat = 
-    question.reponses && 
-    Array.isArray(question.reponses) &&
-    question.reponses.length > 0 && 
-    typeof question.reponses[0] === 'object' &&
-    question.reponses[0] !== null;
 
   return (
     <Card key={index} className="border border-gray-100 shadow-sm hover:shadow-md transition-all">
       <QuestionHeader question={question} index={index} />
       
       <CardContent className="space-y-4 pt-4">
-        {/* Question Image */}
         <QuestionImage imageUrl={imageUrl} index={index} />
-        
-        {/* Question Answers with Expanded Details */}
         <QuestionResponses 
           question={question} 
-          isNewResponseFormat={isNewResponseFormat} 
+          isNewResponseFormat={true} 
         />
       </CardContent>
     </Card>

@@ -9,7 +9,7 @@ interface NewFormatResponseItemProps {
 }
 
 export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItemProps) {
-  if (!reponse) return null;
+  if (!reponse || typeof reponse !== 'object') return null;
   
   console.log("Response item:", reponse);
   
@@ -23,7 +23,7 @@ export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItem
     >
       <div className="flex items-center justify-between">
         <span className={`${reponse.etat ? 'text-green-700 font-medium' : ''} text-base`}>
-          {typeof reponse.reponse_texte === 'string' ? reponse.reponse_texte : 'Réponse indisponible'}
+          {reponse.reponse_texte}
         </span>
         {reponse.etat ? (
           <Badge variant="success" className="flex items-center gap-1">
