@@ -12,33 +12,32 @@ interface QuestionCardProps {
 }
 
 export function QuestionCard({ question, index, token }: QuestionCardProps) {
+  // Get the image URL
   const imageUrl = question.fichier 
     ? `http://kahoot.nos-apps.com/${question.fichier}`
     : question.image 
       ? `http://kahoot.nos-apps.com/${question.image}`
       : null;
 
-  console.log("Question complète:", question);
-  console.log("Structure des réponses:", question.reponses);
-  
-  if (Array.isArray(question.reponses) && question.reponses.length > 0) {
-    console.log("Premier élément de réponse:", question.reponses[0]);
-    if (typeof question.reponses[0] === 'object') {
-      console.log("Propriétés de la réponse:", Object.keys(question.reponses[0]));
-    } else if (typeof question.reponses[0] === 'string') {
-      console.log("Réponse au format ID:", question.reponses[0]);
-    }
-  }
-
-  // Toujours utiliser le nouveau format de réponse
-  const isNewResponseFormat = true;
+  // Vérifier si reponses est un tableau d'objets avec etat et reponse_texte (nouveau format)
+  // ou un tableau de chaînes (ancien format)
+  const isNewResponseFormat = 
+    question.reponses && 
+    Array.isArray(question.reponses) &&
+    question.reponses.length > 0 && 
+    typeof question.reponses[0] === 'object' &&
+    'etat' in question.reponses[0] &&
+    'reponse_texte' in question.reponses[0];
 
   return (
     <Card key={index} className="border border-gray-100 shadow-sm hover:shadow-md transition-all">
       <QuestionHeader question={question} index={index} />
       
       <CardContent className="space-y-4 pt-4">
+        {/* Question Image */}
         <QuestionImage imageUrl={imageUrl} index={index} />
+        
+        {/* Question Answers with Expanded Details */}
         <QuestionResponses 
           question={question} 
           isNewResponseFormat={isNewResponseFormat} 
