@@ -5,7 +5,7 @@ export function PlanificationsLoading() {
   return (
     <div className="flex justify-center items-center py-12">
       <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      <span className="ml-2 text-primary">Chargement des planifications...</span>
+      <span className="ml-2 text-primary font-medium">Chargement des planifications...</span>
     </div>
   );
 }

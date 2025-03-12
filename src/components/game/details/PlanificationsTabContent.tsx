@@ -75,6 +75,7 @@ export function PlanificationsTabContent({ jeuId, onCopyPin }: PlanificationsTab
     navigate(`/planification/${planificationId}`);
   };
 
+  // Extract unique statuses and types for filter options
   const statuses = ["all", ...new Set(planifications.map(p => p.statut?.toLowerCase()).filter(Boolean))] as string[];
   const types = ["all", ...new Set(planifications.map(p => p.type?.toLowerCase()).filter(Boolean))] as string[];
 
