@@ -1,3 +1,4 @@
+
 import { Question } from "@/types/game-details";
 import { Card, CardContent } from "@/components/ui/card";
 import { QuestionHeader } from "./QuestionHeader";
@@ -19,6 +20,11 @@ export function QuestionCard({ question, index, token }: QuestionCardProps) {
 
   console.log("Question data:", question);
 
+  // Determine if we're using the new response format
+  const isNewResponseFormat = question.reponses && 
+    Array.isArray(question.reponses) && 
+    question.reponses.length > 0;
+
   return (
     <Card key={index} className="border border-gray-100 shadow-sm hover:shadow-md transition-all">
       <QuestionHeader question={question} index={index} />
@@ -27,7 +33,7 @@ export function QuestionCard({ question, index, token }: QuestionCardProps) {
         <QuestionImage imageUrl={imageUrl} index={index} />
         <QuestionResponses 
           question={question} 
-          isNewResponseFormat={true} 
+          isNewResponseFormat={isNewResponseFormat} 
         />
       </CardContent>
     </Card>

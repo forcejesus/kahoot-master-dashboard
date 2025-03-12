@@ -20,13 +20,16 @@ export function QuestionResponses({ question, isNewResponseFormat }: QuestionRes
       </h3>
       
       <div className="space-y-3">
-        {Array.isArray(question.reponses) && question.reponses.map((reponse, rIndex) => (
-          <NewFormatResponseItem 
-            key={typeof reponse === 'object' ? reponse._id : rIndex} 
-            reponse={reponse as QuestionReponse} 
-            rIndex={rIndex} 
-          />
-        ))}
+        {Array.isArray(question.reponses) && question.reponses.map((reponse, rIndex) => {
+          console.log("Response item in map:", reponse);
+          return (
+            <NewFormatResponseItem 
+              key={typeof reponse === 'object' && reponse !== null ? reponse._id : rIndex} 
+              reponse={reponse} 
+              rIndex={rIndex} 
+            />
+          );
+        })}
       </div>
     </div>
   );
