@@ -18,13 +18,18 @@ export function QuestionCard({ question, index, token }: QuestionCardProps) {
       ? `http://kahoot.nos-apps.com/${question.image}`
       : null;
 
-  console.log("Question data:", question);
-  console.log("Responses data in QuestionCard:", question.reponses);
+  console.log("Question complète:", question);
+  console.log("Structure des réponses:", question.reponses);
+  
+  if (Array.isArray(question.reponses) && question.reponses.length > 0) {
+    console.log("Premier élément de réponse:", question.reponses[0]);
+    if (typeof question.reponses[0] === 'object') {
+      console.log("Propriétés de la réponse:", Object.keys(question.reponses[0]));
+    }
+  }
 
-  // Determine if we're using the new response format
-  const isNewResponseFormat = question.reponses && 
-    Array.isArray(question.reponses) && 
-    question.reponses.length > 0;
+  // Toujours utiliser le nouveau format de réponse
+  const isNewResponseFormat = true;
 
   return (
     <Card key={index} className="border border-gray-100 shadow-sm hover:shadow-md transition-all">

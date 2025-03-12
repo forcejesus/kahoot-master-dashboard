@@ -9,12 +9,12 @@ interface NewFormatResponseItemProps {
 }
 
 export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItemProps) {
-  console.log("Response item in component:", reponse);
+  console.log(`Détail de la réponse ${rIndex}:`, reponse);
   
-  // If response is not an object or is null, handle as string
+  // Si la réponse est null ou undefined, ne rien afficher
   if (!reponse) return null;
   
-  // Handle string response format (old format)
+  // Gestion du format de réponse en string (ancien format)
   if (typeof reponse === 'string') {
     return (
       <div className="p-4 rounded-lg bg-gray-50 border-gray-100 border transition-colors">
@@ -29,15 +29,32 @@ export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItem
     );
   }
   
-  // Handle object response format (new format)
-  const responseText = typeof reponse === 'object' && reponse !== null 
-    ? (reponse.reponse_texte || reponse.texte || reponse.text || '') 
-    : '';
-    
+  // Extraction du texte de réponse, avec plusieurs façons possibles de le stocker
+  let responseText = '';
+  
+  if (typeof reponse === 'object' && reponse !== null) {
+    // Essayer différentes propriétés pour trouver le texte de la réponse
+    if (reponse.reponse_texte) {
+      responseText = reponse.reponse_texte;
+    } else if (reponse.texte) {
+      responseText = reponse.texte;
+    } else if (reponse.text) {
+      responseText = reponse.text;
+    } else if (reponse._id) {
+      // Si nous avons un ID mais pas de texte visible, afficher l'ID temporairement
+      // pour aider au débogage
+      responseText = `ID: ${reponse._id}`;
+      console.warn(`Réponse ${rIndex} a un ID mais pas de texte visible:`, reponse);
+    }
+  }
+  
+  // Déterminer si la réponse est correcte
   const isCorrect = typeof reponse === 'object' && reponse !== null 
-    ? !!reponse.etat 
+    ? (reponse.etat === true || reponse.etat === 1) 
     : false;
-    
+  
+  console.log(`Réponse ${rIndex} - Texte: "${responseText}", Correcte: ${isCorrect}`);
+  
   return (
     <div
       className={`p-4 rounded-lg ${
