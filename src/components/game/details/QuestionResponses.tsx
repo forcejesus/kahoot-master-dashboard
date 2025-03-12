@@ -25,6 +25,8 @@ export function QuestionResponses({ question, isNewResponseFormat }: QuestionRes
        (typeof question.reponses[0] === 'object' && !question.reponses[0].reponse_texte));
     
     console.log("Est-ce un tableau d'IDs?", hasOnlyIds);
+    console.log("Question._id:", question._id);
+    console.log("Contenu de reponses:", question.reponses);
     
     // Si nous avons un tableau d'IDs, charger les vraies réponses depuis l'API
     if (hasOnlyIds && question._id) {
@@ -33,27 +35,55 @@ export function QuestionResponses({ question, isNewResponseFormat }: QuestionRes
         setError(null);
         
         try {
-          // Essayons de charger les réponses pour cette question
-          const url = `http://kahoot.nos-apps.com/api/reponse/question/${question._id}`;
-          console.log("Chargement des réponses depuis:", url);
-          
-          const response = await fetch(url, {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          });
-          
-          if (!response.ok) {
-            throw new Error(`Erreur de chargement des réponses (${response.status})`);
-          }
-          
-          const data = await response.json();
-          console.log("Réponses chargées:", data);
-          
-          if (data.success && data.data) {
-            setLoadedResponses(data.data);
+          // Utilisons l'API correcte pour récupérer les réponses
+          // Nous allons charger chaque réponse individuellement puisque nous avons les IDs
+          if (Array.isArray(question.reponses) && question.reponses.length > 0 && typeof question.reponses[0] === 'string') {
+            console.log("Chargement des réponses individuelles à partir des IDs");
+            
+            const responsePromises = question.reponses.map(async (reponseId) => {
+              const url = `http://kahoot.nos-apps.com/api/reponse/${reponseId}`;
+              console.log("Chargement de la réponse:", url);
+              
+              const response = await fetch(url, {
+                headers: {
+                  'Authorization': `Bearer ${token}`
+                }
+              });
+              
+              if (!response.ok) {
+                throw new Error(`Erreur de chargement de la réponse ${reponseId} (${response.status})`);
+              }
+              
+              const data = await response.json();
+              return data.data || data;
+            });
+            
+            const responses = await Promise.all(responsePromises);
+            console.log("Toutes les réponses chargées:", responses);
+            setLoadedResponses(responses);
           } else {
-            setError("Format de réponse invalide");
+            // Essayons l'ancienne méthode pour obtenir toutes les réponses d'une question
+            const url = `http://kahoot.nos-apps.com/api/reponse/question/${question._id}`;
+            console.log("Chargement des réponses depuis:", url);
+            
+            const response = await fetch(url, {
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            });
+            
+            if (!response.ok) {
+              throw new Error(`Erreur de chargement des réponses (${response.status})`);
+            }
+            
+            const data = await response.json();
+            console.log("Réponses chargées:", data);
+            
+            if (data.success && data.data) {
+              setLoadedResponses(data.data);
+            } else {
+              setError("Format de réponse invalide");
+            }
           }
         } catch (err) {
           console.error("Erreur lors du chargement des réponses:", err);
