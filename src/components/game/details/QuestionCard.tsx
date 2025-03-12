@@ -25,9 +25,7 @@ export function QuestionCard({ question, index, token }: QuestionCardProps) {
     question.reponses && 
     Array.isArray(question.reponses) &&
     question.reponses.length > 0 && 
-    typeof question.reponses[0] === 'object' &&
-    'etat' in question.reponses[0] &&
-    'reponse_texte' in question.reponses[0];
+    (typeof question.reponses[0] === 'object' || typeof question.reponses[0] === 'string');
 
   return (
     <Card key={index} className="border border-gray-100 shadow-sm hover:shadow-md transition-all">
