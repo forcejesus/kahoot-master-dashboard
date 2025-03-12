@@ -25,6 +25,8 @@ export function QuestionCard({ question, index, token }: QuestionCardProps) {
     console.log("Premier élément de réponse:", question.reponses[0]);
     if (typeof question.reponses[0] === 'object') {
       console.log("Propriétés de la réponse:", Object.keys(question.reponses[0]));
+    } else if (typeof question.reponses[0] === 'string') {
+      console.log("Réponse au format ID:", question.reponses[0]);
     }
   }
 

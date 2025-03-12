@@ -14,15 +14,15 @@ export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItem
   // Si la réponse est null ou undefined, ne rien afficher
   if (!reponse) return null;
   
-  // Gestion du format de réponse en string (ancien format)
+  // Gestion du format de réponse en string (ancien format ou ID)
   if (typeof reponse === 'string') {
     return (
       <div className="p-4 rounded-lg bg-gray-50 border-gray-100 border transition-colors">
         <div className="flex items-center justify-between">
-          <span className="text-base">{reponse}</span>
+          <span className="text-base">ID: {reponse}</span>
           <Badge variant="outline" className="flex items-center gap-1">
             <X className="w-3 h-3" />
-            <span>Incorrecte</span>
+            <span>Format inconnu</span>
           </Badge>
         </div>
       </div>
@@ -50,7 +50,7 @@ export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItem
   
   // Déterminer si la réponse est correcte
   const isCorrect = typeof reponse === 'object' && reponse !== null 
-    ? (reponse.etat === true || reponse.etat === 1) 
+    ? (reponse.etat === true || reponse.etat === 1 || reponse.etat === "1") 
     : false;
   
   console.log(`Réponse ${rIndex} - Texte: "${responseText}", Correcte: ${isCorrect}`);
