@@ -11,6 +11,9 @@ interface NewFormatResponseItemProps {
 export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItemProps) {
   if (!reponse) return null;
   
+  // Make sure we have the actual response text, not just an ID
+  const responseText = reponse.reponse_texte || "Réponse sans texte";
+  
   return (
     <div
       className={`p-4 rounded-lg ${
@@ -21,7 +24,7 @@ export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItem
     >
       <div className="flex items-center justify-between">
         <span className={`${reponse.etat ? 'text-green-700 font-medium' : ''} text-base`}>
-          {reponse.reponse_texte || "Réponse sans texte"}
+          {responseText}
         </span>
         {reponse.etat ? (
           <Badge variant="success" className="flex items-center gap-1">

@@ -1,3 +1,4 @@
+
 import { Question } from "@/types/game-details";
 import { Card, CardContent } from "@/components/ui/card";
 import { QuestionHeader } from "./QuestionHeader";
@@ -18,12 +19,13 @@ export function QuestionCard({ question, index, token }: QuestionCardProps) {
       ? `http://kahoot.nos-apps.com/${question.image}`
       : null;
 
-  // Vérifier si reponses est un tableau d'objets complet
+  // Check if responses is an array of complete objects (with properties like etat, reponse_texte)
   const isNewResponseFormat = 
     question.reponses && 
     Array.isArray(question.reponses) &&
     question.reponses.length > 0 && 
-    typeof question.reponses[0] === 'object';
+    typeof question.reponses[0] === 'object' &&
+    (question.reponses[0] as any).reponse_texte !== undefined;
 
   return (
     <Card key={index} className="border border-gray-100 shadow-sm hover:shadow-md transition-all">

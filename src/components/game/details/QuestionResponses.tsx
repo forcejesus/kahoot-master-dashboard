@@ -10,11 +10,14 @@ interface QuestionResponsesProps {
 }
 
 export function QuestionResponses({ question, isNewResponseFormat }: QuestionResponsesProps) {
+  // Safely access the response count
+  const responseCount = Array.isArray(question.reponses) ? question.reponses.length : 0;
+
   return (
     <div className="space-y-4 mt-4">
       <h3 className="font-medium text-base flex items-center gap-2">
         <MessageCircle className="w-4 h-4" />
-        Réponses possibles: {Array.isArray(question.reponses) ? question.reponses.length : 0}
+        Réponses possibles: {responseCount}
       </h3>
       
       {isNewResponseFormat ? (
