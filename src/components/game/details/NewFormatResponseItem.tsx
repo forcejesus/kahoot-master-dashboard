@@ -15,7 +15,7 @@ export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItem
     <div
       className={`p-4 rounded-lg ${
         reponse.etat
-          ? 'bg-green-50 border-green-200'
+          ? 'bg-green-100 border-green-300 shadow-sm'
           : 'bg-gray-50 border-gray-100'
       } border transition-colors`}
     >
