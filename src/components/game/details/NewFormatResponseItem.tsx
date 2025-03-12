@@ -19,7 +19,7 @@ export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItem
       : "Réponse sans texte";
   
   // Déterminer si la réponse est correcte
-  const isCorrect = typeof reponse === 'object' && reponse.etat === true;
+  const isCorrect = typeof reponse === 'object' && (reponse.etat === true || reponse.etat === 1);
   
   return (
     <div

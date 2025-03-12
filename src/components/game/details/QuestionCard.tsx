@@ -29,7 +29,7 @@ export function QuestionCard({ question, index, token }: QuestionCardProps) {
     
     // Vérifier si c'est un objet avec la propriété etat ou reponse_texte
     if (typeof firstResponse === 'object' && firstResponse !== null) {
-      return 'etat' in firstResponse || 'reponse_texte' in firstResponse;
+      return true; // C'est un nouveau format si c'est un objet
     }
     
     return false;
