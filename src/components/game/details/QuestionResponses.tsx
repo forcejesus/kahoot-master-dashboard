@@ -36,12 +36,13 @@ export function QuestionResponses({ question, isNewResponseFormat }: QuestionRes
         
         try {
           // Utilisons l'API correcte pour récupérer les réponses
-          // Nous allons charger chaque réponse individuellement puisque nous avons les IDs
+          // Format l'API : /api/reponses/id-question au lieu de /api/reponse/question/id-question
           if (Array.isArray(question.reponses) && question.reponses.length > 0 && typeof question.reponses[0] === 'string') {
             console.log("Chargement des réponses individuelles à partir des IDs");
             
             const responsePromises = question.reponses.map(async (reponseId) => {
-              const url = `http://kahoot.nos-apps.com/api/reponse/${reponseId}`;
+              // Correction de l'URL pour récupérer une réponse spécifique
+              const url = `http://kahoot.nos-apps.com/api/reponses/${reponseId}`;
               console.log("Chargement de la réponse:", url);
               
               const response = await fetch(url, {
@@ -51,19 +52,36 @@ export function QuestionResponses({ question, isNewResponseFormat }: QuestionRes
               });
               
               if (!response.ok) {
-                throw new Error(`Erreur de chargement de la réponse ${reponseId} (${response.status})`);
+                console.error(`Erreur HTTP ${response.status} pour l'URL: ${url}`);
+                return null; // Retourner null pour les réponses qui échouent
               }
               
-              const data = await response.json();
-              return data.data || data;
+              const responseText = await response.text();
+              console.log(`Réponse brute pour ${reponseId}:`, responseText);
+              
+              try {
+                const data = JSON.parse(responseText);
+                return data.data || data;
+              } catch (e) {
+                console.error("Erreur de parsing JSON:", e);
+                return null;
+              }
             });
             
             const responses = await Promise.all(responsePromises);
             console.log("Toutes les réponses chargées:", responses);
-            setLoadedResponses(responses);
+            // Filtrer les réponses null (échecs)
+            const validResponses = responses.filter(r => r !== null);
+            if (validResponses.length > 0) {
+              setLoadedResponses(validResponses);
+            } else {
+              // Si toutes les réponses ont échoué, essayons l'autre méthode
+              throw new Error("Aucune réponse valide n'a pu être chargée individuellement");
+            }
           } else {
-            // Essayons l'ancienne méthode pour obtenir toutes les réponses d'une question
-            const url = `http://kahoot.nos-apps.com/api/reponse/question/${question._id}`;
+            // Essayons l'autre méthode pour obtenir toutes les réponses d'une question
+            // Correction de l'URL : /api/reponses/question/id-question
+            const url = `http://kahoot.nos-apps.com/api/reponses/question/${question._id}`;
             console.log("Chargement des réponses depuis:", url);
             
             const response = await fetch(url, {
@@ -73,21 +91,37 @@ export function QuestionResponses({ question, isNewResponseFormat }: QuestionRes
             });
             
             if (!response.ok) {
+              // Afficher plus de détails sur l'erreur
+              console.error(`Erreur HTTP ${response.status} pour l'URL: ${url}`);
               throw new Error(`Erreur de chargement des réponses (${response.status})`);
             }
             
-            const data = await response.json();
-            console.log("Réponses chargées:", data);
+            const responseText = await response.text();
+            console.log("Réponse brute:", responseText);
             
-            if (data.success && data.data) {
-              setLoadedResponses(data.data);
-            } else {
+            try {
+              const data = JSON.parse(responseText);
+              console.log("Réponses chargées:", data);
+              
+              if (data.success && data.data) {
+                setLoadedResponses(data.data);
+              } else {
+                setError("Format de réponse invalide");
+              }
+            } catch (e) {
+              console.error("Erreur de parsing JSON:", e);
               setError("Format de réponse invalide");
             }
           }
         } catch (err) {
           console.error("Erreur lors du chargement des réponses:", err);
           setError(err instanceof Error ? err.message : "Erreur inconnue");
+          
+          // Plan B : si les deux méthodes ont échoué, utiliser les réponses brutes si possible
+          if (Array.isArray(question.reponses) && typeof question.reponses[0] === 'object') {
+            console.log("Utilisation des réponses brutes comme solution de secours");
+            setLoadedResponses(question.reponses as QuestionReponse[]);
+          }
         } finally {
           setIsLoading(false);
         }
