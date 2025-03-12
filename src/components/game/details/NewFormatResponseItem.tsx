@@ -30,19 +30,27 @@ export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItem
   }
   
   // Handle object response format (new format)
+  const responseText = typeof reponse === 'object' && reponse !== null 
+    ? (reponse.reponse_texte || reponse.texte || reponse.text || '') 
+    : '';
+    
+  const isCorrect = typeof reponse === 'object' && reponse !== null 
+    ? !!reponse.etat 
+    : false;
+    
   return (
     <div
       className={`p-4 rounded-lg ${
-        reponse.etat
+        isCorrect
           ? 'bg-green-100 border-green-300 shadow-sm'
           : 'bg-gray-50 border-gray-100'
       } border transition-colors`}
     >
       <div className="flex items-center justify-between">
-        <span className={`${reponse.etat ? 'text-green-700 font-medium' : ''} text-base`}>
-          {reponse.reponse_texte || 'Réponse sans texte'}
+        <span className={`${isCorrect ? 'text-green-700 font-medium' : ''} text-base`}>
+          {responseText || 'Réponse sans texte'}
         </span>
-        {reponse.etat ? (
+        {isCorrect ? (
           <Badge variant="success" className="flex items-center gap-1">
             <Check className="w-3 h-3" />
             <span>Correcte</span>

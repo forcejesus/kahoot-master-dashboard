@@ -21,10 +21,10 @@ export function QuestionResponses({ question, isNewResponseFormat }: QuestionRes
       
       <div className="space-y-3">
         {Array.isArray(question.reponses) && question.reponses.map((reponse, rIndex) => {
-          console.log("Response item in map:", reponse);
+          console.log("Response item type:", typeof reponse);
           return (
             <NewFormatResponseItem 
-              key={typeof reponse === 'object' && reponse !== null ? reponse._id : rIndex} 
+              key={rIndex} 
               reponse={reponse} 
               rIndex={rIndex} 
             />

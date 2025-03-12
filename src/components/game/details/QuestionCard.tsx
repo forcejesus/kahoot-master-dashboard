@@ -19,6 +19,7 @@ export function QuestionCard({ question, index, token }: QuestionCardProps) {
       : null;
 
   console.log("Question data:", question);
+  console.log("Responses data in QuestionCard:", question.reponses);
 
   // Determine if we're using the new response format
   const isNewResponseFormat = question.reponses && 
