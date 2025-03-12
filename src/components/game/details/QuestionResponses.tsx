@@ -10,6 +10,8 @@ interface QuestionResponsesProps {
 }
 
 export function QuestionResponses({ question, isNewResponseFormat }: QuestionResponsesProps) {
+  console.log("Responses data:", question.reponses);
+  
   return (
     <div className="space-y-4 mt-4">
       <h3 className="font-medium text-base flex items-center gap-2">

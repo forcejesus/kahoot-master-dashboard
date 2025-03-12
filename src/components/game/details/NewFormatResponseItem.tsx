@@ -11,6 +11,8 @@ interface NewFormatResponseItemProps {
 export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItemProps) {
   if (!reponse) return null;
   
+  console.log("Response item:", reponse);
+  
   return (
     <div
       className={`p-4 rounded-lg ${
@@ -21,7 +23,7 @@ export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItem
     >
       <div className="flex items-center justify-between">
         <span className={`${reponse.etat ? 'text-green-700 font-medium' : ''} text-base`}>
-          {reponse.reponse_texte}
+          {typeof reponse.reponse_texte === 'string' ? reponse.reponse_texte : 'Réponse indisponible'}
         </span>
         {reponse.etat ? (
           <Badge variant="success" className="flex items-center gap-1">
