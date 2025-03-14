@@ -18,25 +18,26 @@ export function QuestionResponses({ question, isNewResponseFormat }: QuestionRes
     if (!Array.isArray(question.reponses)) return [];
     
     return question.reponses.map((reponse: any) => {
-      // Si la réponse est déjà un objet avec reponse_texte
+      // Si la réponse est déjà un objet
       if (typeof reponse === 'object' && reponse !== null) {
-        // Vérifier si reponse_texte existe
+        // Si nous avons déjà les détails complets
         if ('reponse_texte' in reponse && reponse.reponse_texte) {
           return reponse as QuestionReponse;
         }
-        // Si c'est un objet mais sans reponse_texte (peut-être juste un ID), on crée un objet temporaire
+        
+        // Sinon, retourner l'objet avec l'ID pour récupération ultérieure
         return {
-          _id: typeof reponse._id === 'string' ? reponse._id : "",
+          _id: reponse._id || "",
           etat: reponse.etat === true || reponse.etat === 1,
-          reponse_texte: reponse.reponse_texte || "Réponse sans texte"
+          reponse_texte: reponse.reponse_texte || ""
         };
       }
       
-      // Si c'est une chaîne, c'est probablement un ancien format
+      // Si c'est une chaîne (ancien format), c'est probablement un ID ou le texte directement
       return {
         _id: typeof reponse === 'string' ? reponse : "",
         etat: reponse === question.reponse_correcte,
-        reponse_texte: typeof reponse === 'string' ? reponse : "Réponse sans texte"
+        reponse_texte: typeof reponse === 'string' ? reponse : ""
       };
     });
   };
