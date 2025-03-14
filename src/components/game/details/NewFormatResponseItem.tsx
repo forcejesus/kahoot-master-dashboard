@@ -18,15 +18,10 @@ export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItem
   const [showDetails, setShowDetails] = useState(false);
 
   useEffect(() => {
-    // Vérifier si nous avons déjà le texte de la réponse
-    if (typeof reponse === 'object' && reponse.reponse_texte) {
-      setResponseDetail(reponse);
-      return;
-    }
-
-    // Si nous n'avons qu'un ID, récupérer les détails
-    if (reponse && typeof reponse === 'object' && reponse._id) {
+    // Si nous avons un ID mais pas de texte de réponse, récupérer les détails depuis l'API
+    if (reponse && typeof reponse === 'object' && reponse._id && (!reponse.reponse_texte || reponse.reponse_texte === "")) {
       setLoading(true);
+      
       fetch(`http://kahoot.nos-apps.com/api/reponse/${reponse._id}`, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -44,6 +39,9 @@ export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItem
         .finally(() => {
           setLoading(false);
         });
+    } else if (reponse && typeof reponse === 'object' && reponse.reponse_texte) {
+      // Si nous avons déjà le texte de la réponse
+      setResponseDetail(reponse);
     }
   }, [reponse, token]);
 
@@ -58,7 +56,7 @@ export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItem
     ? responseData.reponse_texte 
     : typeof responseData === 'string' 
       ? responseData 
-      : "Réponse sans texte";
+      : "Chargement...";
   
   // Déterminer si la réponse est correcte
   const isCorrect = typeof responseData === 'object' && (responseData.etat === true || responseData.etat === 1);

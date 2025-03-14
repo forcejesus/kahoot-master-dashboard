@@ -25,9 +25,18 @@ export function QuestionResponses({ question, isNewResponseFormat }: QuestionRes
           _id: reponse._id || "",
           etat: reponse.etat === true || reponse.etat === 1,
           reponse_texte: reponse.reponse_texte || "",
-          question: reponse.question || "",
+          question: reponse.question || question._id || "",
           date: reponse.date || "",
           __v: reponse.__v
+        };
+      } 
+      
+      // S'il s'agit simplement d'un ID
+      if (typeof reponse === 'string' && reponse.length > 20) {  // C'est probablement un ID MongoDB
+        return {
+          _id: reponse,
+          etat: false,  // Sera actualisé lors du chargement des détails
+          reponse_texte: ""  // Sera actualisé lors du chargement des détails
         };
       }
       
