@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Users } from "lucide-react";
 import { toast } from "sonner";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Accordion,
   AccordionContent,
@@ -60,8 +61,17 @@ export function UserResponses({ questionId, token }: UserResponsesProps) {
         </AccordionTrigger>
         <AccordionContent>
           {loading ? (
-            <div className="flex justify-center py-4">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+            <div className="space-y-3 mt-2">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="p-3 rounded-md border">
+                  <div className="flex justify-between items-center mb-2">
+                    <Skeleton className="h-5 w-1/3" />
+                    <Skeleton className="h-5 w-20" />
+                  </div>
+                  <Skeleton className="h-4 w-2/3 mb-1" />
+                  <Skeleton className="h-3 w-1/4" />
+                </div>
+              ))}
             </div>
           ) : userResponses?.length ? (
             <div className="space-y-2 mt-2">

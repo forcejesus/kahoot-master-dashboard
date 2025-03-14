@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Check, X, Info } from "lucide-react";
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface NewFormatResponseItemProps {
   reponse: QuestionReponse;
@@ -48,7 +49,18 @@ export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItem
   }, [reponse, token]);
 
   if (!reponse) return null;
-  if (loading) return <div className="p-4 rounded-lg bg-gray-50 border-gray-100 border">Chargement...</div>;
+  
+  // Afficher un squelette de chargement pendant le fetch
+  if (loading) {
+    return (
+      <div className="p-4 rounded-lg bg-gray-50 border-gray-100 border">
+        <div className="flex items-center justify-between">
+          <Skeleton className="h-6 w-2/3" />
+          <Skeleton className="h-6 w-24" />
+        </div>
+      </div>
+    );
+  }
   
   // Utiliser les détails récupérés s'ils sont disponibles, sinon utiliser les données existantes
   const responseData = responseDetail || reponse;
