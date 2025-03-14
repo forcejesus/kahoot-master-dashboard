@@ -20,20 +20,18 @@ export function QuestionResponses({ question, isNewResponseFormat }: QuestionRes
     return question.reponses.map((reponse: any) => {
       // Si la réponse est déjà un objet
       if (typeof reponse === 'object' && reponse !== null) {
-        // Si nous avons déjà les détails complets
-        if ('reponse_texte' in reponse && reponse.reponse_texte) {
-          return reponse as QuestionReponse;
-        }
-        
-        // Sinon, retourner l'objet avec l'ID pour récupération ultérieure
+        // Si c'est un objet complet
         return {
           _id: reponse._id || "",
           etat: reponse.etat === true || reponse.etat === 1,
-          reponse_texte: reponse.reponse_texte || ""
+          reponse_texte: reponse.reponse_texte || "",
+          question: reponse.question || "",
+          date: reponse.date || "",
+          __v: reponse.__v
         };
       }
       
-      // Si c'est une chaîne (ancien format), c'est probablement un ID ou le texte directement
+      // Si c'est une chaîne (ancien format)
       return {
         _id: typeof reponse === 'string' ? reponse : "",
         etat: reponse === question.reponse_correcte,

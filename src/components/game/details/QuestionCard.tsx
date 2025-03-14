@@ -20,19 +20,19 @@ export function QuestionCard({ question, index, token }: QuestionCardProps) {
       : null;
 
   // Vérifier si les réponses sont dans le nouveau format (tableau d'objets avec propriétés)
-  const determineResponseFormat = () => {
+  const determineResponseFormat = (): boolean => {
     if (!question.reponses || !Array.isArray(question.reponses) || question.reponses.length === 0) {
       return false;
     }
     
     const firstResponse = question.reponses[0];
     
-    // Si c'est un objet, c'est le nouveau format
+    // Si c'est un objet avec propriétés spécifiques, c'est le nouveau format
     if (typeof firstResponse === 'object' && firstResponse !== null) {
       return true;
     }
     
-    // Sinon c'est probablement l'ancien format (tableau de chaînes)
+    // Sinon c'est l'ancien format (tableau de chaînes)
     return false;
   };
   
