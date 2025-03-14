@@ -12,28 +12,36 @@ export default function Index() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
+    // Force loading to true initially
+    setLoading(true);
+    
     // Simulation d'un chargement progressif avec une animation fluide
     const timer = setInterval(() => {
       setProgress((prevProgress) => {
-        if (prevProgress >= 100) {
+        // Ensure we don't exceed 100%
+        const newProgress = Math.min(prevProgress + 2, 100);
+        
+        // When we reach 100%, schedule the loading state change
+        if (newProgress >= 100) {
           clearInterval(timer);
-          setTimeout(() => setLoading(false), 800); // Délai légèrement plus long pour voir l'animation complète
-          return 100;
+          setTimeout(() => setLoading(false), 800);
         }
-        return prevProgress + 2; // Progression plus lente pour une meilleure expérience
+        
+        return newProgress;
       });
     }, 80);
 
+    // Cleanup function
     return () => {
       clearInterval(timer);
     };
-  }, []);
+  }, []); // Empty dependency array ensures this runs only once
 
   // Icônes animées qui apparaissent pendant le chargement
   const icons = [
-    <GamepadIcon key="gamepad" className="text-primary/60" />,
-    <Zap key="zap" className="text-secondary/60" />,
-    <Stars key="stars" className="text-primary/60" />
+    <GamepadIcon key="gamepad" className="text-primary/60 animate-pulse" size={40} />,
+    <Zap key="zap" className="text-secondary/60 animate-pulse" size={40} />,
+    <Stars key="stars" className="text-primary/60 animate-pulse" size={40} />
   ];
 
   return (
