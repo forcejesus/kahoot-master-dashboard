@@ -23,19 +23,27 @@ export default function Index() {
     // Create a more dynamic loading effect with proper animation sequence
     const timer = setInterval(() => {
       setProgress((prevProgress) => {
-        const newProgress = Math.min(prevProgress + 1, 100);
+        // Ajout d'une progression non-linéaire pour simuler un chargement réel
+        const increment = Math.random() * 2 + (prevProgress < 50 ? 1.5 : 0.5);
+        const newProgress = Math.min(prevProgress + increment, 100);
         
-        // When progress reaches specific thresholds, trigger loading state changes
+        // Déclenchement des états de chargement à des seuils spécifiques
+        if (newProgress >= 60 && prevProgress < 60) {
+          setStatsLoading(false);
+        }
+        
+        if (newProgress >= 85 && prevProgress < 85) {
+          setGamesLoading(false);
+        }
+        
         if (newProgress === 100) {
           clearInterval(timer);
           setTimeout(() => setLoading(false), 300);
-          setTimeout(() => setStatsLoading(false), 800);
-          setTimeout(() => setGamesLoading(false), 1300);
         }
         
         return newProgress;
       });
-    }, 25); // Faster speed for smoother progress
+    }, 100); // Vitesse adaptée pour une progression plus réaliste
 
     return () => {
       clearInterval(timer);
@@ -48,21 +56,18 @@ export default function Index() {
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4 flex items-center gap-2 transition-all duration-500">
             Tableau de bord
-            {loading && <Sparkles className="h-6 w-6 text-primary animate-ping" />}
+            {loading && (
+              <span className="inline-flex">
+                <Sparkles className="h-6 w-6 text-primary animate-ping" />
+                <Loader className="h-6 w-6 text-secondary animate-spin ml-2" />
+              </span>
+            )}
           </h1>
 
           {loading ? (
-            <>
-              <LoadingScreen progress={progress} />
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {Array.from({ length: 4 }).map((_, index) => (
-                  <LoadingCard key={index} delayIndex={index} />
-                ))}
-              </div>
-            </>
+            <LoadingScreen progress={progress} />
           ) : (
             <DashboardStats statsLoading={statsLoading} />
           )}
