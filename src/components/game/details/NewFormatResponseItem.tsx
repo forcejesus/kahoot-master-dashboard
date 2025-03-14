@@ -31,7 +31,7 @@ export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItem
         .then(response => response.json())
         .then(result => {
           if (result.success && result.data) {
-            // N'extraire que les données nécessaires selon le format spécifié
+            // Utiliser directement les données de result.data
             setResponseDetail(result.data);
           }
         })
