@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { CreateKahootDialog } from '@/components/CreateKahootDialog';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Clock, Users, Trophy, BookOpen, Sparkles, GamepadIcon, Zap, Stars } from 'lucide-react';
+import { Clock, Users, Trophy, BookOpen, Sparkles, GamepadIcon, Zap, Stars, Loader } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { LoadingCard } from '@/components/ui/loading-card';
 
@@ -12,24 +12,25 @@ export default function Index() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Force loading to true initially
+    // Force loading to true initially and reset progress
     setLoading(true);
+    setProgress(0);
     
     // Simulation d'un chargement progressif avec une animation fluide
     const timer = setInterval(() => {
       setProgress((prevProgress) => {
         // Ensure we don't exceed 100%
-        const newProgress = Math.min(prevProgress + 2, 100);
+        const newProgress = Math.min(prevProgress + 1, 100);
         
         // When we reach 100%, schedule the loading state change
         if (newProgress >= 100) {
           clearInterval(timer);
-          setTimeout(() => setLoading(false), 800);
+          setTimeout(() => setLoading(false), 1000);
         }
         
         return newProgress;
       });
-    }, 80);
+    }, 50);
 
     // Cleanup function
     return () => {
@@ -39,9 +40,9 @@ export default function Index() {
 
   // Icônes animées qui apparaissent pendant le chargement
   const icons = [
-    <GamepadIcon key="gamepad" className="text-primary/60 animate-pulse" size={40} />,
-    <Zap key="zap" className="text-secondary/60 animate-pulse" size={40} />,
-    <Stars key="stars" className="text-primary/60 animate-pulse" size={40} />
+    <GamepadIcon key="gamepad" className="text-primary animate-bounce" size={36} />,
+    <Zap key="zap" className="text-secondary animate-pulse" size={36} />,
+    <Stars key="stars" className="text-primary animate-spin" size={36} />
   ];
 
   return (
@@ -57,18 +58,18 @@ export default function Index() {
 
           {loading ? (
             <>
-              <div className="mb-6 relative overflow-hidden bg-white/50 p-6 rounded-lg shadow-sm">
+              <div className="mb-6 relative overflow-hidden bg-white/50 p-6 rounded-lg shadow-sm border border-gray-100">
                 <div className="text-center mb-6 text-primary font-medium flex items-center justify-center">
-                  <GamepadIcon className="mr-2 h-5 w-5 animate-bounce" />
-                  <span className="animate-pulse">Chargement de vos Kahoots...</span>
+                  <Loader className="mr-2 h-5 w-5 animate-spin" />
+                  <span>Chargement de vos Kahoots...</span>
                 </div>
-                <div className="absolute top-1/2 left-1/4 transform -translate-y-1/2 opacity-20">
+                <div className="absolute top-1/2 left-1/4 transform -translate-y-1/2 opacity-30 animate-bounce" style={{ animationDelay: '0.1s' }}>
                   {icons[0]}
                 </div>
-                <div className="absolute top-1/3 right-1/4 transform -translate-y-1/2 opacity-20">
+                <div className="absolute top-1/3 right-1/4 transform -translate-y-1/2 opacity-30 animate-pulse" style={{ animationDelay: '0.3s' }}>
                   {icons[1]}
                 </div>
-                <div className="absolute bottom-1/4 right-1/3 transform -translate-y-1/2 opacity-20">
+                <div className="absolute bottom-1/4 right-1/3 transform -translate-y-1/2 opacity-30 animate-spin" style={{ animationDelay: '0.5s' }}>
                   {icons[2]}
                 </div>
                 <Progress 
