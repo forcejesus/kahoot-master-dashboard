@@ -2,7 +2,7 @@
 import { Question, QuestionReponse } from "@/types/game-details";
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ImageIcon, TimerIcon, Check, Clock, Info, User, Calendar, Hash, ToggleLeft, ToggleRight } from "lucide-react";
+import { ImageIcon, TimerIcon, Check, Clock, Info, Calendar, Hash, ToggleLeft, ToggleRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 interface QuestionCardProps {
@@ -23,12 +23,6 @@ export function QuestionCard({ question, index, token }: QuestionCardProps) {
   const isNewResponseFormat = question.reponses && 
     question.reponses.length > 0 && 
     typeof question.reponses[0] !== 'string';
-
-  // Debug the response format to console
-  useEffect(() => {
-    console.log(`Question ${index + 1} responses:`, question.reponses);
-    console.log(`Question ${index + 1} format:`, isNewResponseFormat ? "New Object Format" : "Old String Format");
-  }, [question, index, isNewResponseFormat]);
 
   return (
     <Card key={index} className="border border-gray-100 shadow-sm hover:shadow-md transition-all">
@@ -73,148 +67,143 @@ export function QuestionCard({ question, index, token }: QuestionCardProps) {
           </div>
         )}
         
-        {/* Question Answers with Expanded Details */}
+        {/* Question Answers with Expanded Details - Focus on responses details */}
         <div className="space-y-4 mt-4">
-          <h3 className="font-medium text-base">Réponses possibles:</h3>
+          <h3 className="font-medium text-base">Réponses détaillées:</h3>
+          
           {isNewResponseFormat ? (
             // New response format - reponses is an array of objects with reponse_texte property
-            (question.reponses as QuestionReponse[]).map((reponse, rIndex) => {
-              if (!reponse) return null;
-              
-              return (
-                <div
-                  key={rIndex}
-                  className={`p-4 rounded-lg ${
-                    reponse.etat
-                      ? 'bg-green-50 border-green-200'
-                      : 'bg-gray-50 border-gray-100'
-                  } border transition-colors`}
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className={`${reponse.etat ? 'text-green-700 font-medium' : 'font-medium'}`}>
-                      {reponse.reponse_texte || "Réponse sans texte"}
-                    </span>
-                    {reponse.etat ? (
-                      <Badge variant="success" className="flex items-center gap-1">
-                        <Check className="w-3 h-3" />
-                        <span>Correcte</span>
-                      </Badge>
-                    ) : (
-                      <Badge variant="outline" className="flex items-center gap-1">
-                        <ToggleLeft className="w-3 h-3" />
-                        <span>Incorrecte</span>
-                      </Badge>
-                    )}
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-3 text-sm text-gray-600">
-                    <div className="flex items-center gap-1">
-                      <Hash className="w-3 h-3" /> 
-                      <span className="font-medium">ID:</span> {reponse._id}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <ToggleRight className="w-3 h-3" /> 
-                      <span className="font-medium">État:</span> {reponse.etat ? "Correcte" : "Incorrecte"}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Info className="w-3 h-3" /> 
-                      <span className="font-medium">Question ID:</span> {reponse.question}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Calendar className="w-3 h-3" /> 
-                      <span className="font-medium">Créée le:</span> {new Date(reponse.date).toLocaleDateString('fr-FR', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                      })}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-3 h-3" /> 
-                      <span className="font-medium">Heure:</span> {new Date(reponse.date).toLocaleTimeString('fr-FR', {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      })}
-                    </div>
-                    {reponse.__v !== undefined && (
-                      <div className="flex items-center gap-1">
-                        <Info className="w-3 h-3" /> 
-                        <span className="font-medium">Version:</span> {reponse.__v}
+            <div className="space-y-4">
+              {(question.reponses as QuestionReponse[]).map((reponse, rIndex) => {
+                if (!reponse) return null;
+                
+                return (
+                  <Card key={rIndex} className={`border ${
+                    reponse.etat ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-100'
+                  }`}>
+                    <CardHeader className="py-3 px-4">
+                      <CardTitle className="text-lg flex justify-between items-center">
+                        <span className={`${reponse.etat ? 'text-green-700' : ''}`}>
+                          {reponse.reponse_texte || "Réponse sans texte"}
+                        </span>
+                        {reponse.etat ? (
+                          <Badge variant="success" className="flex items-center gap-1">
+                            <Check className="w-3 h-3" />
+                            <span>Correcte</span>
+                          </Badge>
+                        ) : (
+                          <Badge variant="outline" className="flex items-center gap-1">
+                            <ToggleLeft className="w-3 h-3" />
+                            <span>Incorrecte</span>
+                          </Badge>
+                        )}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="py-3">
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="p-2 bg-white/60 rounded border border-gray-100">
+                          <div className="flex items-center gap-1 text-sm font-medium text-gray-700 mb-1">
+                            <Calendar className="w-3.5 h-3.5" /> 
+                            <span>Date de création</span>
+                          </div>
+                          <div className="text-sm">
+                            {new Date(reponse.date).toLocaleDateString('fr-FR', {
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric'
+                            })}
+                          </div>
+                        </div>
+                        
+                        <div className="p-2 bg-white/60 rounded border border-gray-100">
+                          <div className="flex items-center gap-1 text-sm font-medium text-gray-700 mb-1">
+                            <Clock className="w-3.5 h-3.5" /> 
+                            <span>Heure</span>
+                          </div>
+                          <div className="text-sm">
+                            {new Date(reponse.date).toLocaleTimeString('fr-FR', {
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </div>
+                        </div>
+                        
+                        <div className="p-2 bg-white/60 rounded border border-gray-100">
+                          <div className="flex items-center gap-1 text-sm font-medium text-gray-700 mb-1">
+                            <ToggleRight className="w-3.5 h-3.5" /> 
+                            <span>Statut</span>
+                          </div>
+                          <div className="text-sm">
+                            {reponse.etat ? "Réponse correcte" : "Réponse incorrecte"}
+                          </div>
+                        </div>
+                        
+                        <div className="p-2 bg-white/60 rounded border border-gray-100">
+                          <div className="flex items-center gap-1 text-sm font-medium text-gray-700 mb-1">
+                            <Info className="w-3.5 h-3.5" /> 
+                            <span>Version</span>
+                          </div>
+                          <div className="text-sm">
+                            {reponse.__v !== undefined ? `v${reponse.__v}` : "N/A"}
+                          </div>
+                        </div>
                       </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
           ) : (
             // Old response format - reponses is an array of strings
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {Array.isArray(question.reponses) && (question.reponses as string[]).map((reponse, rIndex) => (
-                <div
-                  key={rIndex}
-                  className={`p-4 rounded-lg ${
-                    reponse === question.reponse_correcte
-                      ? 'bg-green-50 border-green-200'
-                      : 'bg-gray-50 border-gray-100'
-                  } border transition-colors flex items-center justify-between`}
-                >
-                  <span className={`${reponse === question.reponse_correcte ? 'text-green-700 font-medium' : ''}`}>
-                    {reponse}
-                  </span>
-                  {reponse === question.reponse_correcte && (
-                    <Badge variant="success" className="flex items-center gap-1">
-                      <Check className="w-3 h-3" />
-                      <span>Correcte</span>
-                    </Badge>
-                  )}
-                </div>
-              ))}
+              {Array.isArray(question.reponses) && (question.reponses as string[]).map((reponse, rIndex) => {
+                const isCorrect = reponse === question.reponse_correcte;
+                
+                return (
+                  <Card key={rIndex} className={`border ${
+                    isCorrect ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-100'
+                  }`}>
+                    <CardHeader className="py-3 px-4">
+                      <CardTitle className="text-base flex justify-between items-center">
+                        <span className={isCorrect ? 'text-green-700' : ''}>
+                          {reponse}
+                        </span>
+                        {isCorrect && (
+                          <Badge variant="success" className="flex items-center gap-1">
+                            <Check className="w-3 h-3" />
+                            <span>Correcte</span>
+                          </Badge>
+                        )}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="py-2">
+                      <div className="p-2 bg-white/60 rounded border border-gray-100">
+                        <div className="flex items-center gap-1 text-sm font-medium text-gray-700 mb-1">
+                          <Info className="w-3.5 h-3.5" /> 
+                          <span>Détails</span>
+                        </div>
+                        <div className="text-sm">
+                          {isCorrect 
+                            ? "Cette réponse est marquée comme correcte" 
+                            : "Cette réponse est incorrecte"}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           )}
         </div>
         
-        {/* Question details */}
+        {/* Question details - Simplified */}
         <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-100">
-          <h3 className="font-medium text-base mb-2">Détails de la question:</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-            <div><span className="font-medium">ID:</span> {question._id}</div>
-            {question.type_fichier && (
-              <div><span className="font-medium">Type de fichier:</span> {question.type_fichier}</div>
-            )}
+          <h3 className="font-medium text-base mb-2">Informations sur la question:</h3>
+          <div className="grid grid-cols-2 gap-2 text-sm">
+            <div><span className="font-medium">Type:</span> {question.typeQuestion?.libelle || "Non spécifié"}</div>
+            <div><span className="font-medium">Points:</span> {question.point?.valeur || 0}</div>
             <div><span className="font-medium">Temps:</span> {question.temps || "30"} secondes</div>
-            <div><span className="font-medium">Limite de réponse:</span> {question.limite_response ? "Oui" : "Non"}</div>
-            
-            {question.typeQuestion && (
-              <div className="col-span-2">
-                <span className="font-medium">Type de question:</span> {question.typeQuestion.libelle}
-                {question.typeQuestion.description && (
-                  <div className="text-xs text-gray-500 mt-1">{question.typeQuestion.description}</div>
-                )}
-              </div>
-            )}
-            
-            {question.point && (
-              <div className="col-span-2">
-                <span className="font-medium">Points:</span> {question.point.valeur || 0}
-                {question.point.nature && (
-                  <span className="ml-2 text-xs">({question.point.nature})</span>
-                )}
-                {question.point.description && (
-                  <div className="text-xs text-gray-500 mt-1">{question.point.description}</div>
-                )}
-              </div>
-            )}
-            
-            {question.date && (
-              <div className="col-span-2">
-                <span className="font-medium">Date de création:</span> {new Date(question.date).toLocaleDateString('fr-FR', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })}
-              </div>
-            )}
+            <div><span className="font-medium">Chrono:</span> {question.limite_response ? "Activé" : "Désactivé"}</div>
           </div>
         </div>
       </CardContent>
