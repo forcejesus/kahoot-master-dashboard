@@ -32,7 +32,7 @@ export function LoadingCard({ delayIndex = 0 }: LoadingCardProps) {
           <Skeleton className="h-4 w-28" />
         </div>
       </CardContent>
-      <style jsx>{`
+      <style>{`
         @keyframes shimmer {
           100% {
             transform: translateX(100%);
