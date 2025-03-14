@@ -9,11 +9,15 @@ import { LoadingCard } from '@/components/ui/loading-card';
 
 export default function Index() {
   const [loading, setLoading] = useState(true);
+  const [statsLoading, setStatsLoading] = useState(true);
+  const [gamesLoading, setGamesLoading] = useState(true);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     // Force loading to true initially and reset progress
     setLoading(true);
+    setStatsLoading(true);
+    setGamesLoading(true);
     setProgress(0);
     
     // Simulation d'un chargement progressif avec une animation fluide
@@ -25,12 +29,15 @@ export default function Index() {
         // When we reach 100%, schedule the loading state change
         if (newProgress >= 100) {
           clearInterval(timer);
-          setTimeout(() => setLoading(false), 1000);
+          // Séquence l'affichage des éléments
+          setTimeout(() => setLoading(false), 500);
+          setTimeout(() => setStatsLoading(false), 1200);
+          setTimeout(() => setGamesLoading(false), 2000);
         }
         
         return newProgress;
       });
-    }, 50);
+    }, 30);
 
     // Cleanup function
     return () => {
@@ -88,79 +95,91 @@ export default function Index() {
               </div>
             </>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-fade-in">
-              <Card className="bg-white/80 backdrop-blur-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
-                <CardHeader>
-                  <CardTitle className="text-lg text-primary flex items-center gap-2">
-                    <BookOpen className="h-5 w-5" />
-                    Total des Kahoots
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <div className="text-3xl font-bold">0</div>
-                    <div className="text-sm text-muted-foreground">
-                      Kahoots créés
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+            <>
+              <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 transition-all duration-500 ${statsLoading ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
+                {statsLoading ? (
+                  // Cartes de chargement pour les statistiques
+                  Array.from({ length: 4 }).map((_, index) => (
+                    <LoadingCard key={index} delayIndex={index} />
+                  ))
+                ) : (
+                  // Contenu réel des statistiques
+                  <>
+                    <Card className="bg-white/80 backdrop-blur-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+                      <CardHeader>
+                        <CardTitle className="text-lg text-primary flex items-center gap-2">
+                          <BookOpen className="h-5 w-5" />
+                          Total des Kahoots
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-2">
+                          <div className="text-3xl font-bold">0</div>
+                          <div className="text-sm text-muted-foreground">
+                            Kahoots créés
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
 
-              <Card className="bg-white/80 backdrop-blur-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
-                <CardHeader>
-                  <CardTitle className="text-lg text-primary flex items-center gap-2">
-                    <Clock className="h-5 w-5" />
-                    Sessions actives
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <div className="text-3xl font-bold">0</div>
-                    <div className="text-sm text-muted-foreground">
-                      Sessions en cours
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                    <Card className="bg-white/80 backdrop-blur-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+                      <CardHeader>
+                        <CardTitle className="text-lg text-primary flex items-center gap-2">
+                          <Clock className="h-5 w-5" />
+                          Sessions actives
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-2">
+                          <div className="text-3xl font-bold">0</div>
+                          <div className="text-sm text-muted-foreground">
+                            Sessions en cours
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
 
-              <Card className="bg-white/80 backdrop-blur-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
-                <CardHeader>
-                  <CardTitle className="text-lg text-primary flex items-center gap-2">
-                    <Users className="h-5 w-5" />
-                    Participants
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <div className="text-3xl font-bold">0</div>
-                    <div className="text-sm text-muted-foreground">
-                      Participants totaux
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                    <Card className="bg-white/80 backdrop-blur-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+                      <CardHeader>
+                        <CardTitle className="text-lg text-primary flex items-center gap-2">
+                          <Users className="h-5 w-5" />
+                          Participants
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-2">
+                          <div className="text-3xl font-bold">0</div>
+                          <div className="text-sm text-muted-foreground">
+                            Participants totaux
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
 
-              <Card className="bg-white/80 backdrop-blur-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
-                <CardHeader>
-                  <CardTitle className="text-lg text-primary flex items-center gap-2">
-                    <Trophy className="h-5 w-5" />
-                    Meilleur score
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <div className="text-3xl font-bold">0</div>
-                    <div className="text-sm text-muted-foreground">
-                      Points maximums
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+                    <Card className="bg-white/80 backdrop-blur-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+                      <CardHeader>
+                        <CardTitle className="text-lg text-primary flex items-center gap-2">
+                          <Trophy className="h-5 w-5" />
+                          Meilleur score
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-2">
+                          <div className="text-3xl font-bold">0</div>
+                          <div className="text-sm text-muted-foreground">
+                            Points maximums
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </>
+                )}
+              </div>
+            </>
           )}
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className={`grid gap-6 md:grid-cols-2 lg:grid-cols-3 transition-all duration-500 ${gamesLoading ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
           <CreateKahootDialog />
         </div>
       </main>
