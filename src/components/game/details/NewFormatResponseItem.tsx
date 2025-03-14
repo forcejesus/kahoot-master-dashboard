@@ -31,8 +31,16 @@ export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItem
         .then(response => response.json())
         .then(result => {
           if (result.success && result.data) {
-            // Utiliser directement les données de result.data
-            setResponseDetail(result.data);
+            // Extraire les données de result.data comme spécifié
+            const data = result.data;
+            setResponseDetail({
+              _id: data._id,
+              etat: data.etat,
+              reponse_texte: data.reponse_texte,
+              question: data.question,
+              date: data.date,
+              __v: data.__v
+            });
           }
         })
         .catch(error => {
