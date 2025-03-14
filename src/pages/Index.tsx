@@ -12,24 +12,24 @@ export default function Index() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Simuler un chargement progressif avec une animation
+    // Simulation d'un chargement progressif avec une animation fluide
     const timer = setInterval(() => {
       setProgress((prevProgress) => {
         if (prevProgress >= 100) {
           clearInterval(timer);
-          setTimeout(() => setLoading(false), 500);
+          setTimeout(() => setLoading(false), 800); // Délai légèrement plus long pour voir l'animation complète
           return 100;
         }
-        return prevProgress + 5;
+        return prevProgress + 2; // Progression plus lente pour une meilleure expérience
       });
-    }, 120);
+    }, 80);
 
     return () => {
       clearInterval(timer);
     };
   }, []);
 
-  // Effet de particules pour l'animation
+  // Icônes animées qui apparaissent pendant le chargement
   const icons = [
     <GamepadIcon key="gamepad" className="text-primary/60" />,
     <Zap key="zap" className="text-secondary/60" />,
@@ -49,17 +49,29 @@ export default function Index() {
 
           {loading ? (
             <>
-              <div className="mb-6 relative overflow-hidden">
-                <div className="text-center mb-4 text-primary font-medium flex items-center justify-center">
+              <div className="mb-6 relative overflow-hidden bg-white/50 p-6 rounded-lg shadow-sm">
+                <div className="text-center mb-6 text-primary font-medium flex items-center justify-center">
                   <GamepadIcon className="mr-2 h-5 w-5 animate-bounce" />
                   <span className="animate-pulse">Chargement de vos Kahoots...</span>
-                  <div className="absolute top-1/2 transform -translate-y-1/2 right-1/4">
-                    {icons[Math.floor(progress / 33) % icons.length]}
-                  </div>
                 </div>
-                <Progress value={progress} className="h-3 w-full max-w-md mx-auto rounded-full overflow-hidden animate-pulse" />
-                <div className="text-xs text-center mt-2 text-muted-foreground">{Math.round(progress)}%</div>
+                <div className="absolute top-1/2 left-1/4 transform -translate-y-1/2 opacity-20">
+                  {icons[0]}
+                </div>
+                <div className="absolute top-1/3 right-1/4 transform -translate-y-1/2 opacity-20">
+                  {icons[1]}
+                </div>
+                <div className="absolute bottom-1/4 right-1/3 transform -translate-y-1/2 opacity-20">
+                  {icons[2]}
+                </div>
+                <Progress 
+                  value={progress} 
+                  className="h-3 w-full max-w-md mx-auto rounded-full overflow-hidden" 
+                />
+                <div className="text-sm text-center mt-3 font-medium text-primary">
+                  {Math.round(progress)}%
+                </div>
               </div>
+              
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {Array.from({ length: 4 }).map((_, index) => (
                   <LoadingCard key={index} delayIndex={index} />
