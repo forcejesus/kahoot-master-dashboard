@@ -22,6 +22,7 @@ export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItem
     if (reponse && typeof reponse === 'object' && reponse._id && (!reponse.reponse_texte || reponse.reponse_texte === "")) {
       setLoading(true);
       
+      // Utilisation de l'endpoint correct avec l'ID de la réponse
       fetch(`http://kahoot.nos-apps.com/api/reponse/${reponse._id}`, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -30,6 +31,7 @@ export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItem
         .then(response => response.json())
         .then(result => {
           if (result.success && result.data) {
+            // N'extraire que les données nécessaires selon le format spécifié
             setResponseDetail(result.data);
           }
         })
