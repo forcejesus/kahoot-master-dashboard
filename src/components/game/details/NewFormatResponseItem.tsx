@@ -24,7 +24,7 @@ export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItem
                       reponse._id && 
                       (!reponse.reponse_texte || reponse.reponse_texte === "");
                       
-    const isIdString = typeof reponse === 'string' && reponse.length > 20;
+    const isIdString = typeof reponse._id === 'string' && reponse._id.length > 20;
     
     if (hasOnlyId || isIdString) {
       setLoading(true);
@@ -84,8 +84,8 @@ export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItem
   // S'assurer que nous avons le texte de la réponse, pas seulement un ID
   const responseText = typeof responseData === 'object' && responseData.reponse_texte 
     ? responseData.reponse_texte 
-    : typeof responseData === 'string' 
-      ? (responseData.length > 20 ? "Chargement..." : responseData) 
+    : typeof responseData._id === 'string' 
+      ? (responseData._id.length > 20 ? "Chargement..." : responseData._id) 
       : "Chargement...";
   
   // Déterminer si la réponse est correcte

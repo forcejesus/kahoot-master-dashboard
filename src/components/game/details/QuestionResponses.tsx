@@ -26,14 +26,14 @@ export function QuestionResponses({ question, isNewResponseFormat }: QuestionRes
     // avec seulement l'ID, et laissons le composant NewFormatResponseItem faire le fetch
     if (allResponsesAreMongoDB) {
       console.log("Détecté des réponses au format ID seul:", question.reponses);
-      return question.reponses.map((id: string) => ({
+      return (question.reponses as string[]).map((id: string) => ({
         _id: id,
         etat: false, // Sera actualisé lors du chargement des détails
         reponse_texte: "" // Sera actualisé lors du chargement des détails
       }));
     }
     
-    return question.reponses.map((reponse: any) => {
+    return (question.reponses as (QuestionReponse | string)[]).map((reponse: QuestionReponse | string) => {
       // Si la réponse est déjà un objet
       if (typeof reponse === 'object' && reponse !== null) {
         // Si c'est un objet complet
