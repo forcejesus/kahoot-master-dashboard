@@ -17,6 +17,22 @@ export function QuestionResponses({ question, isNewResponseFormat }: QuestionRes
   const prepareResponses = (): QuestionReponse[] => {
     if (!Array.isArray(question.reponses)) return [];
     
+    // Vérifier si toutes les réponses sont des chaînes qui ressemblent à des IDs MongoDB
+    const allResponsesAreMongoDB = question.reponses.every(
+      (response) => typeof response === 'string' && response.length > 20
+    );
+    
+    // Si toutes les réponses semblent être des IDs MongoDB, convertissons-les en objets
+    // avec seulement l'ID, et laissons le composant NewFormatResponseItem faire le fetch
+    if (allResponsesAreMongoDB) {
+      console.log("Détecté des réponses au format ID seul:", question.reponses);
+      return question.reponses.map((id: string) => ({
+        _id: id,
+        etat: false, // Sera actualisé lors du chargement des détails
+        reponse_texte: "" // Sera actualisé lors du chargement des détails
+      }));
+    }
+    
     return question.reponses.map((reponse: any) => {
       // Si la réponse est déjà un objet
       if (typeof reponse === 'object' && reponse !== null) {
@@ -51,6 +67,10 @@ export function QuestionResponses({ question, isNewResponseFormat }: QuestionRes
   
   const formattedResponses = prepareResponses();
 
+  // Forcer l'utilisation du nouveau format pour les IDs MongoDB
+  const shouldUseNewFormat = isNewResponseFormat || 
+    (Array.isArray(question.reponses) && question.reponses.some(r => typeof r === 'string' && r.length > 20));
+
   return (
     <div className="space-y-4 mt-4">
       <h3 className="font-medium text-base flex items-center gap-2">
@@ -58,7 +78,7 @@ export function QuestionResponses({ question, isNewResponseFormat }: QuestionRes
         Réponses possibles: {responseCount}
       </h3>
       
-      {isNewResponseFormat ? (
+      {shouldUseNewFormat ? (
         <div className="space-y-3">
           {formattedResponses.map((reponse, rIndex) => (
             <NewFormatResponseItem 

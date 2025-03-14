@@ -19,21 +19,37 @@ export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItem
   const [showDetails, setShowDetails] = useState(false);
 
   useEffect(() => {
-    // Si nous avons un ID mais pas de texte de réponse, récupérer les détails depuis l'API
-    if (reponse && typeof reponse === 'object' && reponse._id && (!reponse.reponse_texte || reponse.reponse_texte === "")) {
+    // Vérifier si nous avons seulement un ID MongoDB (une chaîne de plus de 20 caractères)
+    const hasOnlyId = typeof reponse === 'object' && 
+                      reponse._id && 
+                      (!reponse.reponse_texte || reponse.reponse_texte === "");
+                      
+    const isIdString = typeof reponse === 'string' && reponse.length > 20;
+    
+    if (hasOnlyId || isIdString) {
       setLoading(true);
       
-      // Utilisation de l'endpoint correct avec l'ID de la réponse
-      fetch(`http://kahoot.nos-apps.com/api/reponse/${reponse._id}`, {
+      // Déterminer l'ID à utiliser pour la requête
+      const idToFetch = hasOnlyId ? reponse._id : reponse;
+      
+      // Fetch les détails de la réponse depuis l'API
+      fetch(`http://kahoot.nos-apps.com/api/reponse/${idToFetch}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       })
-        .then(response => response.json())
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Erreur réseau');
+          }
+          return response.json();
+        })
         .then(result => {
           if (result.success && result.data) {
-            // Dans ce cas, result.data EST la réponse complète, pas besoin d'extraire davantage
+            console.log("Détails de réponse récupérés:", result.data);
             setResponseDetail(result.data);
+          } else {
+            console.error("Pas de données dans la réponse:", result);
           }
         })
         .catch(error => {
@@ -42,7 +58,7 @@ export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItem
         .finally(() => {
           setLoading(false);
         });
-    } else if (reponse && typeof reponse === 'object' && reponse.reponse_texte) {
+    } else if (reponse && typeof reponse === 'object') {
       // Si nous avons déjà le texte de la réponse
       setResponseDetail(reponse);
     }
@@ -69,7 +85,7 @@ export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItem
   const responseText = typeof responseData === 'object' && responseData.reponse_texte 
     ? responseData.reponse_texte 
     : typeof responseData === 'string' 
-      ? responseData 
+      ? (responseData.length > 20 ? "Chargement..." : responseData) 
       : "Chargement...";
   
   // Déterminer si la réponse est correcte

@@ -20,6 +20,7 @@ export function QuestionCard({ question, index, token }: QuestionCardProps) {
       : null;
 
   // Vérifier si les réponses sont dans le nouveau format (tableau d'objets avec propriétés)
+  // Ou si ce sont des IDs MongoDB (chaînes longues)
   const determineResponseFormat = (): boolean => {
     if (!question.reponses || !Array.isArray(question.reponses) || question.reponses.length === 0) {
       return false;
@@ -32,7 +33,12 @@ export function QuestionCard({ question, index, token }: QuestionCardProps) {
       return true;
     }
     
-    // Sinon c'est l'ancien format (tableau de chaînes)
+    // Si c'est un ID MongoDB (chaîne de plus de 20 caractères), considérer comme nouveau format
+    if (typeof firstResponse === 'string' && firstResponse.length > 20) {
+      return true;
+    }
+    
+    // Sinon c'est l'ancien format (tableau de chaînes courtes)
     return false;
   };
   
