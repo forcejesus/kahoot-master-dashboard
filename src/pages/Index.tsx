@@ -14,38 +14,35 @@ export default function Index() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Force loading to true initially and reset progress
+    // Reset all loading states and progress
     setLoading(true);
     setStatsLoading(true);
     setGamesLoading(true);
     setProgress(0);
     
-    // Simulation d'un chargement progressif avec une animation fluide
+    // Create a more dynamic loading effect with proper animation sequence
     const timer = setInterval(() => {
       setProgress((prevProgress) => {
-        // Ensure we don't exceed 100%
         const newProgress = Math.min(prevProgress + 1, 100);
         
-        // When we reach 100%, schedule the loading state change
-        if (newProgress >= 100) {
+        // When progress reaches specific thresholds, trigger loading state changes
+        if (newProgress === 100) {
           clearInterval(timer);
-          // Séquence l'affichage des éléments
-          setTimeout(() => setLoading(false), 500);
-          setTimeout(() => setStatsLoading(false), 1200);
-          setTimeout(() => setGamesLoading(false), 2000);
+          setTimeout(() => setLoading(false), 300);
+          setTimeout(() => setStatsLoading(false), 800);
+          setTimeout(() => setGamesLoading(false), 1300);
         }
         
         return newProgress;
       });
-    }, 30);
+    }, 25); // Faster speed for smoother progress
 
-    // Cleanup function
     return () => {
       clearInterval(timer);
     };
-  }, []); // Empty dependency array ensures this runs only once
+  }, []);
 
-  // Icônes animées qui apparaissent pendant le chargement
+  // Animated icons that appear during loading
   const icons = [
     <GamepadIcon key="gamepad" className="text-primary animate-bounce" size={36} />,
     <Zap key="zap" className="text-secondary animate-pulse" size={36} />,
@@ -81,7 +78,7 @@ export default function Index() {
                 </div>
                 <Progress 
                   value={progress} 
-                  className="h-3 w-full max-w-md mx-auto rounded-full overflow-hidden" 
+                  className="h-3 w-full max-w-md mx-auto rounded-full overflow-hidden bg-gray-200" 
                 />
                 <div className="text-sm text-center mt-3 font-medium text-primary">
                   {Math.round(progress)}%
@@ -96,7 +93,7 @@ export default function Index() {
             </>
           ) : (
             <>
-              <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 transition-all duration-500 ${statsLoading ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
+              <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 transition-all duration-700 ${statsLoading ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
                 {statsLoading ? (
                   // Cartes de chargement pour les statistiques
                   Array.from({ length: 4 }).map((_, index) => (
@@ -179,7 +176,7 @@ export default function Index() {
           )}
         </div>
 
-        <div className={`grid gap-6 md:grid-cols-2 lg:grid-cols-3 transition-all duration-500 ${gamesLoading ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
+        <div className={`grid gap-6 md:grid-cols-2 lg:grid-cols-3 transition-all duration-700 ${gamesLoading ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
           <CreateKahootDialog />
         </div>
       </main>

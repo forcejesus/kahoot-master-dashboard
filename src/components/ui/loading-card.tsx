@@ -20,7 +20,7 @@ export function LoadingCard({ delayIndex = 0 }: LoadingCardProps) {
       />
       <CardHeader>
         <CardTitle className="text-lg text-primary flex items-center gap-2">
-          <Skeleton className="h-5 w-5 rounded-full" />
+          <Skeleton className="h-5 w-5 rounded-full animate-pulse" />
           <Skeleton className="h-4 w-32" />
         </CardTitle>
       </CardHeader>
@@ -32,13 +32,13 @@ export function LoadingCard({ delayIndex = 0 }: LoadingCardProps) {
           <Skeleton className="h-4 w-28" />
         </div>
       </CardContent>
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style>{`
         @keyframes shimmer {
           100% {
             transform: translateX(100%);
           }
         }
-      `}} />
+      `}</style>
     </Card>
   );
 }
