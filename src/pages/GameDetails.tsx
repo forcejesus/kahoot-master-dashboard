@@ -7,10 +7,9 @@ import { ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import { Kahoot } from '@/types/game-details';
 import { GameHeader } from '@/components/game/details/GameHeader';
-import { GameStats } from '@/components/game/details/GameStats';
-import { ActiveSessions } from '@/components/game/details/ActiveSessions';
-import { QuestionsDisplay } from '@/components/game/details/QuestionsDisplay';
 import { useEffect, useState } from 'react';
+import { GameBackgroundImage } from '@/components/game/details/GameBackgroundImage';
+import { GameDetailsTabs } from '@/components/game/details/GameDetailsTabs';
 
 export default function GameDetails() {
   const navigate = useNavigate();
@@ -93,23 +92,7 @@ export default function GameDetails() {
       
       <div className="relative">
         {/* Background Image Section */}
-        <div className="absolute inset-0 h-[400px] overflow-hidden">
-          {jeu.image ? (
-            <>
-              <div 
-                className="absolute inset-0 bg-cover bg-center z-0"
-                style={{ 
-                  backgroundImage: `url(http://kahoot.nos-apps.com/${jeu.image})`,
-                  filter: 'blur(2px)',
-                  transform: 'scale(1.1)' 
-                }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-gray-50 z-1" />
-            </>
-          ) : (
-            <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-gray-50" />
-          )}
-        </div>
+        <GameBackgroundImage jeu={jeu} />
 
         {/* Content Section */}
         <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -130,20 +113,13 @@ export default function GameDetails() {
               onRefresh={refreshGameDetails} 
             />
 
-            <GameStats 
+            {/* Tabbed interface for game statistics */}
+            <GameDetailsTabs 
               jeu={jeu} 
               planificationsEnCours={planificationsEnCours} 
               onCopyPin={handleCopyPin} 
             />
           </div>
-
-          <ActiveSessions 
-            planificationsEnCours={planificationsEnCours} 
-            onCopyPin={handleCopyPin}
-            gameId={jeu._id}
-          />
-
-          <QuestionsDisplay questions={jeu.questions} />
         </main>
       </div>
     </div>

@@ -21,6 +21,7 @@ export interface Planification {
     apprenant: string;
     score: number;
   };
+  questions?: Question[];
 }
 
 export interface PlanificationFormData {
@@ -41,12 +42,12 @@ export interface PlanificationResponse {
 }
 
 export interface QuestionReponse {
-  _id: string;
-  etat: boolean;
+  _id?: string;
+  etat: boolean | number;
   reponse_texte: string;
-  question: string;
-  date: string;
-  __v: number;
+  question?: string;
+  date?: string;
+  __v?: number;
 }
 
 export interface QuestionType {

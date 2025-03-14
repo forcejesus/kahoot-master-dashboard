@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import GameDetails from "./pages/GameDetails";
 import GameSetup from "./pages/GameSetup";
 import GameSchedule from "./pages/GameSchedule";
+import PlanificationDetails from "./pages/PlanificationDetails";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -41,6 +42,11 @@ function AppRoutes() {
       <Route path="/game/:id/schedule" element={
         <PrivateRoute>
           <GameSchedule />
+        </PrivateRoute>
+      } />
+      <Route path="/planification/:id" element={
+        <PrivateRoute>
+          <PlanificationDetails />
         </PrivateRoute>
       } />
       <Route path="*" element={<NotFound />} />
