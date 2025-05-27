@@ -43,10 +43,9 @@ export function AdvancedLoading({
       {showIcons && icons.map((item, index) => (
         <div 
           key={index}
-          className={`absolute ${positions[index]} opacity-20 transition-all duration-1000`}
+          className={`absolute ${positions[index]} opacity-20 transition-all duration-1000 animate-float`}
           style={{ 
-            animationDelay: item.delay,
-            animation: `float 3s ease-in-out infinite`
+            animationDelay: item.delay
           }}
         >
           <item.Icon 
@@ -102,22 +101,6 @@ export function AdvancedLoading({
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-10px) rotate(5deg); }
-        }
-        
-        @keyframes shimmer {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
-        }
-        
-        .animate-shimmer {
-          animation: shimmer 2s infinite;
-        }
-      `}</style>
     </div>
   );
 }
