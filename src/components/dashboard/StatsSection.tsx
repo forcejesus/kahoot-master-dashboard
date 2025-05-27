@@ -1,8 +1,9 @@
-
 import { useState, useEffect } from 'react';
 import { StatCard } from './StatCard';
 import { CreateKahootDialog } from '@/components/CreateKahootDialog';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTranslation } from '@/contexts/I18nContext';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface StatsSectionProps {
   onKahootCreated: () => void;
@@ -10,6 +11,7 @@ interface StatsSectionProps {
 
 export function StatsSection({ onKahootCreated }: StatsSectionProps) {
   const { token } = useAuth();
+  const { t } = useTranslation();
   const [kahoots, setKahoots] = useState([]);
   const [totalApprenants, setTotalApprenants] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -41,13 +43,13 @@ export function StatsSection({ onKahootCreated }: StatsSectionProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
       <StatCard 
-        title="Total des Kahoots" 
+        title={t('dashboard.totalKahoots')} 
         value={kahoots.length} 
         isLoading={isLoading}
       />
       
       <StatCard 
-        title="Total des Apprenants" 
+        title={t('dashboard.totalLearners')} 
         value={totalApprenants} 
         isLoading={isLoading}
       />
@@ -60,5 +62,3 @@ export function StatsSection({ onKahootCreated }: StatsSectionProps) {
     </div>
   );
 }
-
-import { Card, CardContent } from '@/components/ui/card';

@@ -1,5 +1,5 @@
-
 import React from 'react';
+import { useTranslation } from '@/contexts/I18nContext';
 import { Loader2 } from 'lucide-react';
 import {
   AlertDialog,
@@ -27,18 +27,23 @@ export function DeleteConfirmDialog({
   selectedCount,
   isDeleting
 }: DeleteConfirmDialogProps) {
+  const { t } = useTranslation();
+
   return (
     <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
+          <AlertDialogTitle>{t('delete.confirm')}</AlertDialogTitle>
           <AlertDialogDescription>
-            Cette action va supprimer {selectedCount} kahoot{selectedCount > 1 ? 's' : ''} de manière permanente.
-            Cette action est irréversible.
+            {selectedCount > 1 
+              ? t('delete.confirmDescriptionPlural', { count: selectedCount })
+              : t('delete.confirmDescription', { count: selectedCount })
+            }
+            {' '}Cette action est irréversible.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isDeleting}>Annuler</AlertDialogCancel>
+          <AlertDialogCancel disabled={isDeleting}>{t('delete.cancel')}</AlertDialogCancel>
           <AlertDialogAction 
             onClick={onConfirmDelete}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
@@ -47,10 +52,10 @@ export function DeleteConfirmDialog({
             {isDeleting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Suppression...
+                {t('delete.deleting')}
               </>
             ) : (
-              "Supprimer"
+              t('delete.delete')
             )}
           </AlertDialogAction>
         </AlertDialogFooter>

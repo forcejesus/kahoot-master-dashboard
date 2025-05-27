@@ -1,18 +1,21 @@
 
 import React from 'react';
 import { AdvancedLoading } from '@/components/ui/advanced-loading';
+import { useTranslation } from '@/contexts/I18nContext';
 
 interface LoadingScreenProps {
   progress: number;
 }
 
 export function LoadingScreen({ progress }: LoadingScreenProps) {
+  const { t } = useTranslation();
+  
   return (
     <div className="mb-8 flex justify-center">
       <AdvancedLoading 
         progress={progress}
-        title="Chargement de vos données statistiques..."
-        description="Préparation de votre tableau de bord personnalisé"
+        title={t('loading.statsTitle')}
+        description={t('loading.statsDescription')}
         showIcons={true}
       />
     </div>

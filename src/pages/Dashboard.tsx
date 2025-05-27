@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTranslation } from '@/contexts/I18nContext';
 import { Navbar } from '@/components/Navbar';
 import { toast } from 'sonner';
 import { StatsSection } from '@/components/dashboard/StatsSection';
@@ -10,14 +11,15 @@ import { CheckCircle, XCircle, Loader2 } from 'lucide-react';
 
 export default function Dashboard() {
   const { token } = useAuth();
+  const { t } = useTranslation();
   const [kahoots, setKahoots] = useState<Kahoot[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchData = async () => {
     const loadingToastId = toast.loading(
-      "Chargement des données...", 
+      t('loading.data'), 
       {
-        description: "Récupération de vos Kahoots",
+        description: t('loading.dataDescription'),
         icon: <Loader2 className="w-4 h-4 animate-spin" />,
         duration: Infinity,
       }
@@ -33,9 +35,9 @@ export default function Dashboard() {
       // Dismiss loading toast and show success
       toast.dismiss(loadingToastId);
       toast.success(
-        "Données chargées avec succès !",
+        t('success.dataLoaded'),
         {
-          description: `${data.data.length} Kahoot(s) trouvé(s)`,
+          description: t('success.dataLoadedDescription', { count: data.data.length }),
           icon: <CheckCircle className="w-4 h-4" />,
           duration: 4000,
         }
@@ -43,9 +45,9 @@ export default function Dashboard() {
     } catch (error) {
       toast.dismiss(loadingToastId);
       toast.error(
-        "Erreur lors du chargement",
+        t('error.loadingFailed'),
         {
-          description: "Impossible de récupérer vos données. Veuillez réessayer.",
+          description: t('error.loadingFailedDescription'),
           icon: <XCircle className="w-4 h-4" />,
           duration: 5000,
         }
@@ -61,9 +63,9 @@ export default function Dashboard() {
 
   const handleDeleteKahoots = async (kahootIds: string[]) => {
     const loadingToastId = toast.loading(
-      "Suppression en cours...",
+      t('loading.deleting'),
       {
-        description: `Suppression de ${kahootIds.length} Kahoot(s)`,
+        description: t('loading.deletingDescription', { count: kahootIds.length }),
         icon: <Loader2 className="w-4 h-4 animate-spin" />,
         duration: Infinity,
       }
@@ -81,9 +83,9 @@ export default function Dashboard() {
       
       toast.dismiss(loadingToastId);
       toast.success(
-        "Suppression réussie !",
+        t('success.deleteSuccess'),
         {
-          description: `${kahootIds.length} Kahoot(s) supprimé(s) avec succès`,
+          description: t('success.deleteSuccessDescription', { count: kahootIds.length }),
           icon: <CheckCircle className="w-4 h-4" />,
           duration: 4000,
         }
@@ -92,9 +94,9 @@ export default function Dashboard() {
     } catch (error) {
       toast.dismiss(loadingToastId);
       toast.error(
-        "Erreur lors de la suppression",
+        t('error.deleteFailed'),
         {
-          description: "Une erreur est survenue. Veuillez réessayer.",
+          description: t('error.deleteFailedDescription'),
           icon: <XCircle className="w-4 h-4" />,
           duration: 5000,
         }
