@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Language, TranslationKey, TranslationKeys } from '@/types/i18n';
 import { translations } from '@/i18n/translations';
@@ -36,7 +35,7 @@ export function I18nProvider({ children, defaultLanguage = 'fr' }: I18nProviderP
     setLanguageState(lang);
     localStorage.setItem('kahoot-language', lang);
     document.documentElement.lang = lang;
-    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.dir = 'ltr';
   };
 
   useEffect(() => {
@@ -62,7 +61,7 @@ export function I18nProvider({ children, defaultLanguage = 'fr' }: I18nProviderP
     language,
     setLanguage,
     t,
-    isRTL: false, // Add RTL support later if needed
+    isRTL: false, // Only supporting LTR languages for now (fr/en)
   };
 
   return (
