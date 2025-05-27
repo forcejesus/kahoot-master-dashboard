@@ -57,13 +57,7 @@ export function LoadingScreen({ progress }: LoadingScreenProps) {
           value={progress} 
           className="h-3 w-full max-w-md mx-auto rounded-full overflow-hidden bg-gray-200" 
         />
-        <div 
-          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent" 
-          style={{
-            transform: "translateX(-100%)",
-            animation: `shimmer 2s infinite linear`,
-          }}
-        />
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent shimmer" />
       </div>
       
       <div className="text-sm text-center mt-3 font-medium text-primary">
@@ -71,14 +65,6 @@ export function LoadingScreen({ progress }: LoadingScreenProps) {
           {Math.round(progress)}%
         </span>
       </div>
-      
-      <style jsx>{`
-        @keyframes shimmer {
-          100% {
-            transform: translateX(100%);
-          }
-        }
-      `}</style>
     </div>
   );
 }
