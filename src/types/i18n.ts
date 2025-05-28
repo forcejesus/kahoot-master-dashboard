@@ -2,6 +2,22 @@
 export type Language = 'fr' | 'en';
 
 export interface TranslationKeys {
+  // Authentication
+  'auth.title': string;
+  'auth.subtitle': string;
+  'auth.email': string;
+  'auth.emailPlaceholder': string;
+  'auth.password': string;
+  'auth.passwordPlaceholder': string;
+  'auth.signIn': string;
+  'auth.loggingIn': string;
+  'auth.forgotPassword': string;
+  'auth.secureEducator': string;
+  'auth.loginSuccess': string;
+  'auth.welcomeMessage': string;
+  'auth.loginFailed': string;
+  'auth.checkCredentials': string;
+  
   // Navigation
   'nav.logout': string;
   'nav.dashboard': string;

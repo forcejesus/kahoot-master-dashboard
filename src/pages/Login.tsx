@@ -2,11 +2,13 @@
 import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTranslation } from '@/contexts/I18nContext';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Eye, EyeOff, Mail, Lock, Gamepad2, Sparkles, ArrowRight } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, Gamepad2, ArrowRight } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function Login() {
@@ -14,18 +16,19 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const { login, isAuthenticated, isLoading } = useAuth();
+  const { t } = useTranslation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await login({ email, password });
-      toast.success('Connexion réussie !', {
-        description: 'Bienvenue dans votre espace Kahoot',
+      toast.success(t('auth.loginSuccess'), {
+        description: t('auth.welcomeMessage'),
         duration: 3000,
       });
     } catch (err) {
-      toast.error('Échec de connexion', {
-        description: 'Veuillez vérifier vos identifiants et réessayer',
+      toast.error(t('auth.loginFailed'), {
+        description: t('auth.checkCredentials'),
         duration: 4000,
       });
     }
@@ -36,31 +39,32 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 relative overflow-hidden">
-      {/* Animated background elements */}
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 relative overflow-hidden">
+      {/* Language switcher in top right */}
+      <div className="absolute top-6 right-6 z-20">
+        <LanguageSwitcher variant="outline" showLabel={true} />
+      </div>
+
+      {/* Professional background elements */}
       <div className="absolute inset-0">
-        <div className="absolute top-20 left-20 w-32 h-32 bg-purple-500/20 rounded-full blur-xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-20 w-48 h-48 bg-blue-500/20 rounded-full blur-xl animate-pulse delay-700"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-indigo-500/10 rounded-full blur-2xl animate-pulse delay-1000"></div>
+        <div className="absolute top-20 left-20 w-32 h-32 bg-blue-500/10 rounded-full blur-xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-20 w-48 h-48 bg-indigo-500/10 rounded-full blur-xl animate-pulse delay-700"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-slate-500/5 rounded-full blur-2xl animate-pulse delay-1000"></div>
       </div>
 
       <div className="w-full max-w-md mx-4 relative z-10">
-        {/* Floating card effect */}
-        <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur opacity-25 animate-pulse"></div>
-        
-        <Card className="relative bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl">
+        <Card className="bg-white/95 backdrop-blur-sm border border-white/20 shadow-2xl">
           <CardHeader className="text-center space-y-4 pb-8">
-            <div className="mx-auto w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg">
+            <div className="mx-auto w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
               <Gamepad2 className="w-8 h-8 text-white" />
             </div>
             
             <div className="space-y-2">
-              <CardTitle className="text-3xl font-bold text-white flex items-center justify-center gap-2">
-                Kahoot Pro
-                <Sparkles className="w-6 h-6 text-yellow-400 animate-pulse" />
+              <CardTitle className="text-3xl font-bold text-gray-900">
+                {t('auth.title')}
               </CardTitle>
-              <CardDescription className="text-gray-300 text-lg">
-                Connectez-vous à votre espace éducateur
+              <CardDescription className="text-gray-600 text-lg">
+                {t('auth.subtitle')}
               </CardDescription>
             </div>
           </CardHeader>
@@ -69,42 +73,42 @@ export default function Login() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-white font-medium">
-                    Adresse email
+                  <Label htmlFor="email" className="text-gray-700 font-medium">
+                    {t('auth.email')}
                   </Label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                     <Input
                       id="email"
                       type="email"
-                      placeholder="votre@email.com"
+                      placeholder={t('auth.emailPlaceholder')}
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
-                      className="pl-12 bg-white/5 border-white/20 text-white placeholder:text-gray-400 focus:bg-white/10 focus:border-purple-400 transition-all duration-200"
+                      className="pl-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="password" className="text-white font-medium">
-                    Mot de passe
+                  <Label htmlFor="password" className="text-gray-700 font-medium">
+                    {t('auth.password')}
                   </Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                     <Input
                       id="password"
                       type={showPassword ? "text" : "password"}
-                      placeholder="••••••••"
+                      placeholder={t('auth.passwordPlaceholder')}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
-                      className="pl-12 pr-12 bg-white/5 border-white/20 text-white placeholder:text-gray-400 focus:bg-white/10 focus:border-purple-400 transition-all duration-200"
+                      className="pl-12 pr-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                     >
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
@@ -114,17 +118,17 @@ export default function Login() {
 
               <Button 
                 type="submit" 
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg shadow-purple-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={isLoading}
               >
                 {isLoading ? (
                   <div className="flex items-center gap-2">
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    Connexion en cours...
+                    {t('auth.loggingIn')}
                   </div>
                 ) : (
                   <div className="flex items-center gap-2">
-                    Se connecter
+                    {t('auth.signIn')}
                     <ArrowRight className="w-5 h-5" />
                   </div>
                 )}
@@ -132,17 +136,16 @@ export default function Login() {
             </form>
 
             <div className="text-center">
-              <button className="text-gray-300 hover:text-white transition-colors text-sm underline">
-                Mot de passe oublié ?
+              <button className="text-gray-500 hover:text-gray-700 transition-colors text-sm underline">
+                {t('auth.forgotPassword')}
               </button>
             </div>
           </CardContent>
         </Card>
 
-        {/* Subtle animation hint */}
         <div className="text-center mt-6">
-          <p className="text-gray-400 text-sm">
-            Plateforme sécurisée pour éducateurs
+          <p className="text-gray-300 text-sm">
+            {t('auth.secureEducator')}
           </p>
         </div>
       </div>
