@@ -29,7 +29,7 @@ export function WelcomeHeader() {
           <div>
             <h1 className="text-3xl font-bold">{getGreeting()}</h1>
             <p className="text-blue-100 text-lg">
-              {t('dashboard.welcomeBack', { name: user?.nom || t('dashboard.user') })}
+              {t('dashboard.welcomeBack', { name: user?.name || t('dashboard.user') })}
             </p>
           </div>
         </div>
