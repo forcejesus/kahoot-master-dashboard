@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTranslation } from "@/contexts/I18nContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,6 +27,7 @@ export function CreateKahootDialog({ onSuccess }: CreateKahootDialogProps) {
   const [titre, setTitre] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const { token } = useAuth();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const resetForm = () => {
@@ -41,7 +43,7 @@ export function CreateKahootDialog({ onSuccess }: CreateKahootDialogProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!titre.trim()) {
-      toast.error("Le titre est requis");
+      toast.error(t('create.titleRequired'));
       return;
     }
 
@@ -65,7 +67,7 @@ export function CreateKahootDialog({ onSuccess }: CreateKahootDialogProps) {
       const data = await response.json();
       
       if (response.ok && data.statut === 200) {
-        toast.success(data.message || "Kahoot créé avec succès");
+        toast.success(data.message || t('create.success'));
         setIsOpen(false);
         resetForm();
         if (data.jeu) {
@@ -79,12 +81,12 @@ export function CreateKahootDialog({ onSuccess }: CreateKahootDialogProps) {
         }
         onSuccess?.();
       } else {
-        toast.error(data.message || "Erreur lors de la création du kahoot");
+        toast.error(data.message || t('create.error'));
         console.error("API Error:", data);
       }
     } catch (error) {
       console.error("Request Error:", error);
-      toast.error("Erreur lors de la création du kahoot");
+      toast.error(t('create.error'));
     } finally {
       setIsLoading(false);
     }
@@ -105,19 +107,19 @@ export function CreateKahootDialog({ onSuccess }: CreateKahootDialogProps) {
           className="w-full text-lg h-20 bg-white text-primary hover:bg-white/90 transition-all duration-200 transform hover:scale-[1.02] shadow-xl"
         >
           <Plus className="mr-2 h-6 w-6" />
-          Créer un Kahoot
+          {t('create.kahoot')}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Créer un nouveau Kahoot</DialogTitle>
+          <DialogTitle>{t('create.newKahoot')}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6 pt-4">
           <div className="space-y-2">
-            <Label htmlFor="titre">Titre</Label>
+            <Label htmlFor="titre">{t('create.titleLabel')}</Label>
             <Input
               id="titre"
-              placeholder="Entrez le titre du kahoot"
+              placeholder={t('create.titlePlaceholder')}
               value={titre}
               onChange={(e) => setTitre(e.target.value)}
               disabled={isLoading}
@@ -125,7 +127,7 @@ export function CreateKahootDialog({ onSuccess }: CreateKahootDialogProps) {
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="image">Image</Label>
+            <Label htmlFor="image">{t('create.imageLabel')}</Label>
             <div className="flex items-center gap-4">
               <Input
                 id="image"
@@ -143,7 +145,7 @@ export function CreateKahootDialog({ onSuccess }: CreateKahootDialogProps) {
                 disabled={isLoading}
               >
                 <ImageIcon className="mr-2 h-4 w-4" />
-                {image ? "Changer l'image" : "Ajouter une image"}
+                {image ? t('create.changeImage') : t('create.addImage')}
               </Button>
               {image && (
                 <span className="text-sm text-muted-foreground truncate max-w-[150px]">
@@ -157,7 +159,7 @@ export function CreateKahootDialog({ onSuccess }: CreateKahootDialogProps) {
             <DialogClose asChild>
               <Button type="button" variant="outline" className="w-full" disabled={isLoading}>
                 <ArrowLeft className="mr-2 h-4 w-4" />
-                Annuler
+                {t('create.cancel')}
               </Button>
             </DialogClose>
             
@@ -165,10 +167,10 @@ export function CreateKahootDialog({ onSuccess }: CreateKahootDialogProps) {
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Création en cours...
+                  {t('create.creating')}
                 </>
               ) : (
-                "Créer le Kahoot"
+                t('create.kahoot')
               )}
             </Button>
           </div>

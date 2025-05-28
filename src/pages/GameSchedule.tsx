@@ -1,5 +1,6 @@
 
 import { useLocation } from "react-router-dom";
+import { useTranslation } from "@/contexts/I18nContext";
 import { Navbar } from "@/components/Navbar";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Kahoot } from "@/types/game-details";
@@ -8,6 +9,7 @@ import { HomeIcon, CalendarClock } from "lucide-react";
 
 export default function GameSchedule() {
   const location = useLocation();
+  const { t } = useTranslation();
   const kahoot = location.state?.jeu as Kahoot | undefined;
 
   return (
@@ -20,20 +22,20 @@ export default function GameSchedule() {
             <BreadcrumbItem>
               <BreadcrumbLink href="/dashboard">
                 <HomeIcon className="h-4 w-4 mr-1" />
-                Dashboard
+                {t('breadcrumb.dashboard')}
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink href={`/game/${kahoot?._id}`}>
-                {kahoot?.titre || "Jeu"}
+                {kahoot?.titre || t('breadcrumb.game')}
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <div className="flex items-center">
                 <CalendarClock className="h-4 w-4 mr-1" />
-                Planification
+                {t('breadcrumb.planification')}
               </div>
             </BreadcrumbItem>
           </BreadcrumbList>
@@ -42,11 +44,11 @@ export default function GameSchedule() {
         <div className="flex flex-col items-center">
           <div className="w-full max-w-4xl mb-8 text-center">
             <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-4">
-              Planifier une session de jeu
+              {t('schedule.title')}
             </h1>
             {kahoot && (
               <p className="text-lg text-gray-600">
-                Vous planifiez une session pour: <span className="font-semibold">{kahoot.titre}</span>
+                {t('schedule.sessionFor')} <span className="font-semibold">{kahoot.titre}</span>
               </p>
             )}
           </div>

@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTranslation } from '@/contexts/I18nContext';
 import { Navbar } from '@/components/Navbar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,6 +14,7 @@ import { ArrowLeft } from 'lucide-react';
 
 export default function GameSetup() {
   const { token } = useAuth();
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const gameId = location.state?.gameId;
@@ -46,12 +48,12 @@ export default function GameSetup() {
         setQuestionTypes(typesData.data);
         setPoints(pointsData.data);
       } catch (error) {
-        toast.error("Erreur lors du chargement des données");
+        toast.error(t('error.loadingFailed'));
       }
     };
 
     fetchData();
-  }, [gameId, token, navigate]);
+  }, [gameId, token, navigate, t]);
 
   const handleQuestionAdded = (question: Question) => {
     setQuestions([...questions, question]);
@@ -65,21 +67,19 @@ export default function GameSetup() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <Navbar />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Back to Dashboard Button */}
         <Button 
           variant="outline" 
           className="mb-6 shadow-sm hover:shadow-md transition-all duration-200"
           onClick={handleBackToDashboard}
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Retour au tableau de bord
+          {t('game.backToDashboard')}
         </Button>
         
-        {/* Game Title and Image Card */}
         <Card className="mb-8">
           <CardHeader>
             <CardTitle className="text-3xl font-bold">
-              Configuration du jeu : {gameTitle}
+              {t('game.configuration')} {gameTitle}
             </CardTitle>
           </CardHeader>
           {gameImage && (

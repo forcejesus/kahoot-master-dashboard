@@ -1,6 +1,7 @@
 
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTranslation } from '@/contexts/I18nContext';
 import { Navbar } from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
@@ -15,15 +16,14 @@ export default function GameDetails() {
   const navigate = useNavigate();
   const location = useLocation();
   const { token } = useAuth();
+  const { t } = useTranslation();
   const initialJeu = location.state?.jeu as Kahoot;
   const [jeu, setJeu] = useState<Kahoot | null>(initialJeu);
 
-  // Fonction pour rafraîchir les détails du jeu
   const refreshGameDetails = async () => {
     if (!jeu) return;
     
     try {
-      // Utilisation de l'endpoint direct avec l'ID du jeu
       const response = await fetch(`http://kahoot.nos-apps.com/api/jeux/${jeu._id}`, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -46,7 +46,6 @@ export default function GameDetails() {
     }
   };
 
-  // Récupérer les détails initiaux si nous n'avons pas de state
   useEffect(() => {
     if (!jeu) {
       navigate('/dashboard');
@@ -91,10 +90,8 @@ export default function GameDetails() {
       <Navbar />
       
       <div className="relative">
-        {/* Background Image Section */}
         <GameBackgroundImage jeu={jeu} />
 
-        {/* Content Section */}
         <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <Button
             variant="navigation"
@@ -102,7 +99,7 @@ export default function GameDetails() {
             onClick={() => navigate('/dashboard')}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Retour au tableau de bord
+            {t('details.backToDashboard')}
           </Button>
 
           <div className="space-y-8 animate-fade-in">
@@ -113,7 +110,6 @@ export default function GameDetails() {
               onRefresh={refreshGameDetails} 
             />
 
-            {/* Tabbed interface for game statistics */}
             <GameDetailsTabs 
               jeu={jeu} 
               planificationsEnCours={planificationsEnCours} 

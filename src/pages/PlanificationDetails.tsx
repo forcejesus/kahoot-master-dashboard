@@ -1,7 +1,7 @@
-
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTranslation } from "@/contexts/I18nContext";
 import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Loader2, Trash2 } from "lucide-react";
@@ -17,6 +17,7 @@ export default function PlanificationDetails() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { token } = useAuth();
+  const { t } = useTranslation();
   const [planification, setPlanification] = useState<PlanificationDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -83,7 +84,7 @@ export default function PlanificationDetails() {
   };
 
   const handleGoBack = () => {
-    navigate(-1); // Go back to previous page
+    navigate(-1);
   };
 
   const handleDeleteClick = () => {
@@ -112,7 +113,6 @@ export default function PlanificationDetails() {
 
       toast.success("Planification supprimée avec succès");
       
-      // Redirect to the game details page or dashboard
       if (planification?.jeu?._id) {
         navigate(`/game/${planification.jeu._id}`);
       } else {
@@ -133,7 +133,7 @@ export default function PlanificationDetails() {
         <Navbar />
         <div className="flex flex-col items-center justify-center h-[calc(100vh-5rem)]">
           <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
-          <p className="text-lg text-gray-600">Chargement des détails de la planification...</p>
+          <p className="text-lg text-gray-600">{t('planDetails.loading')}</p>
         </div>
       </div>
     );
@@ -145,10 +145,10 @@ export default function PlanificationDetails() {
         <Navbar />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center py-12">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">Planification non trouvée</h2>
-            <p className="text-gray-600 mb-8">La planification que vous recherchez n'existe pas ou a été supprimée.</p>
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">{t('planDetails.notFound')}</h2>
+            <p className="text-gray-600 mb-8">{t('planDetails.notFoundDesc')}</p>
             <Button onClick={() => navigate("/dashboard")}>
-              Retour au tableau de bord
+              {t('details.backToDashboard')}
             </Button>
           </div>
         </div>
@@ -164,7 +164,7 @@ export default function PlanificationDetails() {
         <Breadcrumb className="mb-6">
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
+              <BreadcrumbLink href="/dashboard">{t('breadcrumb.dashboard')}</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -174,7 +174,7 @@ export default function PlanificationDetails() {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <span>Détails de la planification</span>
+              <span>{t('planDetails.title')}</span>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
@@ -186,7 +186,7 @@ export default function PlanificationDetails() {
             className="bg-white shadow-sm hover:bg-gray-50"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Retour
+            {t('planDetails.backButton')}
           </Button>
           
           <Button
@@ -195,7 +195,7 @@ export default function PlanificationDetails() {
             className="shadow-sm"
           >
             <Trash2 className="mr-2 h-4 w-4" />
-            Supprimer la planification
+            {t('planDetails.deleteButton')}
           </Button>
         </div>
 
@@ -208,18 +208,18 @@ export default function PlanificationDetails() {
 
           {/* Statistiques de la planification */}
           <div className="mb-8">
-            <h2 className="text-xl font-bold text-primary mb-4">Statistiques de la session</h2>
+            <h2 className="text-xl font-bold text-primary mb-4">{t('planDetails.sessionStats')}</h2>
             <PlanificationStats stats={stats} />
           </div>
 
           {/* Liste des participants */}
           <div className="bg-white/90 backdrop-blur-sm rounded-lg shadow-md p-6 border border-gray-200">
-            <h2 className="text-xl font-bold text-primary mb-4">Participants</h2>
+            <h2 className="text-xl font-bold text-primary mb-4">{t('planDetails.participants')}</h2>
             {planification.participants && planification.participants.length > 0 ? (
               <ParticipantsList participants={planification.participants} />
             ) : (
               <div className="text-center py-8 text-gray-500">
-                <p>Aucun participant pour cette planification.</p>
+                <p>{t('planDetails.noParticipants')}</p>
               </div>
             )}
           </div>
@@ -230,15 +230,14 @@ export default function PlanificationDetails() {
       <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Confirmer la suppression</DialogTitle>
+            <DialogTitle>{t('planDetails.confirmDelete')}</DialogTitle>
             <DialogDescription>
-              Êtes-vous sûr de vouloir supprimer cette planification ? 
-              Cette action est irréversible et supprimera toutes les données associées.
+              {t('planDetails.confirmDeleteDesc')}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="flex flex-col sm:flex-row sm:justify-end gap-2 mt-4">
             <Button variant="outline" onClick={handleCancelDelete}>
-              Annuler
+              {t('delete.cancel')}
             </Button>
             <Button 
               variant="destructive" 
@@ -248,12 +247,12 @@ export default function PlanificationDetails() {
               {isDeleting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Suppression en cours...
+                  {t('planDetails.deleting')}
                 </>
               ) : (
                 <>
                   <Trash2 className="mr-2 h-4 w-4" />
-                  Supprimer
+                  {t('delete.delete')}
                 </>
               )}
             </Button>

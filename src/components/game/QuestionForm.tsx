@@ -1,5 +1,6 @@
 
 import { Question, QuestionType, Point } from '@/types/game';
+import { useTranslation } from '@/contexts/I18nContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
@@ -22,6 +23,7 @@ interface QuestionFormProps {
 }
 
 export function QuestionForm({ gameId, token, questionTypes, points, onQuestionAdded }: QuestionFormProps) {
+  const { t } = useTranslation();
   const {
     formQuestion,
     updateFormQuestion,
@@ -33,7 +35,6 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
     resetForm
   } = useQuestionForm(gameId, token);
 
-  // Add local state for answers and correct answer
   const [answers, setAnswers] = useState<string[]>(['', '']);
   const [correctAnswer, setCorrectAnswer] = useState<number | null>(null);
 
@@ -41,10 +42,9 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
     e.preventDefault();
 
     if (!correctAnswer && correctAnswer !== 0) {
-      return; // Don't submit if no correct answer selected
+      return;
     }
 
-    // Submit the form and call the onQuestionAdded callback on success
     await handleFormSubmit(
       (question) => {
         onQuestionAdded(question);
@@ -59,7 +59,7 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Ajouter une question</CardTitle>
+        <CardTitle>{t('game.questionForm')}</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleAddQuestion} className="space-y-6">
@@ -90,7 +90,7 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
                 limite_response: checked
               })}
             />
-            <Label htmlFor="limite_response">Activer le chrono</Label>
+            <Label htmlFor="limite_response">{t('form.enableTimer')}</Label>
           </div>
 
           <QuestionTypeSelect 
