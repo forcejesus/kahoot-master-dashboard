@@ -1,273 +1,135 @@
-
 import { TranslationKeys } from '@/types/i18n';
 
-export const translations: Record<'fr' | 'en', TranslationKeys> = {
+export const translations: {
+  en: { [key in TranslationKeys]: string };
+  fr: { [key in TranslationKeys]: string };
+} = {
   en: {
-    // Authentication
-    'auth.title': 'Kahoot Pro',
-    'auth.subtitle': 'Sign in to your educator space',
-    'auth.email': 'Email address',
-    'auth.emailPlaceholder': 'your@email.com',
-    'auth.password': 'Password',
-    'auth.passwordPlaceholder': '••••••••',
-    'auth.signIn': 'Sign in',
-    'auth.loggingIn': 'Signing in...',
-    'auth.forgotPassword': 'Forgot password?',
-    'auth.secureEducator': 'Secure platform for educators',
-    'auth.loginSuccess': 'Login successful!',
-    'auth.welcomeMessage': 'Welcome to your Kahoot space',
-    'auth.loginFailed': 'Login failed',
-    'auth.checkCredentials': 'Please check your credentials and try again',
-    
-    // Navigation
-    'nav.logout': 'Log out',
-    'nav.dashboard': 'Dashboard',
-    'nav.planification': 'Planning',
-    
-    // Dashboard
-    'dashboard.title': 'Dashboard',
-    'dashboard.totalKahoots': 'Total Kahoots',
-    'dashboard.totalLearners': 'Total Learners',
-    'dashboard.createKahoot': 'Create Kahoot',
-    'dashboard.noKahoots': 'No kahoots created yet',
-    'dashboard.loading': 'Loading...',
-    
-    // Loading messages
-    'loading.data': 'Loading data...',
-    'loading.dataDescription': 'Fetching your Kahoots',
-    'loading.deleting': 'Deleting...',
-    'loading.deletingDescription': 'Deleting {{count}} Kahoot(s)',
-    'loading.statsTitle': 'Loading your statistics...',
-    'loading.statsDescription': 'Preparing your personalized dashboard',
-    
-    // Success messages
-    'success.dataLoaded': 'Data loaded successfully!',
-    'success.dataLoadedDescription': '{{count}} Kahoot(s) found',
-    'success.deleteSuccess': 'Successfully deleted!',
-    'success.deleteSuccessDescription': '{{count}} Kahoot(s) deleted successfully',
-    
-    // Error messages
-    'error.loadingFailed': 'Loading error',
-    'error.loadingFailedDescription': 'Unable to fetch your data. Please try again.',
-    'error.deleteFailed': 'Delete error',
-    'error.deleteFailedDescription': 'An error occurred. Please try again.',
-    
-    // Table headers
-    'table.title': 'Title',
-    'table.questions': 'Questions',
-    'table.sessions': 'Sessions',
-    'table.participants': 'Participants',
-    
-    // Game details
-    'game.questions': 'Questions',
-    'game.planifications': 'Planifications',
-    'game.sessions': 'Sessions',
-    'game.noQuestions': 'No questions have been added to this game yet.',
-    'game.deleteConfirm': 'Are you sure?',
-    'game.deleteConfirmDescription': 'This action is irreversible. It will permanently delete the game and all its associated data.',
-    'game.delete': 'Delete',
-    'game.cancel': 'Cancel',
-    'game.schedule': 'Schedule',
-    
-    // Question details
-    'question.details': 'Question details',
-    'question.id': 'ID',
-    'question.label': 'Label',
-    'question.time': 'Time',
-    'question.chronoActive': 'Timer active',
-    'question.chronoEnabled': 'Timer enabled',
-    'question.chronoDisabled': 'No timer',
-    'question.date': 'Date',
-    'question.type': 'Type',
-    'question.points': 'Points',
-    'question.fileType': 'File type',
-    'question.gameId': 'Game ID',
-    'question.seconds': 'sec',
-    'question.yes': 'Yes',
-    'question.no': 'No',
-    
-    // Delete confirmation
-    'delete.confirm': 'Are you sure?',
-    'delete.confirmDescription': 'This action will permanently delete {{count}} kahoot.',
-    'delete.confirmDescriptionPlural': 'This action will permanently delete {{count}} kahoots.',
-    'delete.deleting': 'Deleting...',
-    'delete.cancel': 'Cancel',
-    'delete.delete': 'Delete',
-    
-    // Planification
-    'planification.scheduleGame': 'Schedule a game session',
-    'planification.schedulingFor': 'You are scheduling a session for:',
-    'planification.accessPin': 'Access PIN',
-    'planification.copyPin': 'Copy PIN',
-    'planification.from': 'From',
-    'planification.to': 'to',
-    'planification.at': 'at',
-    'planification.type': 'Type',
-    'planification.limit': 'Limit',
-    'planification.participants': 'participants',
-    'planification.standard': 'Standard',
-    'planification.noPlans': 'No planifications have been created for this game yet.',
-    'planification.noPlanFilters': 'No planifications match your search.',
-    'planification.searchPlaceholder': 'Search by PIN, status or type...',
-    'planification.status': 'Status',
-    'planification.allStatuses': 'All statuses',
-    'planification.pending': 'Pending',
-    'planification.inProgress': 'In progress',
-    'planification.completed': 'Completed',
-    'planification.allTypes': 'All types',
-    'planification.public': 'Public',
-    'planification.assigned': 'Assigned',
-    
-    // Common
-    'common.home': 'Home',
-    'common.back': 'Back',
-    'common.save': 'Save',
-    'common.edit': 'Edit',
-    'common.create': 'Create',
-    'common.update': 'Update',
-    'common.search': 'Search',
-    'common.filter': 'Filter',
-    'common.all': 'All',
-    'common.none': 'None',
-    'common.or': 'or',
-    'common.and': 'and',
-    'common.with': 'with',
-    'common.without': 'without',
-    'common.total': 'Total',
-    'common.found': 'found',
+    auth: {
+      email: 'Email',
+      password: 'Password',
+      login: 'Sign In',
+      loginTitle: 'Welcome Back',
+      loginSubtitle: 'Sign in to your Kahoot account',
+      rememberMe: 'Remember me',
+      forgotPassword: 'Forgot password?',
+      invalidCredentials: 'Invalid email or password',
+      loginError: 'Login failed. Please try again.',
+      loginSuccess: 'Successfully logged in!',
+      loggingIn: 'Signing in...'
+    },
+    dashboard: {
+      goodMorning: 'Good Morning',
+      goodAfternoon: 'Good Afternoon',
+      goodEvening: 'Good Evening',
+      welcomeBack: 'Welcome back, {{name}}!',
+      user: 'User',
+      welcomeDescription: 'Manage your Kahoots, track your progress, and engage your learners with interactive quizzes.',
+      totalKahoots: 'Total Kahoots',
+      totalLearners: 'Total Learners',
+      totalSessions: 'Active Sessions',
+      loading: 'Loading...',
+      noKahoots: 'No Kahoots found',
+      myKahoots: 'My Kahoots',
+      searchKahoots: 'Search Kahoots...',
+      deleting: 'Deleting...',
+      delete: 'Delete'
+    },
+    table: {
+      title: 'Title',
+      questions: 'Questions',
+      sessions: 'Sessions',
+      participants: 'Participants'
+    },
+    question: {
+      type: 'Type',
+      points: 'Points',
+      duration: 'Duration',
+      responses: 'Responses'
+    },
+    loading: {
+      data: 'Loading data...',
+      dataDescription: 'Fetching your Kahoots',
+      deleting: 'Deleting...',
+      deletingDescription: 'Deleting {{count}} Kahoot(s)',
+      statsTitle: 'Loading Statistics',
+      statsDescription: 'Gathering your data...'
+    },
+    success: {
+      dataLoaded: 'Data loaded successfully',
+      dataLoadedDescription: '{{count}} Kahoot(s) loaded',
+      deleteSuccess: 'Successfully deleted',
+      deleteSuccessDescription: '{{count}} Kahoot(s) deleted'
+    },
+    error: {
+      loadingFailed: 'Failed to load data',
+      loadingFailedDescription: 'Unable to fetch Kahoots',
+      deleteFailed: 'Failed to delete',
+      deleteFailedDescription: 'Unable to delete selected Kahoots'
+    }
   },
   fr: {
-    // Authentication
-    'auth.title': 'Kahoot Pro',
-    'auth.subtitle': 'Connectez-vous à votre espace éducateur',
-    'auth.email': 'Adresse email',
-    'auth.emailPlaceholder': 'votre@email.com',
-    'auth.password': 'Mot de passe',
-    'auth.passwordPlaceholder': '••••••••',
-    'auth.signIn': 'Se connecter',
-    'auth.loggingIn': 'Connexion en cours...',
-    'auth.forgotPassword': 'Mot de passe oublié ?',
-    'auth.secureEducator': 'Plateforme sécurisée pour éducateurs',
-    'auth.loginSuccess': 'Connexion réussie !',
-    'auth.welcomeMessage': 'Bienvenue dans votre espace Kahoot',
-    'auth.loginFailed': 'Échec de connexion',
-    'auth.checkCredentials': 'Veuillez vérifier vos identifiants et réessayer',
-    
-    // Navigation
-    'nav.logout': 'Se déconnecter',
-    'nav.dashboard': 'Tableau de bord',
-    'nav.planification': 'Planification',
-    
-    // Dashboard
-    'dashboard.title': 'Tableau de bord',
-    'dashboard.totalKahoots': 'Total des Kahoots',
-    'dashboard.totalLearners': 'Total des Apprenants',
-    'dashboard.createKahoot': 'Créer un Kahoot',
-    'dashboard.noKahoots': 'Aucun kahoot créé pour le moment',
-    'dashboard.loading': 'Chargement...',
-    
-    // Loading messages
-    'loading.data': 'Chargement des données...',
-    'loading.dataDescription': 'Récupération de vos Kahoots',
-    'loading.deleting': 'Suppression en cours...',
-    'loading.deletingDescription': 'Suppression de {{count}} Kahoot(s)',
-    'loading.statsTitle': 'Chargement de vos données statistiques...',
-    'loading.statsDescription': 'Préparation de votre tableau de bord personnalisé',
-    
-    // Success messages
-    'success.dataLoaded': 'Données chargées avec succès !',
-    'success.dataLoadedDescription': '{{count}} Kahoot(s) trouvé(s)',
-    'success.deleteSuccess': 'Suppression réussie !',
-    'success.deleteSuccessDescription': '{{count}} Kahoot(s) supprimé(s) avec succès',
-    
-    // Error messages
-    'error.loadingFailed': 'Erreur lors du chargement',
-    'error.loadingFailedDescription': 'Impossible de récupérer vos données. Veuillez réessayer.',
-    'error.deleteFailed': 'Erreur lors de la suppression',
-    'error.deleteFailedDescription': 'Une erreur est survenue. Veuillez réessayer.',
-    
-    // Table headers
-    'table.title': 'Titre',
-    'table.questions': 'Questions',
-    'table.sessions': 'Sessions',
-    'table.participants': 'Participants',
-    
-    // Game details
-    'game.questions': 'Questions',
-    'game.planifications': 'Planifications',
-    'game.sessions': 'Sessions',
-    'game.noQuestions': "Aucune question n'a encore été ajoutée à ce jeu.",
-    'game.deleteConfirm': 'Êtes-vous sûr ?',
-    'game.deleteConfirmDescription': 'Cette action est irréversible. Cela supprimera définitivement le jeu et toutes ses données associées.',
-    'game.delete': 'Supprimer',
-    'game.cancel': 'Annuler',
-    'game.schedule': 'Planifier',
-    
-    // Question details
-    'question.details': 'Détails de la question',
-    'question.id': 'ID',
-    'question.label': 'Libellé',
-    'question.time': 'Temps',
-    'question.chronoActive': 'Chrono actif',
-    'question.chronoEnabled': 'Chrono activé',
-    'question.chronoDisabled': 'Sans chrono',
-    'question.date': 'Date',
-    'question.type': 'Type',
-    'question.points': 'Points',
-    'question.fileType': 'Type de fichier',
-    'question.gameId': 'Jeu ID',
-    'question.seconds': 'sec',
-    'question.yes': 'Oui',
-    'question.no': 'Non',
-    
-    // Delete confirmation
-    'delete.confirm': 'Êtes-vous sûr ?',
-    'delete.confirmDescription': 'Cette action va supprimer {{count}} kahoot de manière permanente.',
-    'delete.confirmDescriptionPlural': 'Cette action va supprimer {{count}} kahoots de manière permanente.',
-    'delete.deleting': 'Suppression...',
-    'delete.cancel': 'Annuler',
-    'delete.delete': 'Supprimer',
-    
-    // Planification
-    'planification.scheduleGame': 'Planifier une session de jeu',
-    'planification.schedulingFor': 'Vous planifiez une session pour:',
-    'planification.accessPin': "PIN d'accès",
-    'planification.copyPin': 'Copier le PIN',
-    'planification.from': 'Du',
-    'planification.to': 'au',
-    'planification.at': 'à',
-    'planification.type': 'Type',
-    'planification.limit': 'Limite',
-    'planification.participants': 'participants',
-    'planification.standard': 'Standard',
-    'planification.noPlans': "Aucune planification n'a encore été créée pour ce jeu.",
-    'planification.noPlanFilters': 'Aucune planification ne correspond à votre recherche.',
-    'planification.searchPlaceholder': 'Rechercher par PIN, statut ou type...',
-    'planification.status': 'Statut',
-    'planification.allStatuses': 'Tous les statuts',
-    'planification.pending': 'En attente',
-    'planification.inProgress': 'En cours',
-    'planification.completed': 'Terminé',
-    'planification.allTypes': 'Tous les types',
-    'planification.public': 'Public',
-    'planification.assigned': 'Attribué',
-    
-    // Common
-    'common.home': 'Accueil',
-    'common.back': 'Retour',
-    'common.save': 'Enregistrer',
-    'common.edit': 'Modifier',
-    'common.create': 'Créer',
-    'common.update': 'Mettre à jour',
-    'common.search': 'Rechercher',
-    'common.filter': 'Filtrer',
-    'common.all': 'Tous',
-    'common.none': 'Aucun',
-    'common.or': 'ou',
-    'common.and': 'et',
-    'common.with': 'avec',
-    'common.without': 'sans',
-    'common.total': 'Total',
-    'common.found': 'trouvé(s)',
-  },
+    auth: {
+      email: 'Email',
+      password: 'Mot de passe',
+      login: 'Se connecter',
+      loginTitle: 'Bon retour',
+      loginSubtitle: 'Connectez-vous à votre compte Kahoot',
+      rememberMe: 'Se souvenir de moi',
+      forgotPassword: 'Mot de passe oublié ?',
+      invalidCredentials: 'Email ou mot de passe invalide',
+      loginError: 'Échec de la connexion. Veuillez réessayer.',
+      loginSuccess: 'Connexion réussie !',
+      loggingIn: 'Connexion en cours...'
+    },
+    dashboard: {
+      goodMorning: 'Bonjour',
+      goodAfternoon: 'Bon après-midi',
+      goodEvening: 'Bonsoir',
+      welcomeBack: 'Bon retour, {{name}} !',
+      user: 'Utilisateur',
+      welcomeDescription: 'Gérez vos Kahoots, suivez vos progrès et engagez vos apprenants avec des quiz interactifs.',
+      totalKahoots: 'Total des Kahoots',
+      totalLearners: 'Total des Apprenants',
+      totalSessions: 'Sessions Actives',
+      loading: 'Chargement...',
+      noKahoots: 'Aucun Kahoot trouvé',
+      myKahoots: 'Mes Kahoots',
+      searchKahoots: 'Rechercher des Kahoots...',
+      deleting: 'Suppression...',
+      delete: 'Supprimer'
+    },
+    table: {
+      title: 'Titre',
+      questions: 'Questions',
+      sessions: 'Sessions',
+      participants: 'Participants'
+    },
+    question: {
+      type: 'Type',
+      points: 'Points',
+      duration: 'Durée',
+      responses: 'Réponses'
+    },
+    loading: {
+      data: 'Chargement des données...',
+      dataDescription: 'Récupération de vos Kahoots',
+      deleting: 'Suppression...',
+      deletingDescription: 'Suppression de {{count}} Kahoot(s)',
+      statsTitle: 'Chargement des Statistiques',
+      statsDescription: 'Collecte de vos données...'
+    },
+    success: {
+      dataLoaded: 'Données chargées avec succès',
+      dataLoadedDescription: '{{count}} Kahoot(s) chargé(s)',
+      deleteSuccess: 'Suppression réussie',
+      deleteSuccessDescription: '{{count}} Kahoot(s) supprimé(s)'
+    },
+    error: {
+      loadingFailed: 'Échec du chargement',
+      loadingFailedDescription: 'Impossible de récupérer les Kahoots',
+      deleteFailed: 'Échec de la suppression',
+      deleteFailedDescription: 'Impossible de supprimer les Kahoots sélectionnés'
+    }
+  }
 };

@@ -6,6 +6,7 @@ import { Navbar } from '@/components/Navbar';
 import { toast } from 'sonner';
 import { StatsSection } from '@/components/dashboard/StatsSection';
 import { KahootList } from '@/components/dashboard/KahootList';
+import { WelcomeHeader } from '@/components/dashboard/WelcomeHeader';
 import { Kahoot } from '@/types/game-details';
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react';
 
@@ -106,9 +107,10 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/30">
       <Navbar />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <WelcomeHeader />
         <StatsSection onKahootCreated={fetchData} />
         <KahootList 
           kahoots={kahoots} 
