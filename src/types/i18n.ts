@@ -14,6 +14,15 @@ export interface TranslationKeys {
   'auth.loginError': string;
   'auth.loginSuccess': string;
   'auth.loggingIn': string;
+  'auth.welcomeMessage': string;
+  'auth.loginFailed': string;
+  'auth.checkCredentials': string;
+  'auth.title': string;
+  'auth.subtitle': string;
+  'auth.emailPlaceholder': string;
+  'auth.passwordPlaceholder': string;
+  'auth.signIn': string;
+  'auth.secureEducator': string;
   
   // Navigation
   'nav.logout': string;
@@ -46,6 +55,37 @@ export interface TranslationKeys {
   'question.points': string;
   'question.duration': string;
   'question.responses': string;
+  'question.details': string;
+  'question.id': string;
+  'question.label': string;
+  'question.time': string;
+  'question.seconds': string;
+  'question.chronoActive': string;
+  'question.yes': string;
+  'question.no': string;
+  'question.date': string;
+  'question.fileType': string;
+  'question.gameId': string;
+  
+  // Delete dialogs
+  'delete.confirm': string;
+  'delete.confirmDescription': string;
+  'delete.confirmDescriptionPlural': string;
+  'delete.cancel': string;
+  'delete.deleting': string;
+  'delete.delete': string;
+  
+  // Planification
+  'planification.accessPin': string;
+  'planification.copyPin': string;
+  'planification.from': string;
+  'planification.to': string;
+  'planification.type': string;
+  'planification.standard': string;
+  'planification.status': string;
+  'planification.pending': string;
+  'planification.limit': string;
+  'planification.participants': string;
   
   // Loading messages
   'loading.data': string;
