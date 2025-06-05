@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -55,7 +56,7 @@ export default function Login() {
         <Card className="bg-white/95 backdrop-blur-sm border border-white/20 shadow-2xl">
           <CardHeader className="text-center space-y-4 pb-8">
             <div className="space-y-2">
-              <CardTitle className="text-3xl font-bold text-gray-900">
+              <CardTitle className="text-5xl font-black text-transparent bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text tracking-wider drop-shadow-lg">
                 AKILI
               </CardTitle>
               <CardDescription className="text-gray-600 text-lg">
