@@ -23,6 +23,16 @@ export interface TranslationKeys {
   'auth.passwordPlaceholder': string;
   'auth.signIn': string;
   'auth.secureEducator': string;
+  'auth.resetPassword': string;
+  'auth.resetPasswordTitle': string;
+  'auth.resetPasswordSubtitle': string;
+  'auth.sendResetLink': string;
+  'auth.sendingResetLink': string;
+  'auth.backToLogin': string;
+  'auth.resetLinkSent': string;
+  'auth.resetLinkSentDescription': string;
+  'auth.resetLinkError': string;
+  'auth.resetLinkErrorDescription': string;
   
   // Navigation
   'nav.logout': string;

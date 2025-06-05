@@ -1,5 +1,6 @@
+
 import { useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTranslation } from '@/contexts/I18nContext';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
@@ -134,9 +135,12 @@ export default function Login() {
             </form>
 
             <div className="text-center">
-              <button className="text-gray-500 hover:text-gray-700 transition-colors text-sm underline">
+              <Link 
+                to="/forgot-password" 
+                className="text-gray-500 hover:text-gray-700 transition-colors text-sm underline"
+              >
                 {t('auth.forgotPassword')}
-              </button>
+              </Link>
             </div>
           </CardContent>
         </Card>
