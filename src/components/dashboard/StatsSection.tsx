@@ -1,11 +1,9 @@
-
 import { useState, useEffect } from 'react';
 import { StatCard } from './StatCard';
-import { CreateKahootDialog } from '@/components/CreateKahootDialog';
+import { CreateGameCard } from './CreateGameCard';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTranslation } from '@/contexts/I18nContext';
-import { Card, CardContent } from '@/components/ui/card';
-import { BookOpen, Users, TrendingUp, Clock } from 'lucide-react';
+import { BookOpen, Users, Clock } from 'lucide-react';
 
 interface StatsSectionProps {
   onKahootCreated: () => void;
@@ -63,7 +61,7 @@ export function StatsSection({ onKahootCreated }: StatsSectionProps) {
         value={kahoots.length} 
         icon={BookOpen}
         isLoading={isLoading}
-        gradient="from-blue-500 to-blue-600"
+        gradient="from-emerald-500 to-teal-600"
       />
       
       <StatCard 
@@ -71,7 +69,7 @@ export function StatsSection({ onKahootCreated }: StatsSectionProps) {
         value={totalApprenants} 
         icon={Users}
         isLoading={isLoading}
-        gradient="from-emerald-500 to-emerald-600"
+        gradient="from-blue-500 to-cyan-600"
       />
 
       <StatCard 
@@ -79,19 +77,10 @@ export function StatsSection({ onKahootCreated }: StatsSectionProps) {
         value={totalSessions} 
         icon={Clock}
         isLoading={isLoading}
-        gradient="from-purple-500 to-purple-600"
+        gradient="from-orange-500 to-red-500"
       />
 
-      <Card className="group transform transition-all duration-300 hover:scale-105 hover:shadow-2xl bg-gradient-to-br from-orange-500 to-red-500 text-white border-none shadow-lg overflow-hidden relative">
-        <div className="absolute inset-0 bg-gradient-to-br from-black/0 to-black/10"></div>
-        <CardContent className="relative z-10 flex flex-col items-center justify-center h-full p-8 text-center">
-          <div className="mb-4 p-3 bg-white/20 rounded-full backdrop-blur-sm">
-            <TrendingUp className="w-8 h-8" />
-          </div>
-          <CreateKahootDialog onSuccess={onKahootCreated} />
-        </CardContent>
-        <div className="absolute -bottom-6 -right-6 w-20 h-20 bg-white/10 rounded-full blur-xl"></div>
-      </Card>
+      <CreateGameCard />
     </div>
   );
 }
