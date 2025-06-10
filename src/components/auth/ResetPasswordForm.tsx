@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '@/contexts/I18nContext';
@@ -7,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react';
-import { toast } from 'sonner';
+import { modernToasts } from '@/components/ui/modern-alerts';
 
 interface ResetPasswordFormProps {
   onSuccess: () => void;
@@ -25,18 +24,12 @@ export function ResetPasswordForm({ onSuccess }: ResetPasswordFormProps) {
     e.preventDefault();
     
     if (newPassword !== confirmPassword) {
-      toast.error('Erreur', {
-        description: 'Les mots de passe ne correspondent pas',
-        duration: 4000,
-      });
+      modernToasts.error('Erreur', 'Les mots de passe ne correspondent pas');
       return;
     }
 
     if (newPassword.length < 6) {
-      toast.error('Erreur', {
-        description: 'Le mot de passe doit contenir au moins 6 caractères',
-        duration: 4000,
-      });
+      modernToasts.error('Erreur', 'Le mot de passe doit contenir au moins 6 caractères');
       return;
     }
 
@@ -47,15 +40,14 @@ export function ResetPasswordForm({ onSuccess }: ResetPasswordFormProps) {
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       onSuccess();
-      toast.success('Succès', {
-        description: 'Votre mot de passe a été modifié avec succès',
-        duration: 4000,
-      });
+      modernToasts.success('Succès', 'Votre mot de passe a été modifié avec succès');
     } catch (err) {
-      toast.error('Erreur', {
-        description: 'Erreur lors de la modification du mot de passe',
-        duration: 4000,
-      });
+      // Gestion des erreurs serveur
+      if (err instanceof TypeError && err.message.includes('fetch')) {
+        modernToasts.error('Erreur de connexion', 'Impossible de contacter le serveur. Vérifiez votre connexion internet.');
+      } else {
+        modernToasts.error('Erreur', 'Erreur lors de la modification du mot de passe');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -100,11 +92,13 @@ export function ResetPasswordForm({ onSuccess }: ResetPasswordFormProps) {
                   onChange={(e) => setNewPassword(e.target.value)}
                   required
                   className="pl-12 pr-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                  disabled={isLoading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowNewPassword(!showNewPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors disabled:opacity-50"
+                  disabled={isLoading}
                 >
                   {showNewPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -125,11 +119,13 @@ export function ResetPasswordForm({ onSuccess }: ResetPasswordFormProps) {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                   className="pl-12 pr-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                  disabled={isLoading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors disabled:opacity-50"
+                  disabled={isLoading}
                 >
                   {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -139,7 +135,7 @@ export function ResetPasswordForm({ onSuccess }: ResetPasswordFormProps) {
 
           <Button 
             type="submit" 
-            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             disabled={isLoading}
           >
             {isLoading ? (
