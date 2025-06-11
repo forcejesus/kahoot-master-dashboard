@@ -86,16 +86,16 @@ export default function GameDetails() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-teal-50/30 to-blue-50/40 relative overflow-hidden">
-      {/* Motifs de fond paisibles */}
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/20 to-indigo-50/30 relative overflow-hidden">
+      {/* Motifs de fond plus subtils */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-teal-200/20 to-blue-200/20 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-slate-200/25 to-teal-200/25 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/3 left-1/4 w-64 h-64 bg-gradient-to-br from-blue-100/20 to-slate-100/20 rounded-full blur-2xl"></div>
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-100/8 to-indigo-100/8 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-slate-100/12 to-blue-100/12 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/3 left-1/4 w-64 h-64 bg-gradient-to-br from-indigo-50/10 to-slate-50/10 rounded-full blur-2xl"></div>
       </div>
 
-      {/* Motif géométrique subtil */}
-      <div className="absolute inset-0 opacity-[0.02]" style={{
+      {/* Motif géométrique très subtil */}
+      <div className="absolute inset-0 opacity-[0.005]" style={{
         backgroundImage: `radial-gradient(circle at 2px 2px, rgb(71, 85, 105) 1px, transparent 0)`,
         backgroundSize: '32px 32px'
       }}></div>
@@ -108,7 +108,7 @@ export default function GameDetails() {
         <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <Button
             variant="navigation"
-            className="mb-6"
+            className="mb-6 bg-white/90 hover:bg-white/95 backdrop-blur-sm shadow-md border border-white/20"
             onClick={() => navigate('/dashboard')}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -116,18 +116,22 @@ export default function GameDetails() {
           </Button>
 
           <div className="space-y-8 animate-fade-in">
-            <GameHeader 
-              jeu={jeu} 
-              token={token} 
-              onDelete={handleDeleteGame} 
-              onRefresh={refreshGameDetails} 
-            />
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-8">
+              <GameHeader 
+                jeu={jeu} 
+                token={token} 
+                onDelete={handleDeleteGame} 
+                onRefresh={refreshGameDetails} 
+              />
+            </div>
 
-            <GameDetailsTabs 
-              jeu={jeu} 
-              planificationsEnCours={planificationsEnCours} 
-              onCopyPin={handleCopyPin} 
-            />
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 overflow-hidden">
+              <GameDetailsTabs 
+                jeu={jeu} 
+                planificationsEnCours={planificationsEnCours} 
+                onCopyPin={handleCopyPin} 
+              />
+            </div>
           </div>
         </main>
       </div>

@@ -91,7 +91,9 @@ export default function Dashboard() {
           duration: 4000,
         }
       );
-      fetchData();
+      
+      // Rafraîchir immédiatement les données après suppression
+      await fetchData();
     } catch (error) {
       toast.dismiss(loadingToastId);
       toast.error(
@@ -107,29 +109,21 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-teal-50/30 to-blue-50/40 relative overflow-hidden">
-      {/* Motifs de fond paisibles */}
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/20 to-indigo-50/30 relative overflow-hidden">
+      {/* Motifs de fond plus subtils */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Cercles doux */}
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-teal-200/20 to-blue-200/20 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-slate-200/25 to-teal-200/25 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/3 left-1/4 w-64 h-64 bg-gradient-to-br from-blue-100/20 to-slate-100/20 rounded-full blur-2xl"></div>
-        <div className="absolute bottom-1/3 right-1/4 w-48 h-48 bg-gradient-to-br from-teal-100/25 to-blue-100/25 rounded-full blur-2xl"></div>
+        {/* Cercles très subtils */}
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-100/10 to-indigo-100/10 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-slate-100/15 to-blue-100/15 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/3 left-1/4 w-64 h-64 bg-gradient-to-br from-indigo-50/15 to-slate-50/15 rounded-full blur-2xl"></div>
+        <div className="absolute bottom-1/3 right-1/4 w-48 h-48 bg-gradient-to-br from-blue-50/20 to-indigo-50/20 rounded-full blur-2xl"></div>
       </div>
 
-      {/* Motif géométrique subtil */}
-      <div className="absolute inset-0 opacity-[0.02]" style={{
+      {/* Motif géométrique très subtil */}
+      <div className="absolute inset-0 opacity-[0.008]" style={{
         backgroundImage: `radial-gradient(circle at 2px 2px, rgb(71, 85, 105) 1px, transparent 0)`,
         backgroundSize: '32px 32px'
       }}></div>
-
-      {/* Lignes ondulées */}
-      <div className="absolute inset-0 opacity-[0.03]">
-        <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <path d="M0,20 Q25,10 50,20 T100,20 L100,0 L0,0 Z" fill="currentColor" className="text-teal-300"/>
-          <path d="M0,80 Q25,70 50,80 T100,80 L100,100 L0,100 Z" fill="currentColor" className="text-blue-300"/>
-        </svg>
-      </div>
 
       <Navbar />
       
