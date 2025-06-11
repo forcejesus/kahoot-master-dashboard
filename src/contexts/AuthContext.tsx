@@ -1,3 +1,4 @@
+
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { AuthState, LoginCredentials, LoginResponse, User } from '@/types/auth';
 import { modernToasts } from '@/components/ui/modern-alerts';
@@ -131,10 +132,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     modernToasts.success('Déconnexion réussie', 'À bientôt !');
   };
 
-  // Show compact loading state instead of full screen
+  // Show centered loading state
   if (state.isLoading && !state.user) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
         <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-white/20">
           <div className="flex items-center gap-4">
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>

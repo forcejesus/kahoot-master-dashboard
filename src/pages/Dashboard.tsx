@@ -109,34 +109,36 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-blue-50 to-slate-100 relative overflow-hidden">
-      {/* Motifs de fond plus visibles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-200/30 to-indigo-200/30 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-slate-200/40 to-blue-200/40 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/3 left-1/4 w-64 h-64 bg-gradient-to-br from-indigo-100/35 to-slate-100/35 rounded-full blur-2xl"></div>
-        <div className="absolute bottom-1/3 right-1/4 w-48 h-48 bg-gradient-to-br from-blue-100/45 to-indigo-100/45 rounded-full blur-2xl"></div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 relative overflow-hidden">
+      {/* Motifs géométriques en arrière-plan */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-20 left-20 w-64 h-64 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
+        <div className="absolute top-40 right-20 w-64 h-64 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
+        <div className="absolute bottom-20 left-40 w-64 h-64 bg-indigo-200 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-2000"></div>
       </div>
 
-      {/* Motif géométrique plus visible */}
-      <div className="absolute inset-0 opacity-[0.02]" style={{
-        backgroundImage: `radial-gradient(circle at 2px 2px, rgb(71, 85, 105) 1px, transparent 0)`,
-        backgroundSize: '24px 24px'
+      {/* Motif de grille */}
+      <div className="absolute inset-0 opacity-5" style={{
+        backgroundImage: `
+          linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px)
+        `,
+        backgroundSize: '20px 20px'
       }}></div>
 
-      {/* Lignes ondulées subtiles */}
-      <div className="absolute inset-0 opacity-[0.05]">
-        <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <path d="M0,20 Q25,10 50,20 T100,20 L100,0 L0,0 Z" fill="currentColor" className="text-blue-300"/>
-          <path d="M0,80 Q25,70 50,80 T100,80 L100,100 L0,100 Z" fill="currentColor" className="text-indigo-300"/>
-        </svg>
+      {/* Motifs décoratifs */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-10 left-10 w-8 h-8 border-2 border-blue-300 rounded-full"></div>
+        <div className="absolute top-32 right-32 w-12 h-12 border-2 border-purple-300 rotate-45"></div>
+        <div className="absolute bottom-20 right-20 w-6 h-6 bg-indigo-300 rounded-full"></div>
+        <div className="absolute bottom-40 left-20 w-10 h-10 border-2 border-blue-300 rotate-12"></div>
       </div>
 
       <Navbar />
       
       <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <WelcomeHeader />
-        <StatsSection onKahootCreated={fetchData} />
+        <StatsSection onKahootCreated={fetchData} kahoots={kahoots} />
         <KahootList 
           kahoots={kahoots} 
           isLoading={isLoading} 

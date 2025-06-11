@@ -33,13 +33,8 @@ export function Navbar() {
         <div className="flex justify-between items-center h-16">
           {/* Logo/Brand */}
           <div className="flex-shrink-0">
-            <div className="flex items-center space-x-2">
-              <div className="text-4xl font-black text-transparent bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text tracking-wider drop-shadow-lg">
-                AKILI
-              </div>
-              <div className="text-sm font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
-                Espace Enseignant
-              </div>
+            <div className="text-4xl font-black text-transparent bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text tracking-wider drop-shadow-lg">
+              AKILI
             </div>
           </div>
 

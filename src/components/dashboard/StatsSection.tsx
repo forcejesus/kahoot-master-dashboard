@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { StatCard } from './StatCard';
 import { CreateGameCard } from './CreateGameCard';
@@ -7,60 +8,52 @@ import { BookOpen, Users, Clock } from 'lucide-react';
 
 interface StatsSectionProps {
   onKahootCreated: () => void;
+  kahoots?: any[]; // Ajout pour recevoir les kahoots depuis le parent
 }
 
-export function StatsSection({ onKahootCreated }: StatsSectionProps) {
+export function StatsSection({ onKahootCreated, kahoots = [] }: StatsSectionProps) {
   const { token } = useAuth();
   const { t } = useTranslation();
-  const [kahoots, setKahoots] = useState([]);
   const [totalApprenants, setTotalApprenants] = useState(0);
   const [totalSessions, setTotalSessions] = useState(0);
-  const [totalParticipants, setTotalParticipants] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchStats = async () => {
+  // Calculer les statistiques basées sur les kahoots reçus
+  const totalKahoots = kahoots.length;
+  const sessionsFromKahoots = kahoots.reduce((total: number, kahoot: any) => 
+    total + (kahoot.planifications?.length || 0), 0
+  );
+
+  const fetchApprenants = async () => {
     try {
-      const kahootsResponse = await fetch('http://kahoot.nos-apps.com/api/jeux', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      const kahootsData = await kahootsResponse.json();
-      setKahoots(kahootsData.data);
-
-      // Calculate additional stats
-      const sessions = kahootsData.data.reduce((total: number, kahoot: any) => 
-        total + (kahoot.planifications?.length || 0), 0
-      );
-      setTotalSessions(sessions);
-
-      const participants = kahootsData.data.reduce((total: number, kahoot: any) => 
-        total + (kahoot.planifications?.reduce((sum: number, p: any) => 
-          sum + (p.participants?.length || 0), 0) || 0), 0
-      );
-      setTotalParticipants(participants);
-
       const apprenantResponse = await fetch('http://kahoot.nos-apps.com/api/apprenant', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const apprenantData = await apprenantResponse.json();
       setTotalApprenants(apprenantData.data.length);
     } catch (error) {
-      console.error("Error fetching stats:", error);
+      console.error("Error fetching apprenants:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchStats();
+    fetchApprenants();
   }, [token]);
+
+  // Mettre à jour les sessions quand les kahoots changent
+  useEffect(() => {
+    setTotalSessions(sessionsFromKahoots);
+  }, [sessionsFromKahoots]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
       <StatCard 
         title={t('dashboard.totalKahoots')} 
-        value={kahoots.length} 
+        value={totalKahoots} 
         icon={BookOpen}
-        isLoading={isLoading}
+        isLoading={false}
         gradient="from-emerald-500 to-teal-600"
       />
       
@@ -76,7 +69,7 @@ export function StatsSection({ onKahootCreated }: StatsSectionProps) {
         title={t('dashboard.totalSessions')} 
         value={totalSessions} 
         icon={Clock}
-        isLoading={isLoading}
+        isLoading={false}
         gradient="from-orange-500 to-red-500"
       />
 

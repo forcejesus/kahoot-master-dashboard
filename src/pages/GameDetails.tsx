@@ -86,20 +86,7 @@ export default function GameDetails() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/20 to-indigo-50/30 relative overflow-hidden">
-      {/* Motifs de fond plus subtils */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-100/8 to-indigo-100/8 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-slate-100/12 to-blue-100/12 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/3 left-1/4 w-64 h-64 bg-gradient-to-br from-indigo-50/10 to-slate-50/10 rounded-full blur-2xl"></div>
-      </div>
-
-      {/* Motif géométrique très subtil */}
-      <div className="absolute inset-0 opacity-[0.005]" style={{
-        backgroundImage: `radial-gradient(circle at 2px 2px, rgb(71, 85, 105) 1px, transparent 0)`,
-        backgroundSize: '32px 32px'
-      }}></div>
-      
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/20 to-indigo-50/30">
       <Navbar />
       
       <div className="relative">
