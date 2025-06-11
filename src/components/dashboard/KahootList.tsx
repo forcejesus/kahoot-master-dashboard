@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Trash2, Loader2, Search, Filter, BarChart3 } from 'lucide-react';
+import { Trash2, Loader2, Search, BarChart3 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -66,8 +66,8 @@ export function KahootList({ kahoots, isLoading, onDelete }: KahootListProps) {
 
   return (
     <>
-      <Card className="backdrop-blur-sm bg-white/95 border border-gray-200/50 shadow-2xl overflow-hidden">
-        <CardHeader className="bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 text-white border-b-0 p-8">
+      <Card className="backdrop-blur-sm bg-white/95 border border-slate-200/50 shadow-xl overflow-hidden">
+        <CardHeader className="bg-gradient-to-r from-slate-600 via-teal-600 to-blue-600 text-white border-b-0 p-8">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div className="flex items-center gap-4">
               <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
@@ -77,7 +77,7 @@ export function KahootList({ kahoots, isLoading, onDelete }: KahootListProps) {
                 <CardTitle className="text-3xl font-bold text-white mb-1">
                   {t('dashboard.myKahoots')}
                 </CardTitle>
-                <p className="text-blue-100 text-lg">
+                <p className="text-teal-100 text-lg">
                   Gérez vos jeux interactifs et suivez leurs performances
                 </p>
               </div>
@@ -121,13 +121,13 @@ export function KahootList({ kahoots, isLoading, onDelete }: KahootListProps) {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 pt-6 border-t border-white/20">
             <div className="text-center">
               <div className="text-2xl font-bold text-white">{kahoots.length}</div>
-              <div className="text-blue-100 text-sm">Jeux créés</div>
+              <div className="text-teal-100 text-sm">Jeux créés</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-white">
                 {kahoots.reduce((total, k) => total + (k.planifications?.length || 0), 0)}
               </div>
-              <div className="text-blue-100 text-sm">Sessions totales</div>
+              <div className="text-teal-100 text-sm">Sessions totales</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-white">
@@ -135,7 +135,7 @@ export function KahootList({ kahoots, isLoading, onDelete }: KahootListProps) {
                   total + (k.planifications?.reduce((sum, p) => sum + (p.participants?.length || 0), 0) || 0), 0
                 )}
               </div>
-              <div className="text-blue-100 text-sm">Participants</div>
+              <div className="text-teal-100 text-sm">Participants</div>
             </div>
           </div>
         </CardHeader>
