@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { AuthState, LoginCredentials, LoginResponse, User } from '@/types/auth';
 import { modernToasts } from '@/components/ui/modern-alerts';
@@ -42,6 +41,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             id: payload.id,
             name: payload.name,
             email: payload.email,
+            nom: payload.nom || payload.name?.split(' ')[1] || '',
+            prenom: payload.prenom || payload.name?.split(' ')[0] || '',
             ecole: payload.ecole,
           };
 
@@ -83,6 +84,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           id: payload.id,
           name: payload.name,
           email: payload.email,
+          nom: payload.nom || payload.name?.split(' ')[1] || '',
+          prenom: payload.prenom || payload.name?.split(' ')[0] || '',
           ecole: payload.ecole,
         };
 

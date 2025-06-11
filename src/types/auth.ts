@@ -3,6 +3,8 @@ export interface User {
   id: string;
   name: string;
   email: string;
+  nom: string;
+  prenom: string;
   ecole: {
     _id: string;
     libelle: string;
