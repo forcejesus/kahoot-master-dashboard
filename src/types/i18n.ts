@@ -1,4 +1,3 @@
-export type Language = 'fr' | 'en';
 
 export interface TranslationKeys {
   // Authentication
@@ -32,14 +31,16 @@ export interface TranslationKeys {
   'auth.resetLinkSentDescription': string;
   'auth.resetLinkError': string;
   'auth.resetLinkErrorDescription': string;
+  'auth.passwordChanged': string;
+  'auth.passwordChangedSuccess': string;
   
-  // Navigation
+  // Nav translations
   'nav.logout': string;
   'nav.profile': string;
   'nav.settings': string;
   'nav.loggingOut': string;
-  
-  // Dashboard
+
+  // Dashboard translations
   'dashboard.goodMorning': string;
   'dashboard.goodAfternoon': string;
   'dashboard.goodEvening': string;
@@ -55,14 +56,14 @@ export interface TranslationKeys {
   'dashboard.searchKahoots': string;
   'dashboard.deleting': string;
   'dashboard.delete': string;
-  
-  // Table headers
+
+  // Table translations
   'table.title': string;
   'table.questions': string;
   'table.sessions': string;
   'table.participants': string;
-  
-  // Question details
+
+  // Question translations  
   'question.type': string;
   'question.points': string;
   'question.duration': string;
@@ -78,16 +79,16 @@ export interface TranslationKeys {
   'question.date': string;
   'question.fileType': string;
   'question.gameId': string;
-  
-  // Delete dialogs
+
+  // Delete translations
   'delete.confirm': string;
   'delete.confirmDescription': string;
   'delete.confirmDescriptionPlural': string;
   'delete.cancel': string;
   'delete.deleting': string;
   'delete.delete': string;
-  
-  // Planification
+
+  // Planification translations
   'planification.accessPin': string;
   'planification.copyPin': string;
   'planification.from': string;
@@ -98,28 +99,43 @@ export interface TranslationKeys {
   'planification.pending': string;
   'planification.limit': string;
   'planification.participants': string;
-  
-  // Loading messages
+  'planification.allStatuses': string;
+  'planification.inProgress': string;
+  'planification.completed': string;
+  'planification.allTypes': string;
+  'planification.public': string;
+  'planification.assigned': string;
+  'planification.searchPlaceholder': string;
+  'planification.filterByStatus': string;
+  'planification.filterByType': string;
+  'planification.bestScore': string;
+  'planification.activeUntil': string;
+  'planification.sessionEnded': string;
+  'planification.viewPlanification': string;
+  'planification.loading': string;
+  'planification.noMatchingResults': string;
+
+  // Loading translations
   'loading.data': string;
   'loading.dataDescription': string;
   'loading.deleting': string;
   'loading.deletingDescription': string;
   'loading.statsTitle': string;
   'loading.statsDescription': string;
-  
-  // Success messages
+
+  // Success translations
   'success.dataLoaded': string;
   'success.dataLoadedDescription': string;
   'success.deleteSuccess': string;
   'success.deleteSuccessDescription': string;
-  
-  // Error messages
+
+  // Error translations
   'error.loadingFailed': string;
   'error.loadingFailedDescription': string;
   'error.deleteFailed': string;
   'error.deleteFailedDescription': string;
 
-  // Create Kahoot
+  // Create game translations
   'create.title': string;
   'create.kahoot': string;
   'create.newKahoot': string;
@@ -133,15 +149,21 @@ export interface TranslationKeys {
   'create.success': string;
   'create.error': string;
   'create.titleRequired': string;
+  'create.subtitle': string;
+  'create.gameInfo': string;
+  'create.optional': string;
+  'create.imageFormats': string;
+  'create.selectedFile': string;
+  'create.preview': string;
 
-  // Game Setup
+  // Game translations
   'game.setup': string;
   'game.configuration': string;
   'game.backToDashboard': string;
   'game.addQuestion': string;
   'game.questionForm': string;
 
-  // Question Form
+  // Form translations
   'form.questionLabel': string;
   'form.questionPlaceholder': string;
   'form.duration': string;
@@ -159,7 +181,7 @@ export interface TranslationKeys {
   'form.addQuestion': string;
   'form.adding': string;
 
-  // Game Details
+  // Details translations
   'details.backToDashboard': string;
   'details.title': string;
   'details.questions': string;
@@ -170,17 +192,17 @@ export interface TranslationKeys {
   'details.noPlanifications': string;
   'details.noSessions': string;
 
-  // Schedule
+  // Schedule translations
   'schedule.title': string;
   'schedule.sessionFor': string;
   'schedule.createSession': string;
 
-  // Not Found
+  // Not found translations
   'notFound.title': string;
   'notFound.message': string;
   'notFound.returnHome': string;
 
-  // Planification Details
+  // Plan details translations
   'planDetails.title': string;
   'planDetails.backButton': string;
   'planDetails.deleteButton': string;
@@ -194,11 +216,9 @@ export interface TranslationKeys {
   'planDetails.notFoundDesc': string;
   'planDetails.loading': string;
 
-  // Breadcrumbs
+  // Breadcrumb translations
   'breadcrumb.dashboard': string;
   'breadcrumb.game': string;
   'breadcrumb.planification': string;
   'breadcrumb.details': string;
 }
-
-export type TranslationKey = keyof TranslationKeys;
