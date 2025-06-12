@@ -100,10 +100,10 @@ export default function CreateGame() {
               <GamepadIcon className="w-8 h-8 text-white" />
             </div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-purple-800 to-blue-800 bg-clip-text text-transparent mb-2">
-              Créer un nouveau jeu
+              {t('create.newKahoot')}
             </h1>
             <p className="text-lg text-gray-600">
-              Donnez vie à vos idées avec un jeu interactif captivant
+              {t('create.subtitle') || "Bring your ideas to life with an interactive game"}
             </p>
           </div>
         </div>
@@ -113,7 +113,7 @@ export default function CreateGame() {
           <CardHeader className="bg-gradient-to-r from-purple-50 to-blue-50 border-b border-gray-100 p-8">
             <CardTitle className="text-2xl font-bold text-gray-800 flex items-center gap-3">
               <Sparkles className="h-6 w-6 text-purple-600" />
-              Informations du jeu
+              {t('create.gameInfo') || "Game Information"}
             </CardTitle>
           </CardHeader>
           
@@ -122,11 +122,11 @@ export default function CreateGame() {
               {/* Champ titre */}
               <div className="space-y-3">
                 <Label htmlFor="titre" className="text-lg font-semibold text-gray-800">
-                  Titre du jeu
+                  {t('create.titleLabel')}
                 </Label>
                 <Input
                   id="titre"
-                  placeholder="Donnez un nom accrocheur à votre jeu..."
+                  placeholder={t('create.titlePlaceholder')}
                   value={titre}
                   onChange={(e) => setTitre(e.target.value)}
                   disabled={isLoading}
@@ -137,7 +137,7 @@ export default function CreateGame() {
               {/* Section image */}
               <div className="space-y-4">
                 <Label className="text-lg font-semibold text-gray-800">
-                  Image du jeu (optionnel)
+                  {t('create.imageLabel')} ({t('create.optional') || "optional"})
                 </Label>
                 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -162,17 +162,17 @@ export default function CreateGame() {
                       <div className="text-center">
                         <ImageIcon className="mx-auto h-8 w-8 mb-2" />
                         <div className="text-sm font-medium">
-                          {image ? 'Changer l\'image' : 'Ajouter une image'}
+                          {image ? t('create.changeImage') : t('create.addImage')}
                         </div>
                         <div className="text-xs text-gray-500 mt-1">
-                          PNG, JPG jusqu'à 10MB
+                          {t('create.imageFormats') || "PNG, JPG up to 10MB"}
                         </div>
                       </div>
                     </Button>
                     
                     {image && (
                       <div className="text-sm text-gray-600 p-3 bg-gray-50 rounded-lg">
-                        <span className="font-medium">Fichier sélectionné:</span>
+                        <span className="font-medium">{t('create.selectedFile') || "Selected file"}:</span>
                         <br />
                         <span className="truncate">{image.name}</span>
                       </div>
@@ -183,12 +183,12 @@ export default function CreateGame() {
                   {previewUrl && (
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">
-                        Aperçu
+                        {t('create.preview') || "Preview"}
                       </Label>
                       <div className="relative overflow-hidden rounded-xl shadow-lg">
                         <img 
                           src={previewUrl}
-                          alt="Aperçu" 
+                          alt={t('create.preview') || "Preview"} 
                           className="w-full h-48 object-cover"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
@@ -207,7 +207,7 @@ export default function CreateGame() {
                   onClick={() => navigate('/dashboard')}
                   disabled={isLoading}
                 >
-                  Annuler
+                  {t('create.cancel')}
                 </Button>
                 
                 <Button 
@@ -218,12 +218,12 @@ export default function CreateGame() {
                   {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                      Création en cours...
+                      {t('create.creating')}
                     </>
                   ) : (
                     <>
                       <Sparkles className="mr-2 h-5 w-5" />
-                      Créer le jeu
+                      {t('create.kahoot')}
                     </>
                   )}
                 </Button>

@@ -21,7 +21,7 @@ export function ResetPasswordSuccess() {
             AKILI
           </CardTitle>
           <div className="text-sm font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-full inline-block border border-blue-200">
-            Espace Enseignant
+            {t('auth.title')}
           </div>
           
           <div className="space-y-4">
@@ -30,10 +30,10 @@ export function ResetPasswordSuccess() {
             </div>
             <div className="space-y-2">
               <CardTitle className="text-xl font-semibold text-gray-800">
-                Mot de passe modifié !
+                {t('auth.passwordChanged') || "Password changed!"}
               </CardTitle>
               <CardDescription className="text-gray-600">
-                Votre mot de passe a été modifié avec succès
+                {t('auth.passwordChangedSuccess') || "Your password has been successfully changed"}
               </CardDescription>
             </div>
           </div>

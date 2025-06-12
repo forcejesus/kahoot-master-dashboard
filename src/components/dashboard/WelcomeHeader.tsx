@@ -50,8 +50,8 @@ export function WelcomeHeader() {
           
           <div className="hidden md:flex items-center justify-end">
             <div className="text-right">
-              <p className="text-teal-200 text-sm font-medium">Plateforme</p>
-              <p className="text-white text-2xl font-bold">AKILI | Espace Enseignant</p>
+              <p className="text-teal-200 text-sm font-medium">{t('auth.title')}</p>
+              <p className="text-white text-2xl font-bold">AKILI</p>
             </div>
           </div>
         </div>
