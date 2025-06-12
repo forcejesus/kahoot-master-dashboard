@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTranslation } from '@/contexts/I18nContext';
@@ -109,29 +108,43 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 relative overflow-hidden">
-      {/* Motifs géométriques en arrière-plan */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-20 left-20 w-64 h-64 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
-        <div className="absolute top-40 right-20 w-64 h-64 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
-        <div className="absolute bottom-20 left-40 w-64 h-64 bg-indigo-200 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-2000"></div>
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Image de fond */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: `url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')`
+        }}
+      />
+      
+      {/* Overlay gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-purple-900/70 to-indigo-800/80" />
+      
+      {/* Motifs géométriques décoratifs */}
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-20 left-20 w-64 h-64 bg-white/10 rounded-full mix-blend-overlay filter blur-xl animate-pulse"></div>
+        <div className="absolute top-40 right-20 w-48 h-48 bg-blue-300/20 rounded-full mix-blend-overlay filter blur-xl animate-pulse delay-1000"></div>
+        <div className="absolute bottom-20 left-40 w-56 h-56 bg-purple-300/20 rounded-full mix-blend-overlay filter blur-xl animate-pulse delay-2000"></div>
+        <div className="absolute bottom-40 right-40 w-40 h-40 bg-indigo-300/20 rounded-full mix-blend-overlay filter blur-xl animate-pulse delay-3000"></div>
       </div>
 
       {/* Motif de grille */}
-      <div className="absolute inset-0 opacity-5" style={{
+      <div className="absolute inset-0 opacity-10" style={{
         backgroundImage: `
-          linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px)
+          linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px)
         `,
-        backgroundSize: '20px 20px'
+        backgroundSize: '50px 50px'
       }}></div>
 
-      {/* Motifs décoratifs */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-10 left-10 w-8 h-8 border-2 border-blue-300 rounded-full"></div>
-        <div className="absolute top-32 right-32 w-12 h-12 border-2 border-purple-300 rotate-45"></div>
-        <div className="absolute bottom-20 right-20 w-6 h-6 bg-indigo-300 rounded-full"></div>
-        <div className="absolute bottom-40 left-20 w-10 h-10 border-2 border-blue-300 rotate-12"></div>
+      {/* Formes géométriques décoratives */}
+      <div className="absolute inset-0 opacity-15">
+        <div className="absolute top-10 left-10 w-8 h-8 border-2 border-white/30 rounded-full animate-pulse"></div>
+        <div className="absolute top-32 right-32 w-12 h-12 border-2 border-blue-300/40 rotate-45 animate-pulse delay-500"></div>
+        <div className="absolute bottom-20 right-20 w-6 h-6 bg-white/30 rounded-full animate-pulse delay-1000"></div>
+        <div className="absolute bottom-40 left-20 w-10 h-10 border-2 border-purple-300/40 rotate-12 animate-pulse delay-1500"></div>
+        <div className="absolute top-60 left-60 w-14 h-14 border-2 border-indigo-300/40 rounded-full animate-pulse delay-2000"></div>
+        <div className="absolute top-80 right-80 w-8 h-8 bg-blue-300/30 rotate-45 animate-pulse delay-2500"></div>
       </div>
 
       <Navbar />
