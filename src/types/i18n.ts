@@ -1,4 +1,8 @@
 
+export type Language = 'en' | 'fr';
+
+export type TranslationKey = keyof TranslationKeys;
+
 export interface TranslationKeys {
   // Authentication
   'auth.email': string;
@@ -221,4 +225,30 @@ export interface TranslationKeys {
   'breadcrumb.game': string;
   'breadcrumb.planification': string;
   'breadcrumb.details': string;
+
+  // Planifications translations
+  'planifications.loading': string;
+  'planifications.empty': string;
+  'planifications.emptyDescription': string;
+  'planifications.startCreating': string;
+  'planifications.filter': string;
+  'planifications.allStatuses': string;
+  'planifications.allTypes': string;
+  'planifications.search': string;
+
+  // Create game additional translations
+  'createGame.coverImage': string;
+  'createGame.uploadCover': string;
+  'createGame.dragDrop': string;
+  'createGame.maxSize': string;
+  'createGame.formats': string;
+  'createGame.gameTitle': string;
+  'createGame.titlePlaceholder': string;
+  'createGame.createButton': string;
+  'createGame.creatingButton': string;
+
+  // Password reset translations
+  'passwordReset.success': string;
+  'passwordReset.successMessage': string;
+  'passwordReset.loginButton': string;
 }
