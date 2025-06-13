@@ -96,8 +96,8 @@ export default function GameDetails() {
           {/* Header responsive avec bouton retour */}
           <div className="mb-6 sm:mb-8">
             <Button
-              variant="navigation"
-              className="mb-4 sm:mb-6 bg-white/90 hover:bg-white/95 backdrop-blur-sm shadow-md border border-white/20 text-sm sm:text-base"
+              variant="default"
+              className="mb-4 sm:mb-6 bg-white text-slate-700 hover:bg-slate-50 shadow-lg border border-slate-200 text-sm sm:text-base font-semibold px-6 py-3"
               onClick={() => navigate('/dashboard')}
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
