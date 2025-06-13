@@ -31,7 +31,7 @@ export default function GameDetails() {
       });
 
       if (!response.ok) {
-        throw new Error('Erreur lors du chargement des détails du jeu');
+        throw new Error(t('error.loadingFailed'));
       }
 
       const data = await response.json();
@@ -39,10 +39,10 @@ export default function GameDetails() {
       if (data.data) {
         setJeu(data.data);
       } else {
-        toast.error("Jeu non trouvé");
+        toast.error(t('error.loadingFailed'));
       }
     } catch (error) {
-      toast.error("Erreur lors du rafraîchissement des données");
+      toast.error(t('error.loadingFailedDescription'));
     }
   };
 
@@ -62,7 +62,7 @@ export default function GameDetails() {
 
   const handleCopyPin = (pin: string) => {
     navigator.clipboard.writeText(pin);
-    toast.success("PIN copié !");
+    toast.success(t('planification.copyPin') + " !");
   };
 
   const handleDeleteGame = async () => {
@@ -75,13 +75,13 @@ export default function GameDetails() {
       });
 
       if (!response.ok) {
-        throw new Error('Erreur lors de la suppression');
+        throw new Error(t('error.deleteFailed'));
       }
 
-      toast.success("Jeu supprimé avec succès");
+      toast.success(t('success.deleteSuccess'));
       navigate('/dashboard');
     } catch (error) {
-      toast.error("Erreur lors de la suppression du jeu");
+      toast.error(t('error.deleteFailedDescription'));
     }
   };
 
@@ -92,18 +92,22 @@ export default function GameDetails() {
       <div className="relative">
         <GameBackgroundImage jeu={jeu} />
 
-        <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <Button
-            variant="navigation"
-            className="mb-6 bg-white/90 hover:bg-white/95 backdrop-blur-sm shadow-md border border-white/20"
-            onClick={() => navigate('/dashboard')}
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            {t('details.backToDashboard')}
-          </Button>
+        <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+          {/* Header responsive avec bouton retour */}
+          <div className="mb-6 sm:mb-8">
+            <Button
+              variant="navigation"
+              className="mb-4 sm:mb-6 bg-white/90 hover:bg-white/95 backdrop-blur-sm shadow-md border border-white/20 text-sm sm:text-base"
+              onClick={() => navigate('/dashboard')}
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              {t('details.backToDashboard')}
+            </Button>
+          </div>
 
-          <div className="space-y-8 animate-fade-in">
-            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-8">
+          <div className="space-y-6 sm:space-y-8 animate-fade-in">
+            {/* Header du jeu - responsive */}
+            <div className="bg-white/90 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-xl border border-white/20 p-4 sm:p-6 lg:p-8">
               <GameHeader 
                 jeu={jeu} 
                 token={token} 
@@ -112,7 +116,8 @@ export default function GameDetails() {
               />
             </div>
 
-            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 overflow-hidden">
+            {/* Contenu principal avec tabs - responsive */}
+            <div className="bg-white/90 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-xl border border-white/20 overflow-hidden">
               <GameDetailsTabs 
                 jeu={jeu} 
                 planificationsEnCours={planificationsEnCours} 
