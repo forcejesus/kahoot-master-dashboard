@@ -15,6 +15,13 @@ export function WelcomeHeader() {
     return t('dashboard.goodEvening');
   };
 
+  const getFirstName = () => {
+    if (user?.prenom) {
+      return user.prenom.split(' ')[0];
+    }
+    return user?.name?.split(' ')[0] || t('dashboard.user');
+  };
+
   return (
     <Card className="mb-10 p-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 text-white border-none shadow-2xl overflow-hidden relative">
       {/* Animated background elements */}
@@ -46,7 +53,7 @@ export function WelcomeHeader() {
                   {getGreeting()}
                 </h1>
                 <p className="text-indigo-100 text-2xl font-semibold tracking-wide">
-                  {t('dashboard.welcomeBack', { name: user?.name || t('dashboard.user') })}
+                  Bon retour {getFirstName()}
                 </p>
               </div>
             </div>
