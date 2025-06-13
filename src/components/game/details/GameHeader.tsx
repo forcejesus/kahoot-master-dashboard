@@ -25,11 +25,6 @@ export function GameHeader({ jeu, token, onDelete, onRefresh }: GameHeaderProps)
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-800 mb-2 break-words">
             {jeu.titre}
           </h1>
-          {jeu.description && (
-            <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-              {jeu.description}
-            </p>
-          )}
         </div>
         
         {/* Actions - responsive */}
