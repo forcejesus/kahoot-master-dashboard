@@ -24,6 +24,7 @@ export function EditGameQuestionsList({ questions, onQuestionUpdate }: EditGameQ
           question={question}
           index={index}
           onUpdate={onQuestionUpdate}
+          onDelete={onQuestionUpdate}
         />
       ))}
     </div>

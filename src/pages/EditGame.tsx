@@ -11,7 +11,6 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { EditGameQuestionsList } from '@/components/game/edit/EditGameQuestionsList';
 
 export default function EditGame() {
@@ -97,6 +96,8 @@ export default function EditGame() {
         formData.append('image', imageFile);
       }
 
+      console.log('Envoi de la mise à jour du jeu avec:', { titre, hasImage: !!imageFile });
+
       const response = await fetch(`http://kahoot.nos-apps.com/api/jeux/update/${jeu._id}`, {
         method: 'PUT',
         headers: {
@@ -105,11 +106,19 @@ export default function EditGame() {
         body: formData
       });
 
-      if (!response.ok) {
-        throw new Error('Erreur lors de la mise à jour');
+      const responseData = await response.json();
+      console.log('Réponse de la mise à jour du jeu:', responseData);
+
+      if (!response.ok || !responseData.success) {
+        throw new Error(responseData.message || 'Erreur lors de la mise à jour');
       }
 
       toast.success('Jeu mis à jour avec succès !');
+      // Mettre à jour l'état local avec les nouvelles données
+      setJeu(responseData.data);
+      setImageFile(null);
+      setImagePreview(null);
+      
       // Recharger les détails complets du jeu
       await loadGameDetails();
     } catch (error) {
@@ -177,7 +186,7 @@ export default function EditGame() {
               className="bg-blue-600 hover:bg-blue-700"
             >
               <Save className="mr-2 h-4 w-4" />
-              {isSaving ? 'Sauvegarde...' : 'Sauvegarder'}
+              {isSaving ? 'Sauvegarde...' : 'Sauvegarder les informations'}
             </Button>
           </div>
         </div>
