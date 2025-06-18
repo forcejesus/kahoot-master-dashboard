@@ -4,8 +4,8 @@ import { PlanificationDetailsPage } from "@/components/planification/Planificati
 
 export default function PlanificationDetails() {
   return (
-    <Layout>
-      <div className="flex-1 bg-gradient-to-br from-slate-50 to-blue-50">
+    <Layout showBackButton={true} backTo="/dashboard">
+      <div className="h-full">
         <PlanificationDetailsPage />
       </div>
     </Layout>

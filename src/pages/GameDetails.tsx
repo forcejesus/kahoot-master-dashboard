@@ -3,8 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTranslation } from '@/contexts/I18nContext';
 import { Layout } from '@/components/Layout';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import { Kahoot } from '@/types/game-details';
 import { GameHeader } from '@/components/game/details/GameHeader';
@@ -85,37 +83,24 @@ export default function GameDetails() {
   };
 
   return (
-    <Layout>
-      <div className="flex-1 bg-gradient-to-br from-slate-50 to-blue-50">
-        <div className="max-w-7xl mx-auto px-6 py-8">
-          <div className="mb-6">
-            <Button
-              variant="outline"
-              className="mb-6 bg-white/80 backdrop-blur-sm border-gray-200 hover:bg-white hover:border-gray-300"
-              onClick={() => navigate('/dashboard')}
-            >
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              {t('details.backToDashboard')}
-            </Button>
+    <Layout showBackButton={true} backTo="/dashboard" title={jeu.titre}>
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="space-y-6 animate-fade-in">
+          <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-sm border-0 p-6 hover:bg-white transition-all duration-300">
+            <GameHeader 
+              jeu={jeu} 
+              token={token} 
+              onDelete={handleDeleteGame} 
+              onRefresh={refreshGameDetails} 
+            />
           </div>
 
-          <div className="space-y-6 animate-fade-in">
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border-0 p-6 hover:bg-white/90 transition-all duration-300">
-              <GameHeader 
-                jeu={jeu} 
-                token={token} 
-                onDelete={handleDeleteGame} 
-                onRefresh={refreshGameDetails} 
-              />
-            </div>
-
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border-0 overflow-hidden hover:bg-white/90 transition-all duration-300">
-              <GameDetailsTabs 
-                jeu={jeu} 
-                planificationsEnCours={planificationsEnCours} 
-                onCopyPin={handleCopyPin} 
-              />
-            </div>
+          <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-sm border-0 overflow-hidden hover:bg-white transition-all duration-300">
+            <GameDetailsTabs 
+              jeu={jeu} 
+              planificationsEnCours={planificationsEnCours} 
+              onCopyPin={handleCopyPin} 
+            />
           </div>
         </div>
       </div>

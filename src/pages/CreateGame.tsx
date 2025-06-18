@@ -4,8 +4,8 @@ import { CreateGameInterface } from "@/components/create-game/CreateGameInterfac
 
 export default function CreateGame() {
   return (
-    <Layout>
-      <div className="flex-1 bg-gradient-to-br from-slate-50 to-blue-50">
+    <Layout showBackButton={true} backTo="/dashboard">
+      <div className="h-full">
         <CreateGameInterface />
       </div>
     </Layout>
