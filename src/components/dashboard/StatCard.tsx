@@ -1,5 +1,5 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { LucideIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -8,45 +8,45 @@ interface StatCardProps {
   value: number | string;
   icon: LucideIcon;
   isLoading?: boolean;
-  gradient?: string;
+  color?: string;
+  trend?: string;
 }
 
-export function StatCard({ title, value, icon: Icon, isLoading = false, gradient = "from-gray-100 to-gray-200" }: StatCardProps) {
+export function StatCard({ title, value, icon: Icon, isLoading = false, color = "blue", trend }: StatCardProps) {
+  const colorClasses = {
+    blue: "bg-blue-50 text-blue-600 border-blue-200",
+    green: "bg-green-50 text-green-600 border-green-200", 
+    purple: "bg-purple-50 text-purple-600 border-purple-200",
+    orange: "bg-orange-50 text-orange-600 border-orange-200"
+  };
+
   return (
-    <Card className={`group transform transition-all duration-300 hover:scale-105 hover:shadow-2xl bg-gradient-to-br ${gradient} text-white border-none shadow-lg overflow-hidden relative`}>
-      <div className="absolute inset-0 bg-gradient-to-br from-black/0 to-black/10"></div>
-      <div className="absolute -bottom-6 -right-6 w-20 h-20 bg-white/10 rounded-full blur-xl"></div>
-      <div className="absolute top-4 right-4 opacity-20">
-        <Icon className="w-16 h-16" />
+    <Card className="p-6 bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200">
+      <div className="flex items-start justify-between">
+        <div className="flex-1">
+          <div className="flex items-center gap-3 mb-4">
+            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${colorClasses[color as keyof typeof colorClasses]}`}>
+              <Icon className="w-5 h-5" />
+            </div>
+            <h3 className="text-sm font-medium text-gray-600">
+              {title}
+            </h3>
+          </div>
+          
+          <div className="space-y-1">
+            {isLoading ? (
+              <Skeleton className="h-8 w-16" />
+            ) : (
+              <div className="text-2xl font-bold text-gray-900">
+                {value}
+              </div>
+            )}
+            {trend && (
+              <p className="text-xs text-gray-500">{trend}</p>
+            )}
+          </div>
+        </div>
       </div>
-      
-      <CardHeader className="relative z-10 space-y-2">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
-            <Icon className="w-5 h-5" />
-          </div>
-          <CardTitle className="text-lg font-semibold text-white/90">
-            {title}
-          </CardTitle>
-        </div>
-      </CardHeader>
-      
-      <CardContent className="relative z-10 pb-6">
-        <div className="text-4xl font-bold mb-2">
-          {isLoading ? (
-            <Skeleton className="h-12 w-20 bg-white/20" />
-          ) : (
-            <span className="bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
-              {value}
-            </span>
-          )}
-        </div>
-        {!isLoading && (
-          <div className="text-white/70 text-sm">
-            {typeof value === 'number' && value > 0 ? '↗ Active' : 'Getting started'}
-          </div>
-        )}
-      </CardContent>
     </Card>
   );
 }
