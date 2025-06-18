@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Trash2, Calendar, Users, HelpCircle } from 'lucide-react';
 import { Kahoot } from '@/types/game-details';
 import { ScheduleDialog } from '../schedule/ScheduleDialog';
+import { EditGameDialog } from '../edit/EditGameDialog';
 import { useTranslation } from '@/contexts/I18nContext';
 import { Badge } from '@/components/ui/badge';
 
@@ -29,6 +30,12 @@ export function GameHeader({ jeu, token, onDelete, onRefresh }: GameHeaderProps)
         
         {/* Actions - responsive */}
         <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+          <EditGameDialog
+            gameId={jeu._id}
+            currentTitle={jeu.titre}
+            currentImage={jeu.image}
+            onSuccess={onRefresh}
+          />
           <ScheduleDialog 
             gameId={jeu._id} 
             jeu={jeu} 

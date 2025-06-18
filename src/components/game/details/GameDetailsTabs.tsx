@@ -11,9 +11,10 @@ interface GameDetailsTabsProps {
   jeu: Kahoot;
   planificationsEnCours: Planification[];
   onCopyPin: (pin: string) => void;
+  onRefresh: () => void;
 }
 
-export function GameDetailsTabs({ jeu, planificationsEnCours, onCopyPin }: GameDetailsTabsProps) {
+export function GameDetailsTabs({ jeu, planificationsEnCours, onCopyPin, onRefresh }: GameDetailsTabsProps) {
   const { t } = useTranslation();
 
   return (
@@ -53,7 +54,10 @@ export function GameDetailsTabs({ jeu, planificationsEnCours, onCopyPin }: GameD
 
         {/* Questions Tab Content */}
         <TabsContent value="questions" className="mt-0 animate-fade-in">
-          <QuestionsDisplay questions={jeu.questions} />
+          <QuestionsDisplay 
+            questions={jeu.questions} 
+            onRefresh={onRefresh}
+          />
         </TabsContent>
 
         {/* Active Sessions Tab Content */}

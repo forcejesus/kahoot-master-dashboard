@@ -1,4 +1,3 @@
-
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTranslation } from '@/contexts/I18nContext';
@@ -121,7 +120,8 @@ export default function GameDetails() {
               <GameDetailsTabs 
                 jeu={jeu} 
                 planificationsEnCours={planificationsEnCours} 
-                onCopyPin={handleCopyPin} 
+                onCopyPin={handleCopyPin}
+                onRefresh={refreshGameDetails}
               />
             </div>
           </div>
