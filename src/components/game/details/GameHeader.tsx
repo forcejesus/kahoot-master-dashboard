@@ -1,12 +1,12 @@
 
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Button } from '@/components/ui/button';
-import { Trash2, Calendar, Users, HelpCircle } from 'lucide-react';
+import { Trash2, Calendar, Users, HelpCircle, Edit } from 'lucide-react';
 import { Kahoot } from '@/types/game-details';
 import { ScheduleDialog } from '../schedule/ScheduleDialog';
-import { EditGameDialog } from '../edit/EditGameDialog';
 import { useTranslation } from '@/contexts/I18nContext';
 import { Badge } from '@/components/ui/badge';
+import { useNavigate } from 'react-router-dom';
 
 interface GameHeaderProps {
   jeu: Kahoot;
@@ -17,6 +17,7 @@ interface GameHeaderProps {
 
 export function GameHeader({ jeu, token, onDelete, onRefresh }: GameHeaderProps) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   return (
     <div className="flex flex-col space-y-6">
@@ -30,12 +31,15 @@ export function GameHeader({ jeu, token, onDelete, onRefresh }: GameHeaderProps)
         
         {/* Actions - responsive */}
         <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
-          <EditGameDialog
-            gameId={jeu._id}
-            currentTitle={jeu.titre}
-            currentImage={jeu.image}
-            onSuccess={onRefresh}
-          />
+          <Button
+            variant="outline"
+            size="default"
+            className="w-full sm:w-auto"
+            onClick={() => navigate(`/game/${jeu._id}/edit`, { state: { jeu } })}
+          >
+            <Edit className="mr-2 h-4 w-4" />
+            Modifier le jeu
+          </Button>
           <ScheduleDialog 
             gameId={jeu._id} 
             jeu={jeu} 

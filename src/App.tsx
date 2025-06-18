@@ -12,6 +12,7 @@ import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
 import CreateGame from "./pages/CreateGame";
 import GameDetails from "./pages/GameDetails";
+import EditGame from "./pages/EditGame";
 import GameSetup from "./pages/GameSetup";
 import GameSchedule from "./pages/GameSchedule";
 import PlanificationDetails from "./pages/PlanificationDetails";
@@ -48,6 +49,11 @@ function AppRoutes() {
       <Route path="/game/:id" element={
         <PrivateRoute>
           <GameDetails />
+        </PrivateRoute>
+      } />
+      <Route path="/game/:id/edit" element={
+        <PrivateRoute>
+          <EditGame />
         </PrivateRoute>
       } />
       <Route path="/game/:id/schedule" element={
