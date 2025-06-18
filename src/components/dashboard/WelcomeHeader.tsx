@@ -10,9 +10,8 @@ export function WelcomeHeader() {
 
   const getGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return t('dashboard.goodMorning');
-    if (hour < 18) return t('dashboard.goodAfternoon');
-    return t('dashboard.goodEvening');
+    if (hour < 18) return 'Bonjour';
+    return 'Bonsoir';
   };
 
   const getFirstName = () => {
@@ -23,7 +22,7 @@ export function WelcomeHeader() {
   };
 
   return (
-    <Card className="p-8 bg-white border border-gray-200 shadow-sm">
+    <Card className="p-8 bg-white/80 backdrop-blur-sm border-0 shadow-sm hover:bg-white/90 transition-all duration-300">
       <div className="flex items-center justify-between">
         <div className="flex-1">
           <div className="flex items-center gap-4 mb-4">
@@ -32,10 +31,10 @@ export function WelcomeHeader() {
             </div>
             <div>
               <h1 className="text-3xl font-bold text-gray-900 mb-1">
-                {getGreeting()}
+                {getGreeting()} {getFirstName()}
               </h1>
               <p className="text-gray-600 text-lg">
-                Bon retour {getFirstName()}
+                Bon retour sur votre tableau de bord
               </p>
             </div>
           </div>

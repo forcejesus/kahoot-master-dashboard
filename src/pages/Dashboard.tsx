@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTranslation } from '@/contexts/I18nContext';
-import { Navbar } from '@/components/Navbar';
+import { Layout } from '@/components/Layout';
 import { toast } from 'sonner';
 import { StatsSection } from '@/components/dashboard/StatsSection';
 import { KahootList } from '@/components/dashboard/KahootList';
@@ -107,26 +107,26 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar />
-      
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-        <div className="animate-slide-in">
-          <WelcomeHeader />
+    <Layout>
+      <div className="flex-1 bg-gradient-to-br from-slate-50 to-blue-50">
+        <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+          <div className="animate-slide-in">
+            <WelcomeHeader />
+          </div>
+          
+          <div className="animate-slide-in" style={{ animationDelay: '0.2s' }}>
+            <StatsSection onKahootCreated={fetchData} kahoots={kahoots} />
+          </div>
+          
+          <div className="animate-slide-in" style={{ animationDelay: '0.4s' }}>
+            <KahootList 
+              kahoots={kahoots} 
+              isLoading={isLoading} 
+              onDelete={handleDeleteKahoots} 
+            />
+          </div>
         </div>
-        
-        <div className="animate-slide-in" style={{ animationDelay: '0.2s' }}>
-          <StatsSection onKahootCreated={fetchData} kahoots={kahoots} />
-        </div>
-        
-        <div className="animate-slide-in" style={{ animationDelay: '0.4s' }}>
-          <KahootList 
-            kahoots={kahoots} 
-            isLoading={isLoading} 
-            onDelete={handleDeleteKahoots} 
-          />
-        </div>
-      </main>
-    </div>
+      </div>
+    </Layout>
   );
 }
