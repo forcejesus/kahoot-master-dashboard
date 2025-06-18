@@ -22,7 +22,7 @@ export default function GameSchedule() {
                 <BreadcrumbLink href="/dashboard">
                   <Home className="h-4 w-4 mr-1" />
                   {t('breadcrumb.dashboard')}
-                </B readcrumbLink>
+                </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
