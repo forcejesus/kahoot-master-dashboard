@@ -49,7 +49,7 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
     const questionTypeLibelle = selectedQuestionType?.libelle;
 
     let finalAnswers: string[] = [];
-    let finalCorrectAnswer: number | string = 0;
+    let finalCorrectAnswers: number[] = [];
 
     switch (questionTypeLibelle) {
       case 'CHOIX_MULTIPLE':
@@ -57,7 +57,7 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
           return; // La validation est gérée dans le composant
         }
         finalAnswers = answers;
-        finalCorrectAnswer = correctAnswers[0]; // Pour compatibilité, on prend le premier
+        finalCorrectAnswers = correctAnswers; // Support for multiple correct answers
         break;
       
       case 'CHOIX_UNIQUE':
@@ -65,7 +65,7 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
           return; // La validation est gérée dans le composant
         }
         finalAnswers = answers;
-        finalCorrectAnswer = correctAnswer;
+        finalCorrectAnswers = [correctAnswer]; // Single correct answer as array
         break;
       
       case 'REPONSE_COURTE':
@@ -73,7 +73,7 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
           return; // La validation est gérée dans le composant
         }
         finalAnswers = [shortAnswer];
-        finalCorrectAnswer = 0;
+        finalCorrectAnswers = [0];
         break;
       
       default:
@@ -89,25 +89,26 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
         setShortAnswer('');
       },
       finalAnswers,
-      typeof finalCorrectAnswer === 'number' ? finalCorrectAnswer : 0
+      finalCorrectAnswers,
+      shortAnswer
     );
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 h-full">
       {/* Header Card */}
       <Card className="shadow-2xl border-0 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white overflow-hidden relative">
         <div className="absolute inset-0 bg-black/10"></div>
         <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16 blur-2xl"></div>
         <CardHeader className="relative z-10 pb-6">
-          <CardTitle className="text-3xl font-bold flex items-center gap-4">
+          <CardTitle className="text-2xl lg:text-3xl font-bold flex items-center gap-4">
             <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-sm">
-              <HelpCircle className="w-8 h-8" />
+              <HelpCircle className="w-7 h-7" />
             </div>
             <div>
-              <span>{t('game.questionForm')}</span>
-              <p className="text-indigo-100 text-lg font-normal mt-1">
-                Créez une question engageante pour vos apprenants
+              <span>Créer une question</span>
+              <p className="text-indigo-100 text-base lg:text-lg font-normal mt-1">
+                Donnez vie à votre contenu pédagogique
               </p>
             </div>
           </CardTitle>
@@ -115,16 +116,16 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
       </Card>
 
       {/* Main Form Card */}
-      <Card className="shadow-2xl border-0 bg-white overflow-hidden">
-        <CardContent className="p-0">
-          <form onSubmit={handleAddQuestion} className="space-y-0">
+      <Card className="shadow-2xl border-0 bg-white overflow-hidden flex-1">
+        <CardContent className="p-0 h-full">
+          <form onSubmit={handleAddQuestion} className="space-y-0 h-full flex flex-col">
             {/* Question Section */}
-            <div className="p-8 bg-gradient-to-r from-slate-50 to-blue-50/30 border-b">
+            <div className="p-6 lg:p-8 bg-gradient-to-r from-slate-50 to-blue-50/30 border-b">
               <div className="flex items-center gap-3 mb-6">
                 <div className="p-2 bg-blue-100 rounded-xl">
                   <FileText className="w-5 h-5 text-blue-600" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-800">Votre Question</h3>
+                <h3 className="text-lg lg:text-xl font-bold text-gray-800">Votre Question</h3>
               </div>
               <LabelledQuestionField 
                 value={formQuestion.libelle}
@@ -134,31 +135,16 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
               />
             </div>
 
-            {/* Media Section */}
-            <div className="p-8 border-b">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 bg-purple-100 rounded-xl">
-                  <Sparkles className="w-5 h-5 text-purple-600" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-800">Média (Optionnel)</h3>
-                <span className="text-sm text-gray-500">Ajoutez une image ou vidéo pour enrichir votre question</span>
-              </div>
-              <FileUploadField 
-                onFileChange={handleFileChange}
-                currentFileType={formQuestion.type_fichier}
-              />
-            </div>
-
             {/* Settings Section */}
-            <div className="p-8 bg-gradient-to-r from-emerald-50/30 to-teal-50/50 border-b">
+            <div className="p-6 lg:p-8 bg-gradient-to-r from-emerald-50/30 to-teal-50/50 border-b">
               <div className="flex items-center gap-3 mb-6">
                 <div className="p-2 bg-emerald-100 rounded-xl">
                   <Settings2 className="w-5 h-5 text-emerald-600" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-800">Paramètres de la Question</h3>
+                <h3 className="text-lg lg:text-xl font-bold text-gray-800">Configuration</h3>
               </div>
               
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
                 <div className="space-y-4">
                   <div className="flex items-center gap-2 mb-3">
                     <Timer className="w-4 h-4 text-blue-600" />
@@ -205,38 +191,15 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
                   />
                 </div>
               </div>
-
-              <div className="mt-8 p-6 bg-white rounded-2xl border border-gray-100 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Timer className="w-5 h-5 text-indigo-600" />
-                    <div>
-                      <Label htmlFor="limite_response" className="text-base font-semibold text-gray-800">
-                        {t('form.enableTimer')}
-                      </Label>
-                      <p className="text-sm text-gray-600 mt-1">
-                        Active le minuteur pour cette question
-                      </p>
-                    </div>
-                  </div>
-                  <Switch
-                    id="limite_response"
-                    checked={formQuestion.limite_response}
-                    onCheckedChange={(checked) => updateFormQuestion({
-                      limite_response: checked
-                    })}
-                  />
-                </div>
-              </div>
             </div>
 
             {/* Answers Section */}
-            <div className="p-8 bg-gradient-to-r from-orange-50/30 to-red-50/30 border-b">
+            <div className="flex-1 p-6 lg:p-8 bg-gradient-to-r from-orange-50/30 to-red-50/30 overflow-y-auto">
               <div className="flex items-center gap-3 mb-6">
                 <div className="p-2 bg-orange-100 rounded-xl">
                   <Award className="w-5 h-5 text-orange-600" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-800">Réponses</h3>
+                <h3 className="text-lg lg:text-xl font-bold text-gray-800">Réponses</h3>
                 <span className="text-sm text-gray-500">Configurez les options de réponse</span>
               </div>
               
@@ -255,7 +218,7 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
             </div>
 
             {/* Submit Section */}
-            <div className="p-8 bg-gradient-to-r from-green-50 to-emerald-50">
+            <div className="p-6 lg:p-8 bg-gradient-to-r from-green-50 to-emerald-50 border-t">
               <SubmitQuestionButton isLoading={isSubmitting} />
             </div>
           </form>

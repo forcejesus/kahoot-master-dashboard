@@ -62,7 +62,8 @@ export const useQuestionForm = (gameId: string, token: string) => {
   const handleFormSubmit = useCallback(async (
     onSuccess: (question: Question) => void,
     answers: string[] = [],
-    correctAnswer: number = 0
+    correctAnswers: number[] = [], // Changed to support multiple correct answers
+    shortAnswer: string = ''
   ) => {
     try {
       setIsSubmitting(true);
@@ -85,11 +86,32 @@ export const useQuestionForm = (gameId: string, token: string) => {
         setIsSubmitting(false);
         return;
       }
+
+      // Handle different question types for correct answers
+      let finalCorrectAnswer: string = '';
+      
+      if (formQuestion.typeQuestion) {
+        // Find question type to determine how to handle correct answers
+        const questionType = formQuestion.typeQuestion;
+        
+        if (shortAnswer) {
+          // For short answer questions
+          finalCorrectAnswer = shortAnswer;
+        } else if (correctAnswers.length > 0) {
+          // For multiple choice questions - store all correct answer indices
+          finalCorrectAnswer = correctAnswers.join(',');
+        } else if (typeof correctAnswers[0] === 'number') {
+          // For single choice questions - store single index
+          finalCorrectAnswer = correctAnswers[0]?.toString() || '0';
+        }
+      }
       
       console.log("Soumission du formulaire avec les données:", {
         question: formQuestion,
         answers,
-        correctAnswer,
+        correctAnswers,
+        shortAnswer,
+        finalCorrectAnswer,
         file: selectedFile ? {
           name: selectedFile.name,
           type: selectedFile.type,
@@ -99,9 +121,9 @@ export const useQuestionForm = (gameId: string, token: string) => {
       
       // Use the submitQuestionWithAnswers function from questionService
       const resultQuestion = await submitQuestionWithAnswers(
-        formQuestion,
-        answers,
-        correctAnswer,
+        { ...formQuestion, reponse_correcte: finalCorrectAnswer },
+        answers.length > 0 ? answers : (shortAnswer ? [shortAnswer] : []),
+        correctAnswers[0] || 0,
         selectedFile,
         token
       );
