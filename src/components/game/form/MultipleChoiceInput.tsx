@@ -58,6 +58,9 @@ export function MultipleChoiceInput({
     onCorrectAnswersChange(newCorrectAnswers);
   };
 
+  // Validation: au moins une réponse doit être correcte
+  const hasAtLeastOneCorrect = correctAnswers.length > 0;
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -119,10 +122,17 @@ export function MultipleChoiceInput({
         ))}
       </div>
       
-      <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded-lg">
+      <div className={`text-sm p-3 rounded-lg ${
+        hasAtLeastOneCorrect 
+          ? 'text-green-700 bg-green-50 border border-green-200' 
+          : 'text-amber-700 bg-amber-50 border border-amber-200'
+      }`}>
         <p className="font-medium">Instructions :</p>
         <p>• Cochez toutes les réponses correctes (plusieurs réponses possibles)</p>
         <p>• Au moins une réponse doit être marquée comme correcte</p>
+        {!hasAtLeastOneCorrect && (
+          <p className="font-medium text-red-600 mt-2">⚠️ Veuillez sélectionner au moins une réponse correcte</p>
+        )}
       </div>
     </div>
   );

@@ -38,7 +38,7 @@ export function SingleChoiceInput({
     const newAnswers = answers.filter((_, i) => i !== index);
     onAnswersChange(newAnswers);
     
-    // Ajuster l'indice de la réponse correcte
+    // Ajuster l'index de la réponse correcte
     if (correctAnswer === index) {
       onCorrectAnswerChange(0); // Sélectionner la première réponse par défaut
     } else if (correctAnswer !== null && correctAnswer > index) {
@@ -50,6 +50,11 @@ export function SingleChoiceInput({
     const newAnswers = [...answers];
     newAnswers[index] = value;
     onAnswersChange(newAnswers);
+  };
+
+  const handleCorrectAnswerChange = (value: string) => {
+    const index = parseInt(value);
+    onCorrectAnswerChange(index);
   };
 
   return (
@@ -74,7 +79,7 @@ export function SingleChoiceInput({
       
       <RadioGroup 
         value={correctAnswer?.toString() || ""} 
-        onValueChange={(value) => onCorrectAnswerChange(parseInt(value))}
+        onValueChange={handleCorrectAnswerChange}
         className="space-y-3"
       >
         {answers.map((answer, index) => (
@@ -117,10 +122,17 @@ export function SingleChoiceInput({
         ))}
       </RadioGroup>
       
-      <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded-lg">
+      <div className={`text-sm p-3 rounded-lg ${
+        correctAnswer !== null 
+          ? 'text-green-700 bg-green-50 border border-green-200' 
+          : 'text-amber-700 bg-amber-50 border border-amber-200'
+      }`}>
         <p className="font-medium">Instructions :</p>
-        <p>• Sélectionnez la seule réponse correcte</p>
-        <p>• Une seule réponse peut être choisie par les participants</p>
+        <p>• Sélectionnez une seule réponse correcte (choix unique)</p>
+        <p>• Une réponse doit obligatoirement être marquée comme correcte</p>
+        {correctAnswer === null && (
+          <p className="font-medium text-red-600 mt-2">⚠️ Veuillez sélectionner une réponse correcte</p>
+        )}
       </div>
     </div>
   );

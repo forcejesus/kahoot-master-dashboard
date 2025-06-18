@@ -14,6 +14,7 @@ import { LabelledQuestionField } from './form/LabelledQuestionField';
 import { useQuestionForm } from './form/useQuestionForm';
 import { useState } from 'react';
 import { HelpCircle, Timer, Award, FileText, Settings2, Sparkles } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface QuestionFormProps {
   gameId: string;
@@ -53,16 +54,29 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
 
     switch (questionTypeLibelle) {
       case 'CHOIX_MULTIPLE':
+        // Validation spécifique pour les choix multiples
         if (correctAnswers.length === 0) {
-          return; // La validation est gérée dans le composant
+          toast.error("Veuillez sélectionner au moins une réponse correcte pour les choix multiples");
+          return;
+        }
+        if (answers.some(answer => !answer.trim())) {
+          toast.error("Toutes les réponses doivent être remplies");
+          return;
         }
         finalAnswers = answers;
-        finalCorrectAnswer = correctAnswers[0]; // Pour compatibilité, on prend le premier
+        // Pour les choix multiples, on envoie l'index de la première réponse correcte
+        // Le backend devra être modifié pour gérer les réponses multiples correctes
+        finalCorrectAnswer = correctAnswers[0];
         break;
       
       case 'CHOIX_UNIQUE':
         if (correctAnswer === null) {
-          return; // La validation est gérée dans le composant
+          toast.error("Veuillez sélectionner une réponse correcte");
+          return;
+        }
+        if (answers.some(answer => !answer.trim())) {
+          toast.error("Toutes les réponses doivent être remplies");
+          return;
         }
         finalAnswers = answers;
         finalCorrectAnswer = correctAnswer;
@@ -70,15 +84,24 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
       
       case 'REPONSE_COURTE':
         if (!shortAnswer.trim()) {
-          return; // La validation est gérée dans le composant
+          toast.error("Veuillez saisir une réponse courte");
+          return;
         }
         finalAnswers = [shortAnswer];
         finalCorrectAnswer = 0;
         break;
       
       default:
+        toast.error("Veuillez sélectionner un type de question");
         return;
     }
+
+    console.log('Soumission de question:', {
+      type: questionTypeLibelle,
+      answers: finalAnswers,
+      correctAnswer: finalCorrectAnswer,
+      correctAnswers: questionTypeLibelle === 'CHOIX_MULTIPLE' ? correctAnswers : [finalCorrectAnswer]
+    });
 
     await handleFormSubmit(
       (question) => {
@@ -87,6 +110,7 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
         setCorrectAnswer(null);
         setCorrectAnswers([]);
         setShortAnswer('');
+        toast.success("Question ajoutée avec succès !");
       },
       finalAnswers,
       typeof finalCorrectAnswer === 'number' ? finalCorrectAnswer : 0
