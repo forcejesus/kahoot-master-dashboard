@@ -2,12 +2,16 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTranslation } from '@/contexts/I18nContext';
-import { Layout } from '@/components/Layout';
+import { Navbar } from '@/components/Navbar';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import { Kahoot } from '@/types/game-details';
 import { GameHeader } from '@/components/game/details/GameHeader';
 import { useEffect, useState } from 'react';
+import { GameBackgroundImage } from '@/components/game/details/GameBackgroundImage';
 import { GameDetailsTabs } from '@/components/game/details/GameDetailsTabs';
+import { ModernBackground } from '@/components/shared/ModernBackground';
 
 export default function GameDetails() {
   const navigate = useNavigate();
@@ -83,27 +87,48 @@ export default function GameDetails() {
   };
 
   return (
-    <Layout showBackButton={true} backTo="/dashboard" title={jeu.titre}>
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="space-y-6 animate-fade-in">
-          <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-sm border-0 p-6 hover:bg-white transition-all duration-300">
-            <GameHeader 
-              jeu={jeu} 
-              token={token} 
-              onDelete={handleDeleteGame} 
-              onRefresh={refreshGameDetails} 
-            />
+    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 relative overflow-hidden">
+      {/* Modern Background */}
+      <ModernBackground />
+      
+      <Navbar />
+      
+      <div className="relative z-10">
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+          {/* Header responsive avec bouton retour */}
+          <div className="mb-6 sm:mb-8">
+            <Button
+              variant="default"
+              className="mb-4 sm:mb-6 bg-white/90 text-slate-700 hover:bg-white border border-white/30 shadow-2xl backdrop-blur-sm text-sm sm:text-base font-semibold px-6 py-3 transition-all duration-300 hover:shadow-xl"
+              onClick={() => navigate('/dashboard')}
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              {t('details.backToDashboard')}
+            </Button>
           </div>
 
-          <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-sm border-0 overflow-hidden hover:bg-white transition-all duration-300">
-            <GameDetailsTabs 
-              jeu={jeu} 
-              planificationsEnCours={planificationsEnCours} 
-              onCopyPin={handleCopyPin} 
-            />
+          <div className="space-y-6 sm:space-y-8 animate-fade-in">
+            {/* Header du jeu - responsive */}
+            <div className="bg-white/10 backdrop-blur-lg rounded-2xl sm:rounded-3xl shadow-2xl border border-white/20 p-4 sm:p-6 lg:p-8 hover:bg-white/15 transition-all duration-300">
+              <GameHeader 
+                jeu={jeu} 
+                token={token} 
+                onDelete={handleDeleteGame} 
+                onRefresh={refreshGameDetails} 
+              />
+            </div>
+
+            {/* Contenu principal avec tabs - responsive */}
+            <div className="bg-white/10 backdrop-blur-lg rounded-2xl sm:rounded-3xl shadow-2xl border border-white/20 overflow-hidden hover:bg-white/15 transition-all duration-300">
+              <GameDetailsTabs 
+                jeu={jeu} 
+                planificationsEnCours={planificationsEnCours} 
+                onCopyPin={handleCopyPin} 
+              />
+            </div>
           </div>
-        </div>
+        </main>
       </div>
-    </Layout>
+    </div>
   );
 }

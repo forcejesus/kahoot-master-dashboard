@@ -35,16 +35,9 @@ export function AnswersInput({
 
   if (!questionTypeLibelle) {
     return (
-      <div className="text-center p-12 text-gray-500 bg-gradient-to-br from-gray-50 to-slate-100 rounded-2xl border-2 border-dashed border-gray-300">
-        <div className="space-y-4">
-          <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto">
-            <span className="text-2xl">🎯</span>
-          </div>
-          <div>
-            <p className="text-xl font-bold text-gray-700">Sélectionnez d'abord un type de question</p>
-            <p className="text-gray-500 mt-2">Le formulaire de réponses s'adaptera automatiquement au type choisi</p>
-          </div>
-        </div>
+      <div className="text-center p-8 text-gray-500 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
+        <p className="text-lg font-medium">Sélectionnez d'abord un type de question</p>
+        <p className="text-sm mt-2">Le formulaire de réponses s'adaptera automatiquement</p>
       </div>
     );
   }
@@ -80,7 +73,7 @@ export function AnswersInput({
     
     default:
       return (
-        <div className="text-center p-8 text-amber-600 bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl border-2 border-amber-200">
+        <div className="text-center p-8 text-amber-600 bg-amber-50 rounded-lg border-2 border-amber-200">
           <p className="text-lg font-medium">Type de question non reconnu</p>
           <p className="text-sm mt-2">Type détecté : {questionTypeLibelle}</p>
         </div>

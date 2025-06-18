@@ -1,11 +1,11 @@
 
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "@/contexts/I18nContext";
-import { Layout } from "@/components/Layout";
+import { Navbar } from "@/components/Navbar";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Kahoot } from "@/types/game-details";
 import { ScheduleForm } from "@/components/game/schedule/ScheduleForm";
-import { Home, CalendarClock } from "lucide-react";
+import { HomeIcon, CalendarClock } from "lucide-react";
 
 export default function GameSchedule() {
   const location = useLocation();
@@ -13,13 +13,15 @@ export default function GameSchedule() {
   const kahoot = location.state?.jeu as Kahoot | undefined;
 
   return (
-    <Layout showBackButton={true} backTo={`/game/${kahoot?._id}`} title="Planification">
-      <div className="max-w-7xl mx-auto px-6 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <Navbar />
+      
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <Breadcrumb className="mb-8">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="/dashboard">
-                <Home className="h-4 w-4 mr-1" />
+                <HomeIcon className="h-4 w-4 mr-1" />
                 {t('breadcrumb.dashboard')}
               </BreadcrumbLink>
             </BreadcrumbItem>
@@ -41,7 +43,7 @@ export default function GameSchedule() {
         
         <div className="flex flex-col items-center">
           <div className="w-full max-w-4xl mb-8 text-center">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-4">
               {t('schedule.title')}
             </h1>
             {kahoot && (
@@ -51,13 +53,9 @@ export default function GameSchedule() {
             )}
           </div>
           
-          <div className="w-full max-w-4xl">
-            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-sm border-0 p-8">
-              <ScheduleForm />
-            </div>
-          </div>
+          <ScheduleForm />
         </div>
-      </div>
-    </Layout>
+      </main>
+    </div>
   );
 }

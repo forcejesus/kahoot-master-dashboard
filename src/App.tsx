@@ -15,7 +15,6 @@ import GameDetails from "./pages/GameDetails";
 import GameSetup from "./pages/GameSetup";
 import GameSchedule from "./pages/GameSchedule";
 import PlanificationDetails from "./pages/PlanificationDetails";
-import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -39,11 +38,6 @@ function AppRoutes() {
       <Route path="/create-game" element={
         <PrivateRoute>
           <CreateGame />
-        </PrivateRoute>
-      } />
-      <Route path="/settings" element={
-        <PrivateRoute>
-          <Settings />
         </PrivateRoute>
       } />
       <Route path="/game/setup" element={

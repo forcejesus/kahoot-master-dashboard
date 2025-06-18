@@ -4,11 +4,11 @@ import { StatCard } from './StatCard';
 import { CreateGameCard } from './CreateGameCard';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTranslation } from '@/contexts/I18nContext';
-import { BookOpen, Users, Clock, TrendingUp } from 'lucide-react';
+import { BookOpen, Users, Clock } from 'lucide-react';
 
 interface StatsSectionProps {
   onKahootCreated: () => void;
-  kahoots?: any[];
+  kahoots?: any[]; // Ajout pour recevoir les kahoots depuis le parent
 }
 
 export function StatsSection({ onKahootCreated, kahoots = [] }: StatsSectionProps) {
@@ -18,6 +18,7 @@ export function StatsSection({ onKahootCreated, kahoots = [] }: StatsSectionProp
   const [totalSessions, setTotalSessions] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Calculer les statistiques basées sur les kahoots reçus
   const totalKahoots = kahoots.length;
   const sessionsFromKahoots = kahoots.reduce((total: number, kahoot: any) => 
     total + (kahoot.planifications?.length || 0), 0
@@ -41,19 +42,19 @@ export function StatsSection({ onKahootCreated, kahoots = [] }: StatsSectionProp
     fetchApprenants();
   }, [token]);
 
+  // Mettre à jour les sessions quand les kahoots changent
   useEffect(() => {
     setTotalSessions(sessionsFromKahoots);
   }, [sessionsFromKahoots]);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
       <StatCard 
         title={t('dashboard.totalKahoots')} 
         value={totalKahoots} 
         icon={BookOpen}
         isLoading={false}
-        color="blue"
-        trend="Jeux créés"
+        gradient="from-emerald-500 to-teal-600"
       />
       
       <StatCard 
@@ -61,8 +62,7 @@ export function StatsSection({ onKahootCreated, kahoots = [] }: StatsSectionProp
         value={totalApprenants} 
         icon={Users}
         isLoading={isLoading}
-        color="green"
-        trend="Utilisateurs actifs"
+        gradient="from-blue-500 to-cyan-600"
       />
 
       <StatCard 
@@ -70,8 +70,7 @@ export function StatsSection({ onKahootCreated, kahoots = [] }: StatsSectionProp
         value={totalSessions} 
         icon={Clock}
         isLoading={false}
-        color="purple"
-        trend="Sessions lancées"
+        gradient="from-orange-500 to-red-500"
       />
 
       <CreateGameCard />
