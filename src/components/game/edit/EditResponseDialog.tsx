@@ -20,7 +20,8 @@ export function EditResponseDialog({ response, onSuccess, trigger }: EditRespons
   const { token } = useAuth();
   const [open, setOpen] = useState(false);
   const [reponseTexte, setReponseTexte] = useState(response.reponse_texte);
-  const [etat, setEtat] = useState(response.etat);
+  // Convert etat to boolean for checkbox
+  const [etat, setEtat] = useState(!!response.etat);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -57,7 +58,7 @@ export function EditResponseDialog({ response, onSuccess, trigger }: EditRespons
 
   const resetForm = () => {
     setReponseTexte(response.reponse_texte);
-    setEtat(response.etat);
+    setEtat(!!response.etat);
   };
 
   return (
