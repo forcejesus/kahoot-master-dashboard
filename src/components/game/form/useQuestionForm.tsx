@@ -10,6 +10,8 @@ interface FormQuestion {
   typeQuestion: string;
   point: string;
   jeu: string;
+  reponses: string[];
+  reponse_correcte: string;
 }
 
 export const useQuestionForm = (gameId: string, token: string) => {
@@ -20,7 +22,9 @@ export const useQuestionForm = (gameId: string, token: string) => {
     limite_response: true,
     typeQuestion: '',
     point: '',
-    jeu: gameId
+    jeu: gameId,
+    reponses: [],
+    reponse_correcte: ''
   });
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -55,7 +59,9 @@ export const useQuestionForm = (gameId: string, token: string) => {
       limite_response: true,
       typeQuestion: '',
       point: '',
-      jeu: gameId
+      jeu: gameId,
+      reponses: [],
+      reponse_correcte: ''
     });
     setSelectedFile(null);
     setPreviewUrl('');

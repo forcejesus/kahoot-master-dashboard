@@ -77,8 +77,15 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
     setIsSubmitting(true);
 
     try {
+      // Construct the complete question object
+      const questionToSubmit: Question = {
+        ...formQuestion,
+        reponses: validation.finalAnswers,
+        reponse_correcte: validation.finalAnswers[validation.finalCorrectAnswer] || validation.finalAnswers[0] || ''
+      };
+
       const questionData = await submitQuestionWithAnswers(
-        formQuestion,
+        questionToSubmit,
         validation.finalAnswers,
         validation.finalCorrectAnswers,
         selectedFile,
