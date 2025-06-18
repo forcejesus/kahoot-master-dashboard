@@ -9,6 +9,7 @@ import { MediaSection } from './form/MediaSection';
 import { SettingsSection } from './form/SettingsSection';
 import { AnswersSection } from './form/AnswersSection';
 import { SubmitQuestionButton } from './form/SubmitQuestionButton';
+import { submitQuestionWithAnswers } from './form/questionService';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -27,8 +28,8 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
     selectedFile,
     previewUrl,
     handleFileChange,
-    handleFormSubmit,
     isSubmitting,
+    setIsSubmitting,
     resetForm
   } = useQuestionForm(gameId, token);
 
@@ -70,19 +71,30 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
     console.log('Soumission de question:', {
       type: questionTypes.find(type => type._id === formQuestion.typeQuestion)?.libelle,
       answers: validation.finalAnswers,
-      correctAnswer: validation.finalCorrectAnswer,
-      correctAnswers: formQuestion.typeQuestion === 'CHOIX_MULTIPLE' ? correctAnswers : [validation.finalCorrectAnswer]
+      correctAnswers: validation.finalCorrectAnswers
     });
 
-    await handleFormSubmit(
-      (question) => {
-        onQuestionAdded(question);
-        resetAnswers();
-        toast.success("Question ajoutée avec succès !");
-      },
-      validation.finalAnswers,
-      validation.finalCorrectAnswer
-    );
+    setIsSubmitting(true);
+
+    try {
+      const questionData = await submitQuestionWithAnswers(
+        formQuestion,
+        validation.finalAnswers,
+        validation.finalCorrectAnswers,
+        selectedFile,
+        token
+      );
+
+      onQuestionAdded(questionData);
+      resetForm();
+      resetAnswers();
+      toast.success("Question ajoutée avec succès !");
+    } catch (error) {
+      console.error("Erreur lors de l'ajout de la question:", error);
+      toast.error("Erreur lors de l'ajout de la question");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

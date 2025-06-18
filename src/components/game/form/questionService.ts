@@ -4,7 +4,7 @@ import { Question } from '@/types/game';
 export const submitQuestionWithAnswers = async (
   question: Question,
   answers: string[],
-  correctAnswer: number,
+  correctAnswers: number[],
   selectedFile: File | null,
   token: string
 ) => {
@@ -27,7 +27,6 @@ export const submitQuestionWithAnswers = async (
       console.log("Ajout du fichier:", selectedFile.name, selectedFile.type, selectedFile.size);
     } else {
       console.log("Aucun fichier sélectionné pour cette question");
-      // When no file is uploaded, don't include type_fichier to prevent path access on undefined
     }
 
     // Log des données envoyées pour le débogage
@@ -38,7 +37,8 @@ export const submitQuestionWithAnswers = async (
       typeQuestion: question.typeQuestion,
       point: question.point,
       jeu: question.jeu,
-      type_fichier: selectedFile ? (question.type_fichier || 'image') : undefined
+      type_fichier: selectedFile ? (question.type_fichier || 'image') : undefined,
+      correctAnswers: correctAnswers
     });
 
     // 1. Envoyer la question avec l'image
@@ -79,9 +79,11 @@ export const submitQuestionWithAnswers = async (
 
     // 2. Envoyer les réponses en utilisant l'ID de la question
     console.log("Envoi des réponses pour la question ID:", questionId);
+    console.log("Réponses correctes:", correctAnswers);
     
     const answersPromises = answers.map(async (answer, index) => {
-      const isCorrect = index === correctAnswer;
+      // Pour les choix multiples, vérifier si cet index est dans les réponses correctes
+      const isCorrect = correctAnswers.includes(index);
       
       const responseData = {
         etat: isCorrect ? 1 : 0,
@@ -113,7 +115,7 @@ export const submitQuestionWithAnswers = async (
     return {
       ...questionData,
       reponses: answers,
-      reponse_correcte: answers[correctAnswer]
+      reponse_correcte: answers[correctAnswers[0]] // Première réponse correcte pour compatibilité
     };
   } catch (error) {
     console.error('Error submitting question with answers:', error);
