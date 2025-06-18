@@ -11,7 +11,6 @@ import { Question, QuestionType, Point } from '@/types/game';
 import { QuestionForm } from '@/components/game/QuestionForm';
 import { QuestionsList } from '@/components/game/QuestionsList';
 import { ArrowLeft, Settings, Image as ImageIcon } from 'lucide-react';
-import { ModernBackground } from '@/components/shared/ModernBackground';
 
 export default function GameSetup() {
   const { token } = useAuth();
@@ -65,17 +64,14 @@ export default function GameSetup() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 relative overflow-hidden">
-      {/* Modern Background */}
-      <ModernBackground />
-      
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <Navbar />
-      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header avec bouton retour */}
         <div className="mb-8">
           <Button 
             variant="outline" 
-            className="mb-6 bg-white/90 backdrop-blur-sm border-white/30 hover:bg-white hover:border-white/50 transition-all duration-300 shadow-2xl text-slate-700"
+            className="mb-6 bg-white/80 backdrop-blur-sm border-gray-200 hover:bg-white hover:border-gray-300 transition-all duration-200 shadow-sm"
             onClick={handleBackToDashboard}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -84,8 +80,8 @@ export default function GameSetup() {
         </div>
         
         {/* En-tête du jeu */}
-        <Card className="mb-8 overflow-hidden shadow-2xl border border-white/20 bg-white/10 backdrop-blur-lg hover:bg-white/15 transition-all duration-300">
-          <CardHeader className="bg-gradient-to-r from-blue-600/80 to-indigo-600/80 text-white backdrop-blur-sm">
+        <Card className="mb-8 overflow-hidden shadow-xl border-0 bg-white">
+          <CardHeader className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-white/20 rounded-lg">
                 <Settings className="h-6 w-6" />
@@ -101,7 +97,7 @@ export default function GameSetup() {
             </div>
           </CardHeader>
           {gameImage && (
-            <CardContent className="p-6 bg-white/5">
+            <CardContent className="p-6">
               <div className="flex justify-center">
                 <div className="relative group">
                   <img 
@@ -122,22 +118,18 @@ export default function GameSetup() {
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
           {/* Formulaire de création de question */}
           <div className="xl:col-span-2">
-            <div className="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-6 hover:bg-white/15 transition-all duration-300">
-              <QuestionForm 
-                gameId={gameId}
-                token={token}
-                questionTypes={questionTypes}
-                points={points}
-                onQuestionAdded={handleQuestionAdded}
-              />
-            </div>
+            <QuestionForm 
+              gameId={gameId}
+              token={token}
+              questionTypes={questionTypes}
+              points={points}
+              onQuestionAdded={handleQuestionAdded}
+            />
           </div>
 
           {/* Liste des questions (sidebar sur desktop) */}
           <div className="xl:col-span-1">
-            <div className="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-6 hover:bg-white/15 transition-all duration-300">
-              <QuestionsList questions={questions} />
-            </div>
+            <QuestionsList questions={questions} />
           </div>
         </div>
       </main>
