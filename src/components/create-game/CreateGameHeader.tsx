@@ -1,35 +1,36 @@
 
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from "@/contexts/I18nContext";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, GamepadIcon, Sparkles } from "lucide-react";
+import { ArrowLeft, GamepadIcon } from "lucide-react";
 
 export function CreateGameHeader() {
   const navigate = useNavigate();
-  const { t } = useTranslation();
 
   return (
-    <div className="mb-8">
+    <div className="p-6 lg:p-8 border-b border-gray-100">
       <Button 
-        variant="outline" 
-        className="mb-6 bg-white/90 backdrop-blur-sm border-white/30 hover:bg-white hover:border-white/50 transition-all duration-300 shadow-2xl text-slate-700"
+        variant="ghost" 
+        className="mb-6 text-gray-600 hover:text-gray-900 hover:bg-gray-50"
         onClick={() => navigate('/dashboard')}
       >
         <ArrowLeft className="mr-2 h-4 w-4" />
-        {t('game.backToDashboard')}
+        Retour au tableau de bord
       </Button>
       
-      <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-purple-500/80 to-blue-600/80 rounded-3xl mb-6 shadow-2xl backdrop-blur-sm border border-white/20 hover:scale-105 transition-transform duration-300">
-          <GamepadIcon className="w-10 h-10 text-white" />
+      <div className="space-y-3">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center shadow-sm">
+            <GamepadIcon className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 font-heading">
+              Créer un nouveau Kahoot
+            </h1>
+            <p className="text-gray-600 font-medium">
+              Donnez vie à vos idées pédagogiques
+            </p>
+          </div>
         </div>
-        <h1 className="text-5xl font-black bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent mb-4 drop-shadow-lg flex items-center justify-center gap-3">
-          {t('create.newKahoot')}
-          <Sparkles className="h-8 w-8 text-yellow-300 animate-pulse" />
-        </h1>
-        <p className="text-xl text-white/80 max-w-2xl mx-auto">
-          {t('create.subtitle') || "Donnez vie à vos idées avec un jeu interactif"}
-        </p>
       </div>
     </div>
   );
