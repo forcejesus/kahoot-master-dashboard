@@ -3,7 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useTranslation } from '@/contexts/I18nContext';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { Button } from './ui/button';
-import { LogOut, User, Settings, Shield } from 'lucide-react';
+import { LogOut, User, Settings } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from './ui/dropdown-menu';
 
@@ -17,8 +17,6 @@ export function Navbar() {
     logout();
     navigate('/');
   };
-
-  const isAdminRoute = location.pathname === '/admin';
 
   return (
     <nav className="bg-white/95 backdrop-blur-sm border-b border-slate-200/50 sticky top-0 z-50">
@@ -47,14 +45,6 @@ export function Navbar() {
               >
                 Dashboard
               </Button>
-              <Button
-                variant={isAdminRoute ? 'default' : 'ghost'}
-                onClick={() => navigate('/admin')}
-                className="text-sm gap-2"
-              >
-                <Shield className="w-4 h-4" />
-                Administration
-              </Button>
             </div>
           )}
 
@@ -81,13 +71,6 @@ export function Navbar() {
                     <User className="w-4 h-4" />
                     <span>Profil</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem 
-                    className="flex items-center space-x-2"
-                    onClick={() => navigate('/admin')}
-                  >
-                    <Shield className="w-4 h-4" />
-                    <span>Administration</span>
-                  </DropdownMenuItem>
                   <DropdownMenuItem className="flex items-center space-x-2">
                     <Settings className="w-4 h-4" />
                     <span>Paramètres</span>
@@ -98,7 +81,7 @@ export function Navbar() {
                     onClick={handleLogout}
                   >
                     <LogOut className="w-4 h-4" />
-                    <span>{t('auth.logout')}</span>
+                    <span>Déconnexion</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

@@ -17,7 +17,6 @@ import GameSchedule from './pages/GameSchedule';
 import GameDetails from './pages/GameDetails';
 import EditGame from './pages/EditGame';
 import PlanificationDetails from './pages/PlanificationDetails';
-import Admin from './pages/Admin';
 import NotFound from './pages/NotFound';
 
 const queryClient = new QueryClient();
@@ -41,7 +40,6 @@ function App() {
                 <Route path="/game/:id" element={<GameDetails />} />
                 <Route path="/game/:id/edit" element={<EditGame />} />
                 <Route path="/planification/:id" element={<PlanificationDetails />} />
-                <Route path="/admin" element={<Admin />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </div>
