@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTranslation } from '@/contexts/I18nContext';
@@ -9,6 +8,7 @@ import { KahootList } from '@/components/dashboard/KahootList';
 import { WelcomeHeader } from '@/components/dashboard/WelcomeHeader';
 import { Kahoot } from '@/types/game-details';
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { createApiClient } from '@/lib/api';
 
 export default function Dashboard() {
   const { token } = useAuth();
@@ -27,10 +27,8 @@ export default function Dashboard() {
     );
 
     try {
-      const response = await fetch('http://kahoot.nos-apps.com/api/jeux', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      const data = await response.json();
+      const api = createApiClient(token);
+      const data = await api.get('/jeux');
       setKahoots(data.data);
       
       toast.dismiss(loadingToastId);
@@ -72,13 +70,10 @@ export default function Dashboard() {
     );
 
     try {
+      const api = createApiClient(token);
+      
       for (const id of kahootIds) {
-        await fetch(`http://kahoot.nos-apps.com/api/jeux/delete/${id}`, {
-          method: 'DELETE',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
+        await api.delete(`/jeux/delete/${id}`);
       }
       
       toast.dismiss(loadingToastId);
