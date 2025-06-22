@@ -4,10 +4,9 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useTranslation } from '@/contexts/I18nContext';
 import { Navbar } from '@/components/Navbar';
 import { toast } from 'sonner';
-import { EnhancedStatsSection } from '@/components/dashboard/EnhancedStatsSection';
+import { StatsSection } from '@/components/dashboard/StatsSection';
 import { KahootList } from '@/components/dashboard/KahootList';
 import { WelcomeHeader } from '@/components/dashboard/WelcomeHeader';
-import { TeacherToolsSection } from '@/components/dashboard/TeacherToolsSection';
 import { Kahoot } from '@/types/game-details';
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react';
 
@@ -16,8 +15,6 @@ export default function Dashboard() {
   const { t } = useTranslation();
   const [kahoots, setKahoots] = useState<Kahoot[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [recentActivities, setRecentActivities] = useState<any[]>([]);
-  const [upcomingSessions, setUpcomingSessions] = useState<any[]>([]);
 
   const fetchData = async () => {
     const loadingToastId = toast.loading(
@@ -35,25 +32,6 @@ export default function Dashboard() {
       });
       const data = await response.json();
       setKahoots(data.data);
-      
-      // Simuler des activités récentes basées sur les kahoots
-      const activities = data.data.slice(0, 3).map((kahoot: any, index: number) => ({
-        title: kahoot.titre,
-        date: new Date(kahoot.date).toLocaleDateString(),
-        participants: Math.floor(Math.random() * 50) + 10
-      }));
-      setRecentActivities(activities);
-
-      // Simuler des sessions à venir
-      const sessions = data.data
-        .filter((kahoot: any) => kahoot.planifications && kahoot.planifications.length > 0)
-        .slice(0, 2)
-        .map((kahoot: any) => ({
-          title: kahoot.titre,
-          scheduledDate: "Demain 14h00",
-          duration: 30
-        }));
-      setUpcomingSessions(sessions);
       
       toast.dismiss(loadingToastId);
       toast.success(
@@ -163,17 +141,10 @@ export default function Dashboard() {
         </div>
         
         <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
-          <EnhancedStatsSection onKahootCreated={fetchData} kahoots={kahoots} />
+          <StatsSection onKahootCreated={fetchData} kahoots={kahoots} />
         </div>
         
         <div className="animate-fade-in" style={{ animationDelay: '0.4s' }}>
-          <TeacherToolsSection 
-            recentActivities={recentActivities}
-            upcomingSessions={upcomingSessions}
-          />
-        </div>
-        
-        <div className="animate-fade-in" style={{ animationDelay: '0.6s' }}>
           <KahootList 
             kahoots={kahoots} 
             isLoading={isLoading} 
