@@ -105,7 +105,7 @@ export class ApiClient {
     this.token = token;
   }
 
-  private async makeRequest<T = any>(endpoint: string, options: ApiOptions = {}): Promise<T> {
+  public async makeRequest<T = any>(endpoint: string, options: ApiOptions = {}): Promise<T> {
     const {
       method = 'GET',
       body,
