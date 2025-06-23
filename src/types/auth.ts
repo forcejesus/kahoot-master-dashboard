@@ -30,4 +30,6 @@ export interface LoginResponse {
   statut: number;
   message: string;
   token: string;
+  email: string;
+  role: string;
 }
