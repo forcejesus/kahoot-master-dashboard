@@ -38,6 +38,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             return;
           }
 
+          // Vérifier le rôle enseignant
+          if (payload.role !== 'enseignant') {
+            localStorage.removeItem('token');
+            setState(prev => ({ ...prev, isLoading: false }));
+            return;
+          }
+
           const user: User = {
             id: payload.id,
             name: payload.name,
@@ -79,8 +86,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const data: LoginResponse = await response.json();
 
       if (response.ok) {
+        // Vérifier le rôle dans la réponse directe
+        if (data.role !== 'enseignant') {
+          setState(prev => ({
+            ...prev,
+            isLoading: false,
+            error: 'Accès refusé - Seuls les enseignants peuvent se connecter',
+            isAuthenticated: false,
+          }));
+          modernToasts.error('Accès refusé', 'Seuls les enseignants peuvent accéder à cette plateforme');
+          return;
+        }
+
         // Decode token to get user info
         const payload = JSON.parse(atob(data.token.split('.')[1]));
+        
+        // Double vérification du rôle dans le token
+        if (payload.role !== 'enseignant') {
+          setState(prev => ({
+            ...prev,
+            isLoading: false,
+            error: 'Accès refusé - Seuls les enseignants peuvent se connecter',
+            isAuthenticated: false,
+          }));
+          modernToasts.error('Accès refusé', 'Seuls les enseignants peuvent accéder à cette plateforme');
+          return;
+        }
+
         const user: User = {
           id: payload.id,
           name: payload.name,
