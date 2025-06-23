@@ -96,7 +96,7 @@ export function Navbar() {
               size="icon"
               onClick={handleLogout}
               className="text-neutral-600 hover:text-red-600 transition-colors"
-              title={t('auth.logout')}
+              title={t('nav.logout')}
             >
               <LogOut className="w-5 h-5" />
             </Button>
@@ -156,7 +156,7 @@ export function Navbar() {
                     className="flex-1 gap-2 text-red-600 border-red-200 hover:bg-red-50"
                   >
                     <LogOut className="w-4 h-4" />
-                    {t('auth.logout')}
+                    {t('nav.logout')}
                   </Button>
                 </div>
               </div>
