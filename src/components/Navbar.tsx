@@ -1,78 +1,168 @@
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTranslation } from '@/contexts/I18nContext';
-import { LanguageSwitcher } from './LanguageSwitcher';
-import { Button } from './ui/button';
-import { Avatar, AvatarFallback } from './ui/avatar';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
-import { LogOut, Settings } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { 
+  LogOut, 
+  User, 
+  Settings, 
+  Menu, 
+  X,
+  Sparkles,
+  Home,
+  Plus
+} from 'lucide-react';
 
 export function Navbar() {
-  const { user, logout } = useAuth();
+  const { logout, user } = useAuth();
   const { t } = useTranslation();
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const navigate = useNavigate();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
-    setIsLoggingOut(true);
-    try {
-      await logout();
-    } finally {
-      setIsLoggingOut(false);
-    }
+    await logout();
+    navigate('/');
   };
 
-  const getUserInitials = () => {
-    if (!user?.nom || !user?.prenom) return 'U';
-    return `${user.prenom[0]}${user.nom[0]}`.toUpperCase();
-  };
+  const navigationItems = [
+    {
+      label: 'Dashboard',
+      icon: Home,
+      path: '/dashboard',
+      variant: 'ghost' as const
+    },
+    {
+      label: 'Nouveau Kahoot',
+      icon: Plus,
+      path: '/create-game',
+      variant: 'secondary' as const
+    }
+  ];
 
   return (
-    <nav className="bg-white/90 backdrop-blur-lg border-b border-slate-200/60 shadow-sm sticky top-0 z-50">
+    <nav className="bg-white/95 backdrop-blur-sm border-b border-neutral-200/50 sticky top-0 z-50 shadow-soft">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo/Brand */}
-          <div className="flex-shrink-0">
-            <div className="text-4xl font-black text-transparent bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text tracking-wider drop-shadow-lg">
-              AKILI
+          {/* Logo */}
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-soft">
+              <Sparkles className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-neutral-900 tracking-tight">AKILI</h1>
+              <p className="text-xs text-neutral-500 font-medium">Espace Enseignant</p>
             </div>
           </div>
 
-          {/* Right side */}
-          <div className="flex items-center space-x-4">
-            <LanguageSwitcher />
-            
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback className="bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm font-medium">
-                      {getUserInitials()}
-                    </AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end" forceMount>
-                <div className="flex flex-col space-y-1 p-2">
-                  <p className="text-sm font-medium leading-none">{user?.prenom} {user?.nom}</p>
-                  <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
-                </div>
-                <DropdownMenuItem>
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>{t('nav.settings')}</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={handleLogout}
-                  disabled={isLoggingOut}
-                  className="text-red-600 focus:text-red-600"
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-4">
+            {navigationItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Button
+                  key={item.path}
+                  variant={item.variant}
+                  onClick={() => navigate(item.path)}
+                  className="gap-2 font-medium transition-all duration-200 hover:scale-105"
                 >
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>{isLoggingOut ? t('nav.loggingOut') : t('nav.logout')}</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  <Icon className="w-4 h-4" />
+                  {item.label}
+                </Button>
+              );
+            })}
           </div>
+
+          {/* Desktop User Menu */}
+          <div className="hidden md:flex items-center gap-4">
+            <LanguageSwitcher variant="ghost" showLabel={false} />
+            
+            <div className="flex items-center gap-3 px-3 py-2 bg-neutral-100 rounded-lg">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                <User className="w-4 h-4 text-white" />
+              </div>
+              <div className="text-sm">
+                <p className="font-medium text-neutral-900">
+                  {user?.prenom || user?.name || 'Utilisateur'}
+                </p>
+                <p className="text-neutral-500">{user?.email}</p>
+              </div>
+            </div>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleLogout}
+              className="text-neutral-600 hover:text-red-600 transition-colors"
+              title={t('auth.logout')}
+            >
+              <LogOut className="w-5 h-5" />
+            </Button>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </Button>
         </div>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden border-t border-neutral-200 py-4 animate-slide-in">
+            <div className="space-y-3">
+              {navigationItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Button
+                    key={item.path}
+                    variant="ghost"
+                    onClick={() => {
+                      navigate(item.path);
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="w-full justify-start gap-3 h-12"
+                  >
+                    <Icon className="w-5 h-5" />
+                    {item.label}
+                  </Button>
+                );
+              })}
+              
+              <div className="border-t border-neutral-200 pt-3 mt-3">
+                <div className="flex items-center gap-3 p-3 bg-neutral-50 rounded-lg mb-3">
+                  <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+                    <User className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-neutral-900">
+                      {user?.prenom || user?.name || 'Utilisateur'}
+                    </p>
+                    <p className="text-sm text-neutral-500">{user?.email}</p>
+                  </div>
+                </div>
+                
+                <div className="flex gap-2">
+                  <LanguageSwitcher variant="outline" showLabel={true} />
+                  <Button
+                    variant="outline"
+                    onClick={handleLogout}
+                    className="flex-1 gap-2 text-red-600 border-red-200 hover:bg-red-50"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    {t('auth.logout')}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   );
