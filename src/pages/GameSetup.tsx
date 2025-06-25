@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -10,7 +11,6 @@ import { Question, QuestionType, Point } from '@/types/game';
 import { QuestionForm } from '@/components/game/QuestionForm';
 import { QuestionsList } from '@/components/game/QuestionsList';
 import { ArrowLeft, Settings, Image as ImageIcon } from 'lucide-react';
-import { createApiClient } from '@/lib/api';
 
 export default function GameSetup() {
   const { token } = useAuth();
@@ -33,12 +33,17 @@ export default function GameSetup() {
 
     const fetchData = async () => {
       try {
-        const api = createApiClient(token);
-        
-        const [typesData, pointsData] = await Promise.all([
-          api.get('/type-question'),
-          api.get('/points')
+        const [typesResponse, pointsResponse] = await Promise.all([
+          fetch('http://kahoot.nos-apps.com/api/type-question', {
+            headers: { 'Authorization': `Bearer ${token}` }
+          }),
+          fetch('http://kahoot.nos-apps.com/api/points', {
+            headers: { 'Authorization': `Bearer ${token}` }
+          })
         ]);
+
+        const typesData = await typesResponse.json();
+        const pointsData = await pointsResponse.json();
 
         setQuestionTypes(typesData.data);
         setPoints(pointsData.data);

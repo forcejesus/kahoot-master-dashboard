@@ -10,7 +10,6 @@ import { GameHeader } from '@/components/game/details/GameHeader';
 import { useEffect, useState } from 'react';
 import { GameBackgroundImage } from '@/components/game/details/GameBackgroundImage';
 import { GameDetailsTabs } from '@/components/game/details/GameDetailsTabs';
-import { createApiClient } from '@/lib/api';
 
 export default function GameDetails() {
   const navigate = useNavigate();
@@ -24,8 +23,17 @@ export default function GameDetails() {
     if (!jeu) return;
     
     try {
-      const api = createApiClient(token);
-      const data = await api.get(`/jeux/${jeu._id}`);
+      const response = await fetch(`http://kahoot.nos-apps.com/api/jeux/${jeu._id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(t('error.loadingFailed'));
+      }
+
+      const data = await response.json();
       
       if (data.data) {
         setJeu(data.data);
@@ -58,8 +66,16 @@ export default function GameDetails() {
 
   const handleDeleteGame = async () => {
     try {
-      const api = createApiClient(token);
-      await api.delete(`/jeux/delete/${jeu._id}`);
+      const response = await fetch(`http://kahoot.nos-apps.com/api/jeux/delete/${jeu._id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(t('error.deleteFailed'));
+      }
 
       toast.success(t('success.deleteSuccess'));
       navigate('/dashboard');

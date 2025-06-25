@@ -1,3 +1,4 @@
+
 import { Question, QuestionType, Point } from '@/types/game';
 import { Card, CardContent } from '@/components/ui/card';
 import { useQuestionForm } from './form/useQuestionForm';
@@ -8,7 +9,7 @@ import { MediaSection } from './form/MediaSection';
 import { SettingsSection } from './form/SettingsSection';
 import { AnswersSection } from './form/AnswersSection';
 import { SubmitQuestionButton } from './form/SubmitQuestionButton';
-import { submitQuestionWithAnswers } from '@/lib/api';
+import { submitQuestionWithAnswers } from './form/questionService';
 import { useState } from 'react';
 import { toast } from 'sonner';
 

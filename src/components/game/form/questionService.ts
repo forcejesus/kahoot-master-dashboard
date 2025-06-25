@@ -1,12 +1,6 @@
 
 import { Question } from '@/types/game';
-import { ApiClient } from './client';
 
-// ================================
-// SERVICES MÉTIER SPÉCIALISÉS
-// ================================
-
-// Service pour les questions avec réponses
 export const submitQuestionWithAnswers = async (
   question: Question,
   answers: string[],
@@ -15,8 +9,6 @@ export const submitQuestionWithAnswers = async (
   token: string
 ) => {
   try {
-    const client = new ApiClient(token);
-
     // Créer un FormData pour envoyer à la fois les données et l'image
     const formData = new FormData();
     
@@ -38,7 +30,7 @@ export const submitQuestionWithAnswers = async (
     }
 
     // Log des données envoyées pour le débogage
-    const questionData = {
+    console.log("Envoi de la question avec les données:", {
       libelle: question.libelle,
       temps: question.temps,
       limite_response: question.limite_response,
@@ -47,19 +39,40 @@ export const submitQuestionWithAnswers = async (
       jeu: question.jeu,
       type_fichier: selectedFile ? (question.type_fichier || 'image') : undefined,
       correctAnswers: correctAnswers
-    };
-
-    console.log("Envoi de la question:", questionData);
+    });
 
     // 1. Envoyer la question avec l'image
-    const questionResponseData = await client.post('/questions', formData, true);
+    const questionResponse = await fetch('http://kahoot.nos-apps.com/api/questions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      body: formData
+    });
 
-    console.log("Données de question reçues:", questionResponseData);
+    // Vérifier la réponse du serveur
+    const responseText = await questionResponse.text();
+    console.log("Réponse brute du serveur:", responseText);
     
+    // Essayer de parser la réponse JSON
+    let questionResponseData;
+    try {
+      questionResponseData = JSON.parse(responseText);
+    } catch (e) {
+      console.error("Erreur de parsing JSON:", e);
+      throw new Error(`Réponse invalide du serveur: ${responseText}`);
+    }
+
+    if (!questionResponse.ok || !questionResponseData.success) {
+      console.error("Erreur de l'API:", questionResponseData);
+      throw new Error(`Erreur lors de l'ajout de la question: ${questionResponseData.message || responseText}`);
+    }
+
     // Extraire les données de la question
-    const questionDataResponse = questionResponseData.data || questionResponseData;
-    const questionId = questionDataResponse._id;
+    const questionData = questionResponseData.data || questionResponseData;
+    console.log("Données de question reçues:", questionData);
     
+    const questionId = questionData._id;
     if (!questionId) {
       throw new Error('ID de question non trouvé dans la réponse');
     }
@@ -80,10 +93,19 @@ export const submitQuestionWithAnswers = async (
 
       console.log(`Envoi de la réponse ${index+1}:`, responseData);
 
-      const reponseData = await client.post('/reponse', responseData);
+      const reponseResponse = await fetch('http://kahoot.nos-apps.com/api/reponse', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(responseData)
+      });
+      
+      const reponseData = await reponseResponse.json();
       console.log(`Réponse ${index+1} créée:`, reponseData);
       
-      return reponseData;
+      return reponseResponse;
     });
 
     await Promise.all(answersPromises);
@@ -91,7 +113,7 @@ export const submitQuestionWithAnswers = async (
     
     // Retourner les données complètes
     return {
-      ...questionDataResponse,
+      ...questionData,
       reponses: answers,
       reponse_correcte: answers[correctAnswers[0]] // Première réponse correcte pour compatibilité
     };

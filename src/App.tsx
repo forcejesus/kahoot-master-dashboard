@@ -6,7 +6,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { I18nProvider } from "./contexts/I18nContext";
-import { setGlobalToken } from "./lib/api";
 import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
@@ -18,7 +17,6 @@ import GameSetup from "./pages/GameSetup";
 import GameSchedule from "./pages/GameSchedule";
 import PlanificationDetails from "./pages/PlanificationDetails";
 import NotFound from "./pages/NotFound";
-import { useEffect } from "react";
 
 const queryClient = new QueryClient();
 
@@ -28,14 +26,6 @@ function PrivateRoute({ children }: { children: React.ReactNode }) {
 }
 
 function AppRoutes() {
-  const { token } = useAuth();
-
-  useEffect(() => {
-    if (token) {
-      setGlobalToken(token);
-    }
-  }, [token]);
-
   return (
     <Routes>
       <Route path="/" element={<Login />} />
