@@ -1,5 +1,6 @@
 
-import { buildApiUrl, logApiRequest, logApiResponse } from './utils';
+import { buildApiUrl } from '../../config/hosts';
+import { logApiRequest, logApiResponse } from './utils';
 
 // ================================
 // INTERFACES ET TYPES

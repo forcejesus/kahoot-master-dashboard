@@ -19,7 +19,7 @@ export { submitQuestionWithAnswers } from './services';
 export { logApiRequest, logApiResponse } from './utils';
 
 // Export de buildApiUrl depuis la configuration centralisée
-export { buildApiUrl } from '../config/hosts';
+export { buildApiUrl } from '../../config/hosts';
 
 // Export de la configuration pour compatibilité
 export { apiConfig as config } from './config';
