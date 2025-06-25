@@ -26,11 +26,17 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#6B21A8",
+          DEFAULT: "#ea580c",
+          light: "#fb923c",
+          dark: "#c2410c",
           foreground: "#ffffff",
         },
         secondary: {
           DEFAULT: "#EC4899",
+          foreground: "#ffffff",
+        },
+        success: {
+          DEFAULT: "#10b981",
           foreground: "#ffffff",
         },
         destructive: {
@@ -57,6 +63,11 @@ export default {
       fontFamily: {
         sans: ["Inter", "sans-serif"],
         heading: ["Poppins", "sans-serif"],
+      },
+      boxShadow: {
+        soft: "0 4px 20px rgba(234, 88, 12, 0.08)",
+        card: "0 8px 30px rgba(234, 88, 12, 0.12)",
+        intense: "0 10px 40px rgba(234, 88, 12, 0.15)",
       },
       keyframes: {
         "fade-in": {

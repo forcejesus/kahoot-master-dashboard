@@ -7,21 +7,21 @@ export function Navbar() {
   const { user, logout } = useAuth();
 
   return (
-    <nav className="bg-white/80 backdrop-blur-sm shadow-lg border-b border-white/50">
+    <nav className="bg-white/90 backdrop-blur-sm shadow-soft border-b border-orange-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <div className="flex items-center space-x-3">
-            <div className="h-10 w-10 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+            <div className="h-10 w-10 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 flex items-center justify-center shadow-soft">
               <User className="h-6 w-6 text-white" />
             </div>
-            <span className="font-medium text-lg bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            <span className="font-medium text-lg bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent">
               {user?.name}
             </span>
           </div>
           <Button
             variant="ghost"
             size="sm"
-            className="text-gray-600 hover:text-gray-900 hover:bg-gray-100/50 transition-all duration-200"
+            className="text-gray-600 hover:text-orange-600 hover:bg-orange-50 transition-all duration-200"
             onClick={logout}
           >
             <LogOut className="h-5 w-5 mr-2" />
