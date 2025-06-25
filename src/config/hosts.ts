@@ -70,10 +70,9 @@ export const buildApiUrl = (endpoint: string): string => {
   const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint;
   const fullUrl = `${currentHost.api}/${cleanEndpoint}`;
   
-  // Logger l'URL construite pour debug
-  if (CURRENT_ENVIRONMENT === 'localhost') {
-    console.log(`🔗 API Call: ${fullUrl}`);
-  }
+  // Logger l'URL construite pour debug avec timestamp pour forcer le rafraîchissement
+  const timestamp = new Date().toISOString();
+  console.log(`🔗 [${timestamp}] API Call (${CURRENT_ENVIRONMENT}): ${fullUrl}`);
   
   return fullUrl;
 };
@@ -94,15 +93,14 @@ export const getCurrentEnvironment = () => {
 /**
  * Logger pour afficher la configuration actuelle (en développement)
  */
-if (CURRENT_ENVIRONMENT === 'localhost') {
-  console.log('🌐 Configuration des hôtes (PAR DÉFAUT LOCALHOST):', {
-    environnement: CURRENT_ENVIRONMENT,
-    nom: currentHost.name,
-    api: currentHost.api,
-    app: currentHost.app,
-    note: '✅ Configuration par défaut en localhost'
-  });
-}
+const timestamp = new Date().toISOString();
+console.log(`🌐 [${timestamp}] Configuration des hôtes (FORCE REFRESH):`, {
+  environnement: CURRENT_ENVIRONMENT,
+  nom: currentHost.name,
+  api: currentHost.api,
+  app: currentHost.app,
+  note: '✅ Configuration forcée en localhost avec cache désactivé'
+});
 
 /**
  * Export de la configuration pour compatibilité avec l'ancien système

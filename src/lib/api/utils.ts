@@ -5,17 +5,6 @@ import { apiConfig } from './config';
 // UTILITAIRES API
 // ================================
 
-// Helper pour construire une URL complète
-export const buildApiUrl = (endpoint: string): string => {
-  const url = `${apiConfig.baseUrl}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
-  
-  if (apiConfig.debug) {
-    console.log(`🌐 API URL: ${url}`);
-  }
-  
-  return url;
-};
-
 // Helper pour logger les requêtes en mode debug
 export const logApiRequest = (method: string, url: string, data?: any) => {
   if (apiConfig.debug) {
@@ -30,3 +19,6 @@ export const logApiResponse = (method: string, url: string, response: any, error
     console.log(`${emoji} ${method.toUpperCase()} ${url}`, response);
   }
 };
+
+// Note: buildApiUrl est maintenant uniquement disponible dans src/config/hosts.ts
+// pour éviter les conflits et maintenir une configuration centralisée

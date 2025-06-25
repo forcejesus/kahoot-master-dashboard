@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTranslation } from "@/contexts/I18nContext";
@@ -57,7 +56,11 @@ export function CreateKahootDialog({ onSuccess }: CreateKahootDialogProps) {
         formData.append("image", image);
       }
 
-      const response = await fetch(buildApiUrl("/jeux"), {
+      // Log pour debug - vérifier quelle URL est utilisée
+      const apiUrl = buildApiUrl("/jeux");
+      console.log("🎯 CreateKahoot - URL utilisée:", apiUrl);
+
+      const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
           'Authorization': `Bearer ${token}`
@@ -66,6 +69,7 @@ export function CreateKahootDialog({ onSuccess }: CreateKahootDialogProps) {
       });
 
       const data = await response.json();
+      console.log("🎯 CreateKahoot - Réponse:", data);
       
       if (response.ok && data.statut === 200) {
         toast.success(data.message || t('create.success'));
@@ -74,6 +78,7 @@ export function CreateKahootDialog({ onSuccess }: CreateKahootDialogProps) {
         
         // Redirection automatique vers la configuration du jeu
         if (data.jeu) {
+          console.log("🎯 Redirection vers /game/setup avec:", data.jeu);
           navigate('/game/setup', {
             state: {
               gameId: data.jeu._id,
