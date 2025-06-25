@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Navigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -123,14 +124,14 @@ export default function Login() {
                   </span>
                 </CardTitle>
                 <div className="inline-block px-6 py-2 bg-gradient-to-r from-orange-500/20 to-red-500/20 text-orange-100 text-sm font-medium rounded-full border border-orange-300/30 backdrop-blur-sm">
-                  <span className="flex items-center gap-2">
+                  <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                     Espace Enseignant
-                  </span>
+                  </div>
                 </div>
-                <CardDescription className="text-orange-100 text-base mt-4">
+                <div className="text-orange-100 text-base mt-4">
                   {t('auth.subtitle')}
-                </CardDescription>
+                </div>
               </div>
             </div>
           </CardHeader>
@@ -216,12 +217,12 @@ export default function Login() {
         </Card>
 
         <div className="text-center mt-8">
-          <p className="text-orange-200 text-sm bg-black/20 backdrop-blur-sm px-4 py-2 rounded-full border border-orange-300/20">
-            <span className="flex items-center justify-center gap-2">
+          <div className="text-orange-200 text-sm bg-black/20 backdrop-blur-sm px-4 py-2 rounded-full border border-orange-300/20">
+            <div className="flex items-center justify-center gap-2">
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
               {t('auth.secureEducator')}
-            </span>
-          </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
