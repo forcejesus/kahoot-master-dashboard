@@ -1,5 +1,4 @@
 
-
 import { useState } from 'react';
 import { Navigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -9,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Eye, EyeOff, Mail, Lock, ArrowRight, Sparkles, Zap, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, ArrowRight, Sparkles, Zap, User } from 'lucide-react';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -152,8 +151,11 @@ export default function Login() {
               >
                 {isSubmitting ? (
                   <div className="flex items-center gap-3">
-                    <Loader2 className="w-5 h-5 text-white animate-spin" />
-                    <span className="text-white">Connexion...</span>
+                    <div className="relative">
+                      <User className="w-5 h-5 text-white animate-pulse" />
+                      <div className="absolute inset-0 w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    </div>
+                    <span className="text-white">Authentification...</span>
                   </div>
                 ) : (
                   <div className="flex items-center gap-3">

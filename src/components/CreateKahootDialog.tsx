@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTranslation } from "@/contexts/I18nContext";
@@ -70,6 +71,8 @@ export function CreateKahootDialog({ onSuccess }: CreateKahootDialogProps) {
         toast.success(data.message || t('create.success'));
         setIsOpen(false);
         resetForm();
+        
+        // Redirection vers la configuration du jeu
         if (data.jeu) {
           navigate('/game/setup', {
             state: {
