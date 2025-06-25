@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Navigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -8,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Eye, EyeOff, Mail, Lock, ArrowRight, Sparkles, Zap } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, ArrowRight, Sparkles, Zap, Loader2 } from 'lucide-react';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -24,6 +23,54 @@ export default function Login() {
 
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
+  }
+
+  // Show simple loader overlay when loading
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
+        {/* Same animated background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-900 via-orange-700 to-red-900">
+          <div className="absolute inset-0">
+            <div className="absolute -top-20 -left-20 w-80 h-80 bg-gradient-to-r from-orange-500/20 to-red-500/20 rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-gradient-to-r from-red-500/20 to-orange-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+          </div>
+        </div>
+
+        {/* Simple loader card */}
+        <div className="w-full max-w-md mx-4 relative z-10">
+          <Card className="backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl">
+            <CardContent className="p-12 text-center">
+              <div className="space-y-6">
+                {/* Animated loader icon */}
+                <div className="flex justify-center">
+                  <div className="w-16 h-16 bg-gradient-to-r from-orange-600 to-orange-500 rounded-full flex items-center justify-center shadow-2xl">
+                    <Loader2 className="w-8 h-8 text-white animate-spin" />
+                  </div>
+                </div>
+                
+                {/* Loading text */}
+                <div className="space-y-2">
+                  <h3 className="text-xl font-semibold text-white">
+                    Connexion en cours...
+                  </h3>
+                  <p className="text-orange-200 text-sm">
+                    Vérification de vos identifiants
+                  </p>
+                </div>
+
+                {/* Animated dots */}
+                <div className="flex justify-center gap-1">
+                  <div className="w-2 h-2 bg-orange-400 rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-orange-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-2 h-2 bg-orange-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
   }
 
   return (
