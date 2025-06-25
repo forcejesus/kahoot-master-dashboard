@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -19,7 +20,18 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await login({ email, password });
+    try {
+      await login({ email, password });
+      toast.success(t('auth.loginSuccess'), {
+        description: t('auth.welcomeMessage'),
+        duration: 3000,
+      });
+    } catch (err) {
+      toast.error(t('auth.loginFailed'), {
+        description: t('auth.checkCredentials'),
+        duration: 4000,
+      });
+    }
   };
 
   if (isAuthenticated) {
@@ -73,7 +85,6 @@ export default function Login() {
                       onChange={(e) => setEmail(e.target.value)}
                       required
                       className="pl-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                      disabled={isLoading}
                     />
                   </div>
                 </div>
@@ -92,13 +103,11 @@ export default function Login() {
                       onChange={(e) => setPassword(e.target.value)}
                       required
                       className="pl-12 pr-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                      disabled={isLoading}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors disabled:opacity-50"
-                      disabled={isLoading}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                     >
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
@@ -108,7 +117,7 @@ export default function Login() {
 
               <Button 
                 type="submit" 
-                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={isLoading}
               >
                 {isLoading ? (

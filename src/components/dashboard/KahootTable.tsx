@@ -2,11 +2,9 @@
 import React from 'react';
 import { useTranslation } from '@/contexts/I18nContext';
 import { useApiTranslation } from '@/hooks/useApiTranslation';
-import { ExternalLink, Star, Users, Clock, Trophy } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { ExternalLink } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Badge } from '@/components/ui/badge';
-import { EnhancedTable, EnhancedTableHeader, EnhancedTableRow, EnhancedTableCell } from '@/components/ui/enhanced-table';
-import { TableHead, TableBody } from '@/components/ui/table';
 import { Kahoot } from '@/types/game-details';
 
 interface KahootTableProps {
@@ -30,167 +28,66 @@ export function KahootTable({
   const { translateField } = useApiTranslation();
 
   if (isLoading) {
-    return (
-      <div className="text-center py-16">
-        <div className="inline-flex items-center gap-3 text-gray-500">
-          <div className="w-6 h-6 border-2 border-purple-300 border-t-transparent rounded-full animate-spin"></div>
-          <span className="text-lg font-medium">{t('dashboard.loading')}</span>
-        </div>
-      </div>
-    );
+    return <div className="text-center py-12 text-gray-500">{t('dashboard.loading')}</div>;
   }
   
   if (kahoots.length === 0) {
     return (
-      <div className="text-center py-16">
-        <div className="w-16 h-16 bg-gradient-to-br from-purple-100 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Star className="w-8 h-8 text-purple-500" />
-        </div>
-        <h3 className="text-xl font-semibold text-gray-700 mb-2">Aucun jeu créé</h3>
-        <p className="text-gray-500 max-w-md mx-auto">
-          Commencez par créer votre premier jeu interactif pour engager vos apprenants
-        </p>
+      <div className="text-center py-12 text-gray-500">
+        {t('dashboard.noKahoots')}
       </div>
     );
   }
 
   return (
-    <EnhancedTable priority="high" className="w-full">
-      <EnhancedTableHeader priority="high">
-        <EnhancedTableRow priority="high">
-          <TableHead className="w-12">
-            <Checkbox 
-              checked={selectedKahoots.length === kahoots.length && kahoots.length > 0}
-              onCheckedChange={onSelectAll}
-              className="border-white/30 data-[state=checked]:bg-white data-[state=checked]:text-purple-600"
-            />
-          </TableHead>
-          <TableHead className="min-w-[300px]">
-            <div className="flex items-center gap-2">
-              <Star className="w-4 h-4" />
-              {t('table.title')}
-            </div>
-          </TableHead>
-          <TableHead className="text-center w-24">
-            <div className="flex items-center justify-center gap-2">
-              <Trophy className="w-4 h-4" />
-              {t('table.questions')}
-            </div>
-          </TableHead>
-          <TableHead className="text-center w-24">
-            <div className="flex items-center justify-center gap-2">
-              <Clock className="w-4 h-4" />
-              {t('table.sessions')}
-            </div>
-          </TableHead>
-          <TableHead className="text-center w-32">
-            <div className="flex items-center justify-center gap-2">
-              <Users className="w-4 h-4" />
-              {t('table.participants')}
-            </div>
-          </TableHead>
-          <TableHead className="text-center w-20">Statut</TableHead>
-        </EnhancedTableRow>
-      </EnhancedTableHeader>
-      <TableBody>
-        {kahoots.map((kahoot) => {
-          const questionsCount = kahoot.questions?.length || 0;
-          const sessionsCount = kahoot.planifications?.length || 0;
-          const participantsCount = kahoot.planifications?.reduce((total, p) => total + (p.participants?.length || 0), 0) || 0;
-          const isPopular = participantsCount > 10;
-          
-          return (
-            <EnhancedTableRow 
+    <div className="overflow-x-auto">
+      <table className="w-full">
+        <thead>
+          <tr className="border-b">
+            <th className="py-4 px-6 text-left">
+              <Checkbox 
+                checked={selectedKahoots.length === kahoots.length && kahoots.length > 0}
+                onCheckedChange={onSelectAll}
+              />
+            </th>
+            <th className="text-left py-4 px-6 text-primary font-bold">{t('table.title')}</th>
+            <th className="text-center py-4 px-6 text-primary font-bold">{t('table.questions')}</th>
+            <th className="text-center py-4 px-6 text-primary font-bold">{t('table.sessions')}</th>
+            <th className="text-center py-4 px-6 text-primary font-bold">{t('table.participants')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {kahoots.map((kahoot) => (
+            <tr 
               key={kahoot._id} 
-              priority="high"
-              isSelected={selectedKahoots.includes(kahoot._id)}
-              className="cursor-pointer group"
+              className="border-b last:border-0 hover:bg-gray-50/50 transition-colors cursor-pointer"
               onClick={(e) => onKahootClick(kahoot, e)}
             >
-              <EnhancedTableCell priority="high" className="checkbox-cell">
+              <td className="py-4 px-6 checkbox-cell">
                 <Checkbox 
                   checked={selectedKahoots.includes(kahoot._id)}
                   onCheckedChange={() => onSelectKahoot(kahoot._id)}
-                  className="border-gray-300"
                 />
-              </EnhancedTableCell>
-              
-              <EnhancedTableCell priority="high" highlight>
-                <div className="flex items-center gap-3">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="font-semibold text-gray-900 group-hover:text-purple-700 transition-colors">
-                        {translateField(kahoot, 'titre') || kahoot.titre}
-                      </span>
-                      {isPopular && (
-                        <Badge variant="secondary" className="bg-purple-100 text-purple-700 text-xs">
-                          Populaire
-                        </Badge>
-                      )}
-                      <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-purple-500 transition-colors" />
-                    </div>
-                    {kahoot.image && (
-                      <div className="text-xs text-gray-500 flex items-center gap-1">
-                        <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                        Avec image
-                      </div>
-                    )}
-                  </div>
+              </td>
+              <td className="py-4 px-6">
+                <div className="font-medium text-left flex items-center text-primary">
+                  {translateField(kahoot, 'titre') || kahoot.titre}
+                  <ExternalLink className="ml-2 h-4 w-4" />
                 </div>
-              </EnhancedTableCell>
-              
-              <EnhancedTableCell priority="high" className="text-center">
-                <div className="flex flex-col items-center">
-                  <span className={`text-lg font-bold ${questionsCount > 0 ? 'text-purple-600' : 'text-gray-400'}`}>
-                    {questionsCount}
-                  </span>
-                  {questionsCount > 5 && (
-                    <Badge variant="outline" className="text-xs mt-1">
-                      Complet
-                    </Badge>
-                  )}
-                </div>
-              </EnhancedTableCell>
-              
-              <EnhancedTableCell priority="high" className="text-center">
-                <div className="flex flex-col items-center">
-                  <span className={`text-lg font-bold ${sessionsCount > 0 ? 'text-blue-600' : 'text-gray-400'}`}>
-                    {sessionsCount}
-                  </span>
-                  {sessionsCount > 0 && (
-                    <div className="flex items-center gap-1 mt-1">
-                      <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                      <span className="text-xs text-green-600">Actif</span>
-                    </div>
-                  )}
-                </div>
-              </EnhancedTableCell>
-              
-              <EnhancedTableCell priority="high" className="text-center">
-                <div className="flex flex-col items-center">
-                  <span className={`text-lg font-bold ${participantsCount > 0 ? 'text-green-600' : 'text-gray-400'}`}>
-                    {participantsCount}
-                  </span>
-                  {participantsCount > 0 && (
-                    <div className="text-xs text-gray-500 mt-1">
-                      participants
-                    </div>
-                  )}
-                </div>
-              </EnhancedTableCell>
-              
-              <EnhancedTableCell priority="high" className="text-center">
-                <Badge 
-                  variant={questionsCount > 0 ? "default" : "secondary"}
-                  className={`${questionsCount > 0 ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}
-                >
-                  {questionsCount > 0 ? 'Prêt' : 'Brouillon'}
-                </Badge>
-              </EnhancedTableCell>
-            </EnhancedTableRow>
-          );
-        })}
-      </TableBody>
-    </EnhancedTable>
+              </td>
+              <td className="py-4 px-6 text-center">
+                {kahoot.questions?.length || 0}
+              </td>
+              <td className="py-4 px-6 text-center">
+                {kahoot.planifications?.length || 0}
+              </td>
+              <td className="py-4 px-6 text-center">
+                {kahoot.planifications?.reduce((total, p) => total + (p.participants?.length || 0), 0) || 0}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }

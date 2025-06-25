@@ -1,7 +1,7 @@
 
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { AuthState, LoginCredentials, LoginResponse, User } from '@/types/auth';
-import { modernToasts } from '@/components/ui/modern-alerts';
+import { toast } from 'sonner';
 
 interface AuthContextType extends AuthState {
   login: (credentials: LoginCredentials) => Promise<void>;
@@ -15,7 +15,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     user: null,
     token: null,
     isAuthenticated: false,
-    isLoading: true,
+    isLoading: true, // Changed to true initially
     error: null,
   });
 
@@ -95,7 +95,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         });
 
         localStorage.setItem('token', data.token);
-        modernToasts.success('Connexion réussie !', 'Bienvenue dans votre espace enseignant');
+        toast.success('Connexion réussie !');
       } else {
         throw new Error(data.message || 'Identifiants incorrects');
       }
@@ -106,13 +106,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         error: 'Identifiants incorrects',
         isAuthenticated: false,
       }));
-      
-      // Vérifier si c'est une erreur de réseau/serveur
-      if (error instanceof TypeError && error.message.includes('fetch')) {
-        modernToasts.error('Erreur de connexion', 'Impossible de contacter le serveur. Vérifiez votre connexion internet.');
-      } else {
-        modernToasts.error('Échec de la connexion', 'Identifiants incorrects ou erreur serveur');
-      }
+      toast.error('Identifiants incorrects');
     }
   };
 
@@ -125,24 +119,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isLoading: false,
       error: null,
     });
-    modernToasts.success('Déconnexion réussie', 'À bientôt !');
+    toast.success('Déconnexion réussie');
   };
 
-  // Show compact loading state instead of full screen
-  if (state.isLoading && !state.user) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
-        <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-white/20">
-          <div className="flex items-center gap-4">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
-            <div className="text-gray-800">
-              <div className="font-semibold">Initialisation...</div>
-              <div className="text-sm text-gray-600">Vérification de votre session</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+  // Show loading state
+  if (state.isLoading) {
+    return <div className="flex items-center justify-center min-h-screen">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+    </div>;
   }
 
   return (

@@ -10,7 +10,6 @@ import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
-import CreateGame from "./pages/CreateGame";
 import GameDetails from "./pages/GameDetails";
 import GameSetup from "./pages/GameSetup";
 import GameSchedule from "./pages/GameSchedule";
@@ -33,11 +32,6 @@ function AppRoutes() {
       <Route path="/dashboard" element={
         <PrivateRoute>
           <Dashboard />
-        </PrivateRoute>
-      } />
-      <Route path="/create-game" element={
-        <PrivateRoute>
-          <CreateGame />
         </PrivateRoute>
       } />
       <Route path="/game/setup" element={
