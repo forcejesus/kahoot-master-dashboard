@@ -36,7 +36,7 @@ const developmentConfig: EnvironmentConfig = {
 const productionConfig: EnvironmentConfig = {
   name: 'production',
   api: {
-    baseUrl: 'http://kahoot.nos-apps.com/api',
+    baseUrl: 'http://localhost:3000/api', // Forcé en localhost pour le moment
     timeout: 15000,
   },
   app: {
@@ -46,20 +46,10 @@ const productionConfig: EnvironmentConfig = {
   },
 };
 
-// Détection automatique de l'environnement
+// Détection automatique de l'environnement - FORCÉ EN DÉVELOPPEMENT pour le moment
 const getEnvironment = (): Environment => {
-  // Vérifier d'abord si une variable d'environnement force un mode spécifique
-  const forceEnv = import.meta.env.VITE_APP_ENV as Environment;
-  if (forceEnv && ['development', 'production'].includes(forceEnv)) {
-    return forceEnv;
-  }
-
-  // Détecter automatiquement basé sur l'URL ou le mode Vite
-  if (import.meta.env.DEV || window.location.hostname === 'localhost') {
-    return 'development';
-  }
-
-  return 'production';
+  // Forcer en développement pour utiliser localhost
+  return 'development';
 };
 
 // Configuration active basée sur l'environnement détecté
@@ -82,10 +72,10 @@ export const isProduction = () => env.name === 'production';
 
 // Logger la configuration en mode debug
 if (env.app.debug) {
-  console.log('🌍 Environment Configuration:', {
+  console.log('🌍 Environment Configuration (FORCED LOCALHOST):', {
     environment: env.name,
     apiUrl: env.api.baseUrl,
     debug: env.app.debug,
-    detectedFrom: window.location.hostname === 'localhost' ? 'hostname' : 'build-mode'
+    note: 'Configuration forcée en localhost'
   });
 }

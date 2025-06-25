@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Eye, EyeOff, Mail, Lock, ArrowRight, Sparkles } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, ArrowRight, Sparkles, Zap } from 'lucide-react';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -27,52 +27,76 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-neutral-50 via-primary-50/30 to-secondary-50/30 relative overflow-hidden">
-      {/* Background decorations */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-primary/10 rounded-full blur-2xl animate-bounce-subtle"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-secondary/10 rounded-full blur-3xl animate-bounce-subtle" style={{ animationDelay: '2s' }}></div>
-        <div className="absolute top-3/4 left-1/2 w-24 h-24 bg-primary/5 rounded-full blur-xl animate-bounce-subtle" style={{ animationDelay: '4s' }}></div>
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
+      {/* Animated background with Kahoot-inspired colors */}
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-purple-700 to-indigo-900">
+        {/* Animated geometric patterns */}
+        <div className="absolute inset-0">
+          {/* Large animated circles */}
+          <div className="absolute -top-20 -left-20 w-80 h-80 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+          
+          {/* Floating geometric shapes */}
+          <div className="absolute top-1/4 left-1/4 w-4 h-4 bg-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '0.5s' }}></div>
+          <div className="absolute top-3/4 right-1/4 w-6 h-6 bg-pink-400 rotate-45 animate-bounce" style={{ animationDelay: '1.5s' }}></div>
+          <div className="absolute top-1/2 left-1/6 w-3 h-3 bg-green-400 rounded-full animate-bounce" style={{ animationDelay: '2s' }}></div>
+          <div className="absolute bottom-1/4 left-3/4 w-5 h-5 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '2.5s' }}></div>
+          
+          {/* Animated lines */}
+          <div className="absolute top-0 left-1/2 w-px h-full bg-gradient-to-b from-transparent via-purple-300/30 to-transparent animate-pulse"></div>
+          <div className="absolute left-0 top-1/2 w-full h-px bg-gradient-to-r from-transparent via-purple-300/30 to-transparent animate-pulse" style={{ animationDelay: '1s' }}></div>
+        </div>
+        
+        {/* Overlay with pattern */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(139,69,255,0.1)_0%,transparent_50%)] animate-pulse" style={{ animationDelay: '3s' }}></div>
       </div>
 
       {/* Language switcher */}
       <div className="absolute top-6 right-6 z-20">
-        <LanguageSwitcher variant="outline" showLabel={true} />
+        <LanguageSwitcher variant="navigation" showLabel={true} />
       </div>
 
       <div className="w-full max-w-md mx-4 relative z-10 animate-fade-in">
-        <Card className="card-modern glass-effect overflow-hidden">
-          <CardHeader className="text-center space-y-6 pb-8 bg-gradient-to-r from-primary/5 to-secondary/5">
+        <Card className="backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl overflow-hidden">
+          <CardHeader className="text-center space-y-6 pb-8 bg-gradient-to-r from-purple-500/10 to-pink-500/10">
             <div className="space-y-4">
               <div className="flex justify-center">
-                <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center shadow-medium">
-                  <Sparkles className="w-8 h-8 text-white" />
+                <div className="w-20 h-20 bg-gradient-to-r from-purple-600 to-purple-500 rounded-3xl flex items-center justify-center shadow-2xl animate-bounce-subtle">
+                  <div className="relative">
+                    <Sparkles className="w-10 h-10 text-white animate-pulse" />
+                    <Zap className="w-4 h-4 text-yellow-300 absolute -top-1 -right-1 animate-ping" />
+                  </div>
                 </div>
               </div>
               
-              <div className="space-y-2">
-                <CardTitle className="text-4xl font-bold text-neutral-900 tracking-tight">
-                  AKILI
+              <div className="space-y-3">
+                <CardTitle className="text-5xl font-bold text-white tracking-tight">
+                  <span className="bg-gradient-to-r from-purple-200 via-white to-purple-200 bg-clip-text text-transparent animate-pulse">
+                    AKILI
+                  </span>
                 </CardTitle>
-                <div className="inline-block px-4 py-1.5 bg-primary/10 text-primary-600 text-sm font-medium rounded-full border border-primary/20">
-                  Espace Enseignant
+                <div className="inline-block px-6 py-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-100 text-sm font-medium rounded-full border border-purple-300/30 backdrop-blur-sm">
+                  <span className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    Espace Enseignant
+                  </span>
                 </div>
-                <CardDescription className="text-neutral-600 text-base mt-3">
+                <CardDescription className="text-purple-100 text-base mt-4">
                   {t('auth.subtitle')}
                 </CardDescription>
               </div>
             </div>
           </CardHeader>
 
-          <CardContent className="p-8 space-y-6">
+          <CardContent className="p-8 space-y-6 bg-white/5 backdrop-blur-sm">
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-neutral-700 font-medium">
+              <div className="space-y-5">
+                <div className="space-y-3">
+                  <Label htmlFor="email" className="text-purple-100 font-medium text-base">
                     {t('auth.email')}
                   </Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 w-5 h-5" />
+                  <div className="relative group">
+                    <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-purple-300 w-5 h-5 group-focus-within:text-purple-200 transition-colors" />
                     <Input
                       id="email"
                       type="email"
@@ -80,18 +104,18 @@ export default function Login() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
-                      className="pl-11 input-modern h-12"
+                      className="pl-12 h-14 bg-white/10 border-white/20 text-white placeholder:text-purple-200 focus:border-purple-400 focus:ring-purple-400/30 backdrop-blur-sm transition-all duration-300 hover:bg-white/15"
                       disabled={isLoading}
                     />
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="password" className="text-neutral-700 font-medium">
+                <div className="space-y-3">
+                  <Label htmlFor="password" className="text-purple-100 font-medium text-base">
                     {t('auth.password')}
                   </Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 w-5 h-5" />
+                  <div className="relative group">
+                    <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-purple-300 w-5 h-5 group-focus-within:text-purple-200 transition-colors" />
                     <Input
                       id="password"
                       type={showPassword ? "text" : "password"}
@@ -99,13 +123,13 @@ export default function Login() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
-                      className="pl-11 pr-11 input-modern h-12"
+                      className="pl-12 pr-12 h-14 bg-white/10 border-white/20 text-white placeholder:text-purple-200 focus:border-purple-400 focus:ring-purple-400/30 backdrop-blur-sm transition-all duration-300 hover:bg-white/15"
                       disabled={isLoading}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-neutral-600 transition-colors"
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 text-purple-300 hover:text-purple-200 transition-colors"
                       disabled={isLoading}
                     >
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -116,27 +140,27 @@ export default function Login() {
 
               <Button 
                 type="submit" 
-                className="w-full btn-primary h-12 text-base"
+                className="w-full h-14 text-base font-semibold bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 border-0 shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
                 disabled={isLoading}
               >
                 {isLoading ? (
                   <div className="flex items-center gap-3">
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    {t('auth.loggingIn')}
+                    <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    <span className="text-white">{t('auth.loggingIn')}</span>
                   </div>
                 ) : (
                   <div className="flex items-center gap-3">
-                    {t('auth.signIn')}
-                    <ArrowRight className="w-5 h-5" />
+                    <span className="text-white">{t('auth.signIn')}</span>
+                    <ArrowRight className="w-5 h-5 text-white group-hover:translate-x-1 transition-transform" />
                   </div>
                 )}
               </Button>
             </form>
 
-            <div className="text-center pt-4 border-t border-neutral-200">
+            <div className="text-center pt-6 border-t border-white/20">
               <Link 
                 to="/forgot-password" 
-                className="text-neutral-500 hover:text-primary transition-colors text-sm font-medium"
+                className="text-purple-200 hover:text-white transition-colors text-sm font-medium underline decoration-purple-300/50 hover:decoration-white/70 underline-offset-4"
               >
                 {t('auth.forgotPassword')}
               </Link>
@@ -144,9 +168,12 @@ export default function Login() {
           </CardContent>
         </Card>
 
-        <div className="text-center mt-6">
-          <p className="text-neutral-400 text-sm">
-            {t('auth.secureEducator')}
+        <div className="text-center mt-8">
+          <p className="text-purple-200 text-sm bg-black/20 backdrop-blur-sm px-4 py-2 rounded-full border border-purple-300/20">
+            <span className="flex items-center justify-center gap-2">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              {t('auth.secureEducator')}
+            </span>
           </p>
         </div>
       </div>
