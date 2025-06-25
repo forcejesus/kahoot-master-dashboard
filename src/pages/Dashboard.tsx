@@ -4,16 +4,16 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Navbar } from '@/components/Navbar';
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 import { ModernStatsCard } from '@/components/dashboard/ModernStatsCard';
-import { QuickActions } from '@/components/dashboard/QuickActions';
 import { KahootList } from '@/components/dashboard/KahootList';
+import { CreateGameModal } from '@/components/dashboard/CreateGameModal';
+import { CreatePlanificationModal } from '@/components/dashboard/CreatePlanificationModal';
 import { toast } from 'sonner';
 import { Kahoot } from '@/types/game-details';
-import { Users, GraduationCap, Gamepad, Calendar } from 'lucide-react';
-import { buildApiUrl } from '@/config/hosts';
+import { Users, Gamepad, Calendar } from 'lucide-react';
+import { buildApiUrl } from '@/config/api';
 
 interface StatsData {
   total_apprenants: number;
-  total_enseignants: number;
   total_jeux: number;
   total_planifications: number;
 }
@@ -23,7 +23,6 @@ export default function Dashboard() {
   const [kahoots, setKahoots] = useState<Kahoot[]>([]);
   const [stats, setStats] = useState<StatsData>({
     total_apprenants: 0,
-    total_enseignants: 0,
     total_jeux: 0,
     total_planifications: 0
   });
@@ -59,11 +58,16 @@ export default function Dashboard() {
       });
       const apprenantsData = await apprenantsResponse.json();
 
+      // Fetch planifications count
+      const planificationsResponse = await fetch(buildApiUrl('/api/planification'), {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const planificationsData = await planificationsResponse.json();
+
       setStats({
         total_jeux: kahootsData.data?.length || 0,
         total_apprenants: apprenantsData.data?.length || 0,
-        total_enseignants: 1, // Current user
-        total_planifications: 0 // Placeholder
+        total_planifications: planificationsData.data?.length || 0
       });
     } catch (error) {
       console.error("Error fetching stats:", error);
@@ -97,9 +101,18 @@ export default function Dashboard() {
     }
   };
 
+  const handleGameCreated = () => {
+    fetchData();
+    fetchStats();
+  };
+
+  const handlePlanificationCreated = () => {
+    fetchStats();
+  };
+
   const statsConfig = [
     {
-      title: "Jeux créés",
+      title: "Total Jeux",
       value: stats.total_jeux,
       icon: Gamepad,
       bgColor: "bg-orange-100",
@@ -107,7 +120,7 @@ export default function Dashboard() {
       change: "+12%"
     },
     {
-      title: "Planifications",
+      title: "Total Planifications",
       value: stats.total_planifications,
       icon: Calendar,
       bgColor: "bg-violet-100", 
@@ -115,19 +128,11 @@ export default function Dashboard() {
       change: "+8%"
     },
     {
-      title: "Enseignants",
-      value: stats.total_enseignants,
-      icon: GraduationCap,
-      bgColor: "bg-blue-100",
-      textColor: "text-blue-600",
-      change: "Stable"
-    },
-    {
-      title: "Apprenants",
+      title: "Total Apprenants",
       value: stats.total_apprenants,
       icon: Users,
-      bgColor: "bg-green-100",
-      textColor: "text-green-600",
+      bgColor: "bg-blue-100",
+      textColor: "text-blue-600",
       change: "+25%"
     }
   ];
@@ -140,7 +145,7 @@ export default function Dashboard() {
         <DashboardHeader />
 
         {/* Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8">
           {statsConfig.map((stat, index) => (
             <ModernStatsCard
               key={index}
@@ -160,7 +165,10 @@ export default function Dashboard() {
           <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6">
             Actions rapides
           </h2>
-          <QuickActions />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <CreateGameModal onSuccess={handleGameCreated} />
+            <CreatePlanificationModal kahoots={kahoots} onSuccess={handlePlanificationCreated} />
+          </div>
         </div>
 
         {/* Kahoots List */}
