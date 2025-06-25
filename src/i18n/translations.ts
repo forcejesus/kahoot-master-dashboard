@@ -1,4 +1,3 @@
-
 import { TranslationKeys } from '@/types/i18n';
 
 export const translations: {
@@ -26,16 +25,6 @@ export const translations: {
     'auth.passwordPlaceholder': 'Enter your password',
     'auth.signIn': 'Sign In',
     'auth.secureEducator': 'Secure educator platform',
-    'auth.resetPassword': 'Reset Password',
-    'auth.resetPasswordTitle': 'Reset your password',
-    'auth.resetPasswordSubtitle': 'Enter your email to receive a reset link',
-    'auth.sendResetLink': 'Send Reset Link',
-    'auth.sendingResetLink': 'Sending...',
-    'auth.backToLogin': 'Back to Sign In',
-    'auth.resetLinkSent': 'Reset link sent!',
-    'auth.resetLinkSentDescription': 'Check your email for password reset instructions',
-    'auth.resetLinkError': 'Failed to send reset link',
-    'auth.resetLinkErrorDescription': 'Please verify your email address and try again',
     'nav.logout': 'Logout',
     'dashboard.goodMorning': 'Good Morning',
     'dashboard.goodAfternoon': 'Good Afternoon',
@@ -188,16 +177,6 @@ export const translations: {
     'auth.passwordPlaceholder': 'Entrez votre mot de passe',
     'auth.signIn': 'Se connecter',
     'auth.secureEducator': 'Plateforme éducateur sécurisée',
-    'auth.resetPassword': 'Réinitialiser le mot de passe',
-    'auth.resetPasswordTitle': 'Réinitialisez votre mot de passe',
-    'auth.resetPasswordSubtitle': 'Entrez votre email pour recevoir un lien de réinitialisation',
-    'auth.sendResetLink': 'Envoyer le lien',
-    'auth.sendingResetLink': 'Envoi en cours...',
-    'auth.backToLogin': 'Retour à la connexion',
-    'auth.resetLinkSent': 'Lien de réinitialisation envoyé !',
-    'auth.resetLinkSentDescription': 'Vérifiez votre email pour les instructions de réinitialisation',
-    'auth.resetLinkError': 'Échec de l\'envoi du lien',
-    'auth.resetLinkErrorDescription': 'Veuillez vérifier votre adresse email et réessayer',
     'nav.logout': 'Déconnexion',
     'dashboard.goodMorning': 'Bonjour',
     'dashboard.goodAfternoon': 'Bon après-midi',

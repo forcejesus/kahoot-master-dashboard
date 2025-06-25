@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Navigate, Link } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTranslation } from '@/contexts/I18nContext';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
@@ -59,9 +59,6 @@ export default function Login() {
               <CardTitle className="text-5xl font-black text-transparent bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text tracking-wider drop-shadow-lg">
                 AKILI
               </CardTitle>
-              <div className="text-sm font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-full inline-block border border-blue-200">
-                Espace Enseignant
-              </div>
               <CardDescription className="text-gray-600 text-lg">
                 {t('auth.subtitle')}
               </CardDescription>
@@ -135,12 +132,9 @@ export default function Login() {
             </form>
 
             <div className="text-center">
-              <Link 
-                to="/forgot-password" 
-                className="text-gray-500 hover:text-gray-700 transition-colors text-sm underline"
-              >
+              <button className="text-gray-500 hover:text-gray-700 transition-colors text-sm underline">
                 {t('auth.forgotPassword')}
-              </Link>
+              </button>
             </div>
           </CardContent>
         </Card>
