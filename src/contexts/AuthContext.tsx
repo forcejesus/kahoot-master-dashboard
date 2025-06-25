@@ -1,6 +1,7 @@
 
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { AuthState, LoginCredentials, LoginResponse, User } from '@/types/auth';
+import { buildApiUrl } from '@/config/hosts';
 import { toast } from 'sonner';
 
 interface AuthContextType extends AuthState {
@@ -15,7 +16,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     user: null,
     token: null,
     isAuthenticated: false,
-    isLoading: true, // Changed to true initially
+    isLoading: true,
     error: null,
   });
 
@@ -32,7 +33,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           // Vérifier si le token n'est pas expiré
           const currentTime = Math.floor(Date.now() / 1000);
           if (payload.exp && payload.exp < currentTime) {
-            // Token expiré
+            localStorage.removeItem('token');
+            setState(prev => ({ ...prev, isLoading: false }));
+            return;
+          }
+
+          // Vérifier que l'utilisateur est enseignant
+          if (payload.role !== 'enseignant') {
+            console.warn('🚫 Utilisateur non autorisé:', payload.role);
             localStorage.removeItem('token');
             setState(prev => ({ ...prev, isLoading: false }));
             return;
@@ -42,6 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             id: payload.id,
             name: payload.name,
             email: payload.email,
+            role: payload.role,
             ecole: payload.ecole,
           };
 
@@ -53,7 +62,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             error: null,
           });
         } catch (error) {
-          // En cas d'erreur de décodage du token
+          console.error('❌ Erreur de décodage du token:', error);
           localStorage.removeItem('token');
           setState(prev => ({ ...prev, isLoading: false }));
         }
@@ -67,22 +76,44 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (credentials: LoginCredentials) => {
     setState(prev => ({ ...prev, isLoading: true, error: null }));
+    
     try {
-      const response = await fetch('http://kahoot.nos-apps.com/api/login', {
+      const loginUrl = buildApiUrl('/api/login');
+      console.log('🔐 Tentative de connexion vers:', loginUrl);
+      
+      const response = await fetch(loginUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(credentials),
       });
 
       const data: LoginResponse = await response.json();
+      console.log('📥 Réponse du serveur:', { statut: data.statut, message: data.message, role: data.role });
 
-      if (response.ok) {
+      if (response.ok && data.statut === 200) {
+        // Vérifier que l'utilisateur a le rôle "enseignant"
+        if (data.role !== 'enseignant') {
+          const errorMessage = `Accès refusé. Seuls les enseignants peuvent se connecter. Votre rôle: ${data.role}`;
+          console.warn('🚫', errorMessage);
+          
+          setState(prev => ({
+            ...prev,
+            isLoading: false,
+            error: errorMessage,
+            isAuthenticated: false,
+          }));
+          
+          toast.error(errorMessage);
+          throw new Error(errorMessage);
+        }
+
         // Decode token to get user info
         const payload = JSON.parse(atob(data.token.split('.')[1]));
         const user: User = {
           id: payload.id,
           name: payload.name,
           email: payload.email,
+          role: payload.role,
           ecole: payload.ecole,
         };
 
@@ -95,18 +126,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         });
 
         localStorage.setItem('token', data.token);
-        toast.success('Connexion réussie !');
+        console.log('✅ Connexion réussie pour:', user.email);
+        toast.success('Connexion réussie ! Bienvenue dans l\'espace enseignant.');
       } else {
-        throw new Error(data.message || 'Identifiants incorrects');
+        const errorMessage = data.message || 'Identifiants incorrects';
+        throw new Error(errorMessage);
       }
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Erreur de connexion';
+      console.error('❌ Erreur de connexion:', errorMessage);
+      
       setState(prev => ({
         ...prev,
         isLoading: false,
-        error: 'Identifiants incorrects',
+        error: errorMessage,
         isAuthenticated: false,
       }));
-      toast.error('Identifiants incorrects');
+      
+      toast.error(errorMessage);
+      throw error;
     }
   };
 
@@ -119,13 +157,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isLoading: false,
       error: null,
     });
+    console.log('👋 Déconnexion réussie');
     toast.success('Déconnexion réussie');
   };
 
   // Show loading state
   if (state.isLoading) {
-    return <div className="flex items-center justify-center min-h-screen">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+    return <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-50">
+      <div className="flex flex-col items-center space-y-4">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
+        <p className="text-orange-600 font-medium">Chargement...</p>
+      </div>
     </div>;
   }
 
