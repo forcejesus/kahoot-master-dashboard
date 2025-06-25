@@ -3,89 +3,33 @@ export type Language = 'fr' | 'en';
 
 export interface TranslationKeys {
   // Authentication
+  'auth.title': string;
+  'auth.subtitle': string;
   'auth.email': string;
+  'auth.emailPlaceholder': string;
   'auth.password': string;
-  'auth.login': string;
-  'auth.loginTitle': string;
-  'auth.loginSubtitle': string;
-  'auth.rememberMe': string;
-  'auth.forgotPassword': string;
-  'auth.invalidCredentials': string;
-  'auth.loginError': string;
-  'auth.loginSuccess': string;
+  'auth.passwordPlaceholder': string;
+  'auth.signIn': string;
   'auth.loggingIn': string;
+  'auth.forgotPassword': string;
+  'auth.secureEducator': string;
+  'auth.loginSuccess': string;
   'auth.welcomeMessage': string;
   'auth.loginFailed': string;
   'auth.checkCredentials': string;
-  'auth.title': string;
-  'auth.subtitle': string;
-  'auth.emailPlaceholder': string;
-  'auth.passwordPlaceholder': string;
-  'auth.signIn': string;
-  'auth.secureEducator': string;
   
   // Navigation
   'nav.logout': string;
+  'nav.dashboard': string;
+  'nav.planification': string;
   
   // Dashboard
-  'dashboard.goodMorning': string;
-  'dashboard.goodAfternoon': string;
-  'dashboard.goodEvening': string;
-  'dashboard.welcomeBack': string;
-  'dashboard.user': string;
-  'dashboard.welcomeDescription': string;
+  'dashboard.title': string;
   'dashboard.totalKahoots': string;
   'dashboard.totalLearners': string;
-  'dashboard.totalSessions': string;
-  'dashboard.loading': string;
+  'dashboard.createKahoot': string;
   'dashboard.noKahoots': string;
-  'dashboard.myKahoots': string;
-  'dashboard.searchKahoots': string;
-  'dashboard.deleting': string;
-  'dashboard.delete': string;
-  
-  // Table headers
-  'table.title': string;
-  'table.questions': string;
-  'table.sessions': string;
-  'table.participants': string;
-  
-  // Question details
-  'question.type': string;
-  'question.points': string;
-  'question.duration': string;
-  'question.responses': string;
-  'question.details': string;
-  'question.id': string;
-  'question.label': string;
-  'question.time': string;
-  'question.seconds': string;
-  'question.chronoActive': string;
-  'question.yes': string;
-  'question.no': string;
-  'question.date': string;
-  'question.fileType': string;
-  'question.gameId': string;
-  
-  // Delete dialogs
-  'delete.confirm': string;
-  'delete.confirmDescription': string;
-  'delete.confirmDescriptionPlural': string;
-  'delete.cancel': string;
-  'delete.deleting': string;
-  'delete.delete': string;
-  
-  // Planification
-  'planification.accessPin': string;
-  'planification.copyPin': string;
-  'planification.from': string;
-  'planification.to': string;
-  'planification.type': string;
-  'planification.standard': string;
-  'planification.status': string;
-  'planification.pending': string;
-  'planification.limit': string;
-  'planification.participants': string;
+  'dashboard.loading': string;
   
   // Loading messages
   'loading.data': string;
@@ -106,87 +50,90 @@ export interface TranslationKeys {
   'error.loadingFailedDescription': string;
   'error.deleteFailed': string;
   'error.deleteFailedDescription': string;
-
-  // Create Kahoot
-  'create.title': string;
-  'create.kahoot': string;
-  'create.newKahoot': string;
-  'create.titleLabel': string;
-  'create.titlePlaceholder': string;
-  'create.imageLabel': string;
-  'create.addImage': string;
-  'create.changeImage': string;
-  'create.cancel': string;
-  'create.creating': string;
-  'create.success': string;
-  'create.error': string;
-  'create.titleRequired': string;
-
-  // Game Setup
-  'game.setup': string;
-  'game.configuration': string;
-  'game.backToDashboard': string;
-  'game.addQuestion': string;
-  'game.questionForm': string;
-
-  // Question Form
-  'form.questionLabel': string;
-  'form.questionPlaceholder': string;
-  'form.duration': string;
-  'form.enableTimer': string;
-  'form.questionType': string;
-  'form.selectType': string;
-  'form.points': string;
-  'form.selectPoints': string;
-  'form.answers': string;
-  'form.answer': string;
-  'form.correctAnswer': string;
-  'form.addAnswer': string;
-  'form.removeAnswer': string;
-  'form.selectCorrect': string;
-  'form.addQuestion': string;
-  'form.adding': string;
-
-  // Game Details
-  'details.backToDashboard': string;
-  'details.title': string;
-  'details.questions': string;
-  'details.planifications': string;
-  'details.sessions': string;
-  'details.statistics': string;
-  'details.noQuestions': string;
-  'details.noPlanifications': string;
-  'details.noSessions': string;
-
-  // Schedule
-  'schedule.title': string;
-  'schedule.sessionFor': string;
-  'schedule.createSession': string;
-
-  // Not Found
-  'notFound.title': string;
-  'notFound.message': string;
-  'notFound.returnHome': string;
-
-  // Planification Details
-  'planDetails.title': string;
-  'planDetails.backButton': string;
-  'planDetails.deleteButton': string;
-  'planDetails.confirmDelete': string;
-  'planDetails.confirmDeleteDesc': string;
-  'planDetails.deleting': string;
-  'planDetails.sessionStats': string;
-  'planDetails.participants': string;
-  'planDetails.noParticipants': string;
-  'planDetails.notFound': string;
-  'planDetails.notFoundDesc': string;
-  'planDetails.loading': string;
-
-  // Breadcrumbs
-  'breadcrumb.dashboard': string;
-  'breadcrumb.game': string;
-  'breadcrumb.planification': string;
-  'breadcrumb.details': string;
+  
+  // Table headers
+  'table.title': string;
+  'table.questions': string;
+  'table.sessions': string;
+  'table.participants': string;
+  
+  // Game details
+  'game.questions': string;
+  'game.planifications': string;
+  'game.sessions': string;
+  'game.noQuestions': string;
+  'game.deleteConfirm': string;
+  'game.deleteConfirmDescription': string;
+  'game.delete': string;
+  'game.cancel': string;
+  'game.schedule': string;
+  
+  // Question details
+  'question.details': string;
+  'question.id': string;
+  'question.label': string;
+  'question.time': string;
+  'question.chronoActive': string;
+  'question.chronoEnabled': string;
+  'question.chronoDisabled': string;
+  'question.date': string;
+  'question.type': string;
+  'question.points': string;
+  'question.fileType': string;
+  'question.gameId': string;
+  'question.seconds': string;
+  'question.yes': string;
+  'question.no': string;
+  
+  // Delete confirmation
+  'delete.confirm': string;
+  'delete.confirmDescription': string;
+  'delete.confirmDescriptionPlural': string;
+  'delete.deleting': string;
+  'delete.cancel': string;
+  'delete.delete': string;
+  
+  // Planification
+  'planification.scheduleGame': string;
+  'planification.schedulingFor': string;
+  'planification.accessPin': string;
+  'planification.copyPin': string;
+  'planification.from': string;
+  'planification.to': string;
+  'planification.at': string;
+  'planification.type': string;
+  'planification.limit': string;
+  'planification.participants': string;
+  'planification.standard': string;
+  'planification.noPlans': string;
+  'planification.noPlanFilters': string;
+  'planification.searchPlaceholder': string;
+  'planification.status': string;
+  'planification.allStatuses': string;
+  'planification.pending': string;
+  'planification.inProgress': string;
+  'planification.completed': string;
+  'planification.allTypes': string;
+  'planification.public': string;
+  'planification.assigned': string;
+  
+  // Common
+  'common.home': string;
+  'common.back': string;
+  'common.save': string;
+  'common.edit': string;
+  'common.create': string;
+  'common.update': string;
+  'common.search': string;
+  'common.filter': string;
+  'common.all': string;
+  'common.none': string;
+  'common.or': string;
+  'common.and': string;
+  'common.with': string;
+  'common.without': string;
+  'common.total': string;
+  'common.found': string;
 }
 
 export type TranslationKey = keyof TranslationKeys;

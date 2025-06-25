@@ -1,7 +1,5 @@
-
 import React from 'react';
 import { useTranslation } from '@/contexts/I18nContext';
-import { useApiTranslation } from '@/hooks/useApiTranslation';
 import { useNavigate } from 'react-router-dom';
 import { ExternalLink } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -25,7 +23,6 @@ export function KahootTable({
   isLoading 
 }: KahootTableProps) {
   const { t } = useTranslation();
-  const { translateField } = useApiTranslation();
 
   if (isLoading) {
     return <div className="text-center py-12 text-gray-500">{t('dashboard.loading')}</div>;
@@ -71,7 +68,7 @@ export function KahootTable({
               </td>
               <td className="py-4 px-6">
                 <div className="font-medium text-left flex items-center text-primary">
-                  {translateField(kahoot, 'titre') || kahoot.titre}
+                  {kahoot.titre}
                   <ExternalLink className="ml-2 h-4 w-4" />
                 </div>
               </td>
