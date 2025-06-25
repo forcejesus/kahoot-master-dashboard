@@ -72,7 +72,7 @@ export function CreateKahootDialog({ onSuccess }: CreateKahootDialogProps) {
         setIsOpen(false);
         resetForm();
         
-        // Redirection vers la configuration du jeu
+        // Redirection automatique vers la configuration du jeu
         if (data.jeu) {
           navigate('/game/setup', {
             state: {
