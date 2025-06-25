@@ -1,13 +1,10 @@
 
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
-import { useTranslation } from "@/contexts/I18nContext";
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { LogOut, User } from "lucide-react";
 
 export function Navbar() {
   const { user, logout } = useAuth();
-  const { t } = useTranslation();
 
   return (
     <nav className="bg-white/80 backdrop-blur-sm shadow-lg border-b border-white/50">
@@ -21,18 +18,15 @@ export function Navbar() {
               {user?.name}
             </span>
           </div>
-          <div className="flex items-center space-x-3">
-            <LanguageSwitcher showLabel={true} />
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-gray-600 hover:text-gray-900 hover:bg-gray-100/50 transition-all duration-200"
-              onClick={logout}
-            >
-              <LogOut className="h-5 w-5 mr-2" />
-              {t('nav.logout')}
-            </Button>
-          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-gray-600 hover:text-gray-900 hover:bg-gray-100/50 transition-all duration-200"
+            onClick={logout}
+          >
+            <LogOut className="h-5 w-5 mr-2" />
+            Se déconnecter
+          </Button>
         </div>
       </div>
     </nav>

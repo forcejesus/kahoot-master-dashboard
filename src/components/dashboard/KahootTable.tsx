@@ -1,5 +1,5 @@
+
 import React from 'react';
-import { useTranslation } from '@/contexts/I18nContext';
 import { useNavigate } from 'react-router-dom';
 import { ExternalLink } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -22,16 +22,14 @@ export function KahootTable({
   onKahootClick,
   isLoading 
 }: KahootTableProps) {
-  const { t } = useTranslation();
-
   if (isLoading) {
-    return <div className="text-center py-12 text-gray-500">{t('dashboard.loading')}</div>;
+    return <div className="text-center py-12 text-gray-500">Chargement...</div>;
   }
   
   if (kahoots.length === 0) {
     return (
       <div className="text-center py-12 text-gray-500">
-        {t('dashboard.noKahoots')}
+        Aucun kahoot créé pour le moment
       </div>
     );
   }
@@ -47,10 +45,10 @@ export function KahootTable({
                 onCheckedChange={onSelectAll}
               />
             </th>
-            <th className="text-left py-4 px-6 text-primary font-bold">{t('table.title')}</th>
-            <th className="text-center py-4 px-6 text-primary font-bold">{t('table.questions')}</th>
-            <th className="text-center py-4 px-6 text-primary font-bold">{t('table.sessions')}</th>
-            <th className="text-center py-4 px-6 text-primary font-bold">{t('table.participants')}</th>
+            <th className="text-left py-4 px-6 text-primary font-bold">Titre</th>
+            <th className="text-center py-4 px-6 text-primary font-bold">Questions</th>
+            <th className="text-center py-4 px-6 text-primary font-bold">Sessions</th>
+            <th className="text-center py-4 px-6 text-primary font-bold">Participants</th>
           </tr>
         </thead>
         <tbody>
