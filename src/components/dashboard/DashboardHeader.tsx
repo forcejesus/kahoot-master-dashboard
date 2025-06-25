@@ -12,11 +12,17 @@ export function DashboardHeader() {
           <Award className="h-8 w-8 md:h-10 md:w-10 text-white" />
         </div>
         <div className="flex-1">
-          <h1 className="text-2xl md:text-4xl font-bold font-heading mb-2">
-            Bonjour, {user?.name || 'Enseignant'}! 👋
-          </h1>
+          <div className="flex items-center gap-3 mb-3">
+            <h1 className="text-3xl md:text-4xl font-bold text-white">
+              AKILI
+            </h1>
+            <div className="h-8 w-1 bg-white/50 rounded-full"></div>
+            <span className="text-xl md:text-2xl font-medium text-orange-100">
+              Bonjour, {user?.name || 'Enseignant'}! 👋
+            </span>
+          </div>
           <p className="text-orange-100 text-sm md:text-base leading-relaxed">
-            Bienvenue sur votre tableau de bord. Gérez vos jeux éducatifs, 
+            Bienvenue sur votre tableau de bord AKILI. Gérez vos jeux éducatifs, 
             suivez vos planifications et analysez les performances de vos étudiants.
           </p>
         </div>

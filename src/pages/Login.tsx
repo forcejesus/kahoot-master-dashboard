@@ -31,12 +31,13 @@ export default function Login() {
       <div className="w-full max-w-md mx-4 relative">
         <div className="absolute inset-0 bg-white/20 backdrop-blur-xl rounded-2xl transform rotate-2"></div>
         <Card className="w-full relative backdrop-blur-sm border-t border-white/50 animate-fade-in">
-          <CardHeader className="text-center space-y-2">
-            <CardTitle className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              Kahoot Professeur
+          <CardHeader className="text-center space-y-4">
+            <CardTitle className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-orange-500 via-orange-600 to-orange-700 bg-clip-text text-transparent drop-shadow-lg">
+              AKILI
             </CardTitle>
-            <CardDescription className="text-gray-600">
-              Connectez-vous pour gérer vos jeux
+            <div className="h-1 w-20 bg-gradient-to-r from-orange-500 to-orange-600 mx-auto rounded-full"></div>
+            <CardDescription className="text-gray-600 text-lg font-medium">
+              Plateforme éducative intelligente
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -66,7 +67,7 @@ export default function Login() {
               )}
               <Button 
                 type="submit" 
-                className="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-all duration-200 transform hover:scale-[1.02] shadow-xl hover:shadow-primary/20"
+                className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 transition-all duration-200 transform hover:scale-[1.02] shadow-xl hover:shadow-orange-500/20"
                 disabled={isLoading}
               >
                 {isLoading ? 'Connexion...' : 'Se connecter'}
