@@ -4,7 +4,7 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogAction } from '@/components/ui/alert-dialog';
 import { GraduationCap, Users, BookOpen } from 'lucide-react';
 
@@ -78,57 +78,8 @@ export default function Login() {
                 </div>
               </div>
 
-              <CardDescription className="text-gray-700 text-xl font-semibold">
-                Plateforme éducative intelligente
-              </CardDescription>
-            </CardHeader>
-
-            <CardContent className="space-y-8 px-8 pb-12">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-4">
-                  <Input
-                    type="email"
-                    placeholder="Adresse email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="w-full transition-all duration-200 focus:scale-[1.02] h-14 text-base rounded-xl border-gray-200 focus:border-orange-300 focus:ring-orange-200"
-                  />
-                  <Input
-                    type="password"
-                    placeholder="Mot de passe"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    className="w-full transition-all duration-200 focus:scale-[1.02] h-14 text-base rounded-xl border-gray-200 focus:border-orange-300 focus:ring-orange-200"
-                  />
-                </div>
-
-                {error && (
-                  <div className="px-4 py-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm font-medium flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                    <span>{error}</span>
-                  </div>
-                )}
-
-                <Button 
-                  type="submit" 
-                  className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 transition-all duration-200 transform hover:scale-[1.02] shadow-xl hover:shadow-orange-500/30 h-14 text-base font-semibold rounded-xl"
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <div className="flex items-center space-x-3">
-                      <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
-                      <span>Connexion en cours...</span>
-                    </div>
-                  ) : (
-                    'Se connecter'
-                  )}
-                </Button>
-              </form>
-              
-              {/* Section Espace Enseignant mise en valeur */}
-              <div className="text-center pt-6 border-t border-orange-100">
+              {/* Section Espace Enseignant déplacée ici */}
+              <div className="text-center">
                 <div className="relative mb-4">
                   <div className="absolute inset-0 flex items-center">
                     <div className="w-full border-t border-orange-200"></div>
@@ -160,6 +111,51 @@ export default function Login() {
                   <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
                 </div>
               </div>
+            </CardHeader>
+
+            <CardContent className="space-y-8 px-8 pb-12">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-4">
+                  <Input
+                    type="email"
+                    placeholder="Adresse email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="w-full transition-all duration-200 focus:scale-[1.02] h-16 text-lg rounded-xl border-gray-200 focus:border-orange-300 focus:ring-orange-200"
+                  />
+                  <Input
+                    type="password"
+                    placeholder="Mot de passe"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    className="w-full transition-all duration-200 focus:scale-[1.02] h-16 text-lg rounded-xl border-gray-200 focus:border-orange-300 focus:ring-orange-200"
+                  />
+                </div>
+
+                {error && (
+                  <div className="px-4 py-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm font-medium flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                    <span>{error}</span>
+                  </div>
+                )}
+
+                <Button 
+                  type="submit" 
+                  className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 transition-all duration-200 transform hover:scale-[1.02] shadow-xl hover:shadow-orange-500/30 h-16 text-lg font-semibold rounded-xl"
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <div className="flex items-center space-x-3">
+                      <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
+                      <span>Connexion en cours...</span>
+                    </div>
+                  ) : (
+                    'Se connecter'
+                  )}
+                </Button>
+              </form>
             </CardContent>
           </Card>
         </div>

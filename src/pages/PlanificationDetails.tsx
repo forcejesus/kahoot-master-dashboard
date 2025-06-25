@@ -129,10 +129,10 @@ export default function PlanificationDetails() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100">
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100">
         <Navbar />
         <div className="flex flex-col items-center justify-center h-[calc(100vh-5rem)]">
-          <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
+          <Loader2 className="h-12 w-12 animate-spin text-orange-500 mb-4" />
           <p className="text-lg text-gray-600">Chargement des détails de la planification...</p>
         </div>
       </div>
@@ -141,13 +141,13 @@ export default function PlanificationDetails() {
 
   if (!planification) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100">
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100">
         <Navbar />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center py-12">
             <h2 className="text-2xl font-bold text-gray-800 mb-4">Planification non trouvée</h2>
             <p className="text-gray-600 mb-8">La planification que vous recherchez n'existe pas ou a été supprimée.</p>
-            <Button onClick={() => navigate("/dashboard")}>
+            <Button onClick={() => navigate("/dashboard")} className="bg-orange-500 hover:bg-orange-600">
               Retour au tableau de bord
             </Button>
           </div>
@@ -157,7 +157,7 @@ export default function PlanificationDetails() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-100 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100">
       <Navbar />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -183,7 +183,7 @@ export default function PlanificationDetails() {
           <Button
             variant="outline"
             onClick={handleGoBack}
-            className="bg-white shadow-sm hover:bg-gray-50"
+            className="bg-white shadow-sm hover:bg-orange-50 border-orange-200"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Retour
@@ -208,13 +208,13 @@ export default function PlanificationDetails() {
 
           {/* Statistiques de la planification */}
           <div className="mb-8">
-            <h2 className="text-xl font-bold text-primary mb-4">Statistiques de la session</h2>
+            <h2 className="text-xl font-bold text-orange-600 mb-4">Statistiques de la session</h2>
             <PlanificationStats stats={stats} />
           </div>
 
           {/* Liste des participants */}
-          <div className="bg-white/90 backdrop-blur-sm rounded-lg shadow-md p-6 border border-gray-200">
-            <h2 className="text-xl font-bold text-primary mb-4">Participants</h2>
+          <div className="bg-white/90 backdrop-blur-sm rounded-lg shadow-md p-6 border border-orange-100">
+            <h2 className="text-xl font-bold text-orange-600 mb-4">Participants</h2>
             {planification.participants && planification.participants.length > 0 ? (
               <ParticipantsList participants={planification.participants} />
             ) : (

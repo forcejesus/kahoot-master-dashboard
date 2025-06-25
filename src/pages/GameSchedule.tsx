@@ -11,7 +11,7 @@ export default function GameSchedule() {
   const kahoot = location.state?.jeu as Kahoot | undefined;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100">
       <Navbar />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -41,12 +41,12 @@ export default function GameSchedule() {
         
         <div className="flex flex-col items-center">
           <div className="w-full max-w-4xl mb-8 text-center">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-4">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent mb-4">
               Planifier une session de jeu
             </h1>
             {kahoot && (
               <p className="text-lg text-gray-600">
-                Vous planifiez une session pour: <span className="font-semibold">{kahoot.titre}</span>
+                Vous planifiez une session pour: <span className="font-semibold text-orange-600">{kahoot.titre}</span>
               </p>
             )}
           </div>

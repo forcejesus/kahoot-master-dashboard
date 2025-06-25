@@ -1,4 +1,3 @@
-
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Navbar } from '@/components/Navbar';
@@ -10,6 +9,7 @@ import { GameHeader } from '@/components/game/details/GameHeader';
 import { useEffect, useState } from 'react';
 import { GameBackgroundImage } from '@/components/game/details/GameBackgroundImage';
 import { GameDetailsTabs } from '@/components/game/details/GameDetailsTabs';
+import { buildApiUrl } from '@/config/api';
 
 export default function GameDetails() {
   const navigate = useNavigate();
@@ -18,13 +18,11 @@ export default function GameDetails() {
   const initialJeu = location.state?.jeu as Kahoot;
   const [jeu, setJeu] = useState<Kahoot | null>(initialJeu);
 
-  // Fonction pour rafraîchir les détails du jeu
   const refreshGameDetails = async () => {
     if (!jeu) return;
     
     try {
-      // Utilisation de l'endpoint direct avec l'ID du jeu
-      const response = await fetch(`http://kahoot.nos-apps.com/api/jeux/${jeu._id}`, {
+      const response = await fetch(buildApiUrl(`/api/jeux/${jeu._id}`), {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -46,7 +44,6 @@ export default function GameDetails() {
     }
   };
 
-  // Récupérer les détails initiaux si nous n'avons pas de state
   useEffect(() => {
     if (!jeu) {
       navigate('/dashboard');
@@ -68,7 +65,7 @@ export default function GameDetails() {
 
   const handleDeleteGame = async () => {
     try {
-      const response = await fetch(`http://kahoot.nos-apps.com/api/jeux/delete/${jeu._id}`, {
+      const response = await fetch(buildApiUrl(`/api/jeux/delete/${jeu._id}`), {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -87,7 +84,7 @@ export default function GameDetails() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100">
       <Navbar />
       
       <div className="relative">
@@ -98,7 +95,7 @@ export default function GameDetails() {
         <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <Button
             variant="navigation"
-            className="mb-6"
+            className="mb-6 bg-orange-100 hover:bg-orange-200 text-orange-700 border-orange-200"
             onClick={() => navigate('/dashboard')}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
