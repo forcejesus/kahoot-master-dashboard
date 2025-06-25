@@ -6,16 +6,13 @@ import { Check, X, Info } from "lucide-react";
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { EditResponseDialog } from "../edit/EditResponseDialog";
-import { Button } from "@/components/ui/button";
 
 interface NewFormatResponseItemProps {
   reponse: QuestionReponse;
   rIndex: number;
-  onRefresh?: () => void;
 }
 
-export function NewFormatResponseItem({ reponse, rIndex, onRefresh }: NewFormatResponseItemProps) {
+export function NewFormatResponseItem({ reponse, rIndex }: NewFormatResponseItemProps) {
   const { token } = useAuth();
   const [responseDetail, setResponseDetail] = useState<QuestionReponse | null>(null);
   const [loading, setLoading] = useState(false);
@@ -102,7 +99,7 @@ export function NewFormatResponseItem({ reponse, rIndex, onRefresh }: NewFormatR
           : 'bg-gray-50 border-gray-100'
       } border transition-colors`}
     >
-      <div className="flex items-center justify-between mb-2">
+      <div className="flex items-center justify-between">
         <span className={`${isCorrect ? 'text-green-700 font-medium' : ''} text-base`}>
           {responseText}
         </span>
@@ -126,15 +123,6 @@ export function NewFormatResponseItem({ reponse, rIndex, onRefresh }: NewFormatR
           </button>
         </div>
       </div>
-      
-      {responseDetail && (
-        <div className="flex justify-end">
-          <EditResponseDialog
-            response={responseDetail}
-            onSuccess={() => onRefresh?.()}
-          />
-        </div>
-      )}
       
       {/* Afficher tous les détails de la réponse */}
       {showDetails && responseDetail && (

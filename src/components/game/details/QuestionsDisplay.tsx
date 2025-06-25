@@ -9,10 +9,9 @@ import { Button } from "@/components/ui/button";
 
 interface QuestionsDisplayProps {
   questions?: Question[];
-  onRefresh?: () => void;
 }
 
-export function QuestionsDisplay({ questions, onRefresh }: QuestionsDisplayProps) {
+export function QuestionsDisplay({ questions }: QuestionsDisplayProps) {
   const { token } = useAuth();
   const { t } = useTranslation();
 
@@ -50,7 +49,6 @@ export function QuestionsDisplay({ questions, onRefresh }: QuestionsDisplayProps
               question={question}
               index={index}
               token={token}
-              onRefresh={onRefresh}
             />
           ))}
         </div>

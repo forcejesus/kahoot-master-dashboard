@@ -1,3 +1,4 @@
+
 import { Question, QuestionReponse } from "@/types/game-details";
 import { NewFormatResponseItem } from "./NewFormatResponseItem";
 import { OldFormatResponseItem } from "./OldFormatResponseItem";
@@ -6,10 +7,9 @@ import { MessageCircle } from "lucide-react";
 interface QuestionResponsesProps {
   question: Question;
   isNewResponseFormat: boolean;
-  onRefresh?: () => void;
 }
 
-export function QuestionResponses({ question, isNewResponseFormat, onRefresh }: QuestionResponsesProps) {
+export function QuestionResponses({ question, isNewResponseFormat }: QuestionResponsesProps) {
   // Accéder en toute sécurité au nombre de réponses
   const responseCount = Array.isArray(question.reponses) ? question.reponses.length : 0;
   
@@ -84,8 +84,7 @@ export function QuestionResponses({ question, isNewResponseFormat, onRefresh }: 
             <NewFormatResponseItem 
               key={reponse._id || `response-${rIndex}`} 
               reponse={reponse} 
-              rIndex={rIndex}
-              onRefresh={onRefresh}
+              rIndex={rIndex} 
             />
           ))}
         </div>
