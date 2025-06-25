@@ -3,7 +3,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Search, Filter } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useTranslation } from "@/contexts/I18nContext";
 
 interface PlanificationsFiltersProps {
   searchQuery: string;
@@ -16,6 +15,20 @@ interface PlanificationsFiltersProps {
   availableTypes: string[];
 }
 
+export const statusLabels: Record<string, string> = {
+  "all": "Tous les statuts",
+  "en attente": "En attente",
+  "en cours": "En cours",
+  "terminé": "Terminé"
+};
+
+export const typeLabels: Record<string, string> = {
+  "all": "Tous les types",
+  "public": "Public",
+  "attribué": "Attribué",
+  "attribuer": "Attribué"
+};
+
 export function PlanificationsFilters({
   searchQuery,
   onSearchChange,
@@ -26,34 +39,12 @@ export function PlanificationsFilters({
   availableStatuses,
   availableTypes
 }: PlanificationsFiltersProps) {
-  const { t } = useTranslation();
-
-  const getStatusLabel = (status: string): string => {
-    const statusLabels: Record<string, string> = {
-      "all": t('planification.allStatuses') || "All statuses",
-      "en attente": t('planification.pending'),
-      "en cours": t('planification.inProgress') || "In progress",
-      "terminé": t('planification.completed') || "Completed"
-    };
-    return statusLabels[status] || status;
-  };
-
-  const getTypeLabel = (type: string): string => {
-    const typeLabels: Record<string, string> = {
-      "all": t('planification.allTypes') || "All types",
-      "public": t('planification.public') || "Public",
-      "attribué": t('planification.assigned') || "Assigned",
-      "attribuer": t('planification.assigned') || "Assigned"
-    };
-    return typeLabels[type] || type;
-  };
-
   return (
     <div className="space-y-4 mb-6">
       <div className="relative">
         <Input
           type="text"
-          placeholder={t('planification.searchPlaceholder') || "Search by PIN, status or type..."}
+          placeholder="Rechercher par PIN, statut ou type..."
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
           className="pl-10"
@@ -64,16 +55,16 @@ export function PlanificationsFilters({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="status-filter" className="text-sm font-medium flex items-center gap-1">
-            <Filter className="h-3.5 w-3.5" /> {t('planification.status')}
+            <Filter className="h-3.5 w-3.5" /> Statut
           </Label>
           <Select value={statusFilter} onValueChange={onStatusChange}>
             <SelectTrigger id="status-filter" className="w-full">
-              <SelectValue placeholder={t('planification.filterByStatus') || "Filter by status"} />
+              <SelectValue placeholder="Filtrer par statut" />
             </SelectTrigger>
             <SelectContent>
               {availableStatuses.map((status) => (
                 <SelectItem key={status} value={status}>
-                  {getStatusLabel(status)}
+                  {statusLabels[status] || status}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -82,16 +73,16 @@ export function PlanificationsFilters({
         
         <div className="space-y-2">
           <Label htmlFor="type-filter" className="text-sm font-medium flex items-center gap-1">
-            <Filter className="h-3.5 w-3.5" /> {t('planification.type')}
+            <Filter className="h-3.5 w-3.5" /> Type
           </Label>
           <Select value={typeFilter} onValueChange={onTypeFilter}>
             <SelectTrigger id="type-filter" className="w-full">
-              <SelectValue placeholder={t('planification.filterByType') || "Filter by type"} />
+              <SelectValue placeholder="Filtrer par type" />
             </SelectTrigger>
             <SelectContent>
               {availableTypes.map((type) => (
                 <SelectItem key={type} value={type}>
-                  {getTypeLabel(type)}
+                  {typeLabels[type] || type}
                 </SelectItem>
               ))}
             </SelectContent>

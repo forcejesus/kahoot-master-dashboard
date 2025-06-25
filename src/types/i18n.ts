@@ -1,7 +1,4 @@
-
-export type Language = 'en' | 'fr';
-
-export type TranslationKey = keyof TranslationKeys;
+export type Language = 'fr' | 'en';
 
 export interface TranslationKeys {
   // Authentication
@@ -35,16 +32,14 @@ export interface TranslationKeys {
   'auth.resetLinkSentDescription': string;
   'auth.resetLinkError': string;
   'auth.resetLinkErrorDescription': string;
-  'auth.passwordChanged': string;
-  'auth.passwordChangedSuccess': string;
   
-  // Nav translations
+  // Navigation
   'nav.logout': string;
   'nav.profile': string;
   'nav.settings': string;
   'nav.loggingOut': string;
-
-  // Dashboard translations
+  
+  // Dashboard
   'dashboard.goodMorning': string;
   'dashboard.goodAfternoon': string;
   'dashboard.goodEvening': string;
@@ -60,14 +55,14 @@ export interface TranslationKeys {
   'dashboard.searchKahoots': string;
   'dashboard.deleting': string;
   'dashboard.delete': string;
-
-  // Table translations
+  
+  // Table headers
   'table.title': string;
   'table.questions': string;
   'table.sessions': string;
   'table.participants': string;
-
-  // Question translations  
+  
+  // Question details
   'question.type': string;
   'question.points': string;
   'question.duration': string;
@@ -83,16 +78,16 @@ export interface TranslationKeys {
   'question.date': string;
   'question.fileType': string;
   'question.gameId': string;
-
-  // Delete translations
+  
+  // Delete dialogs
   'delete.confirm': string;
   'delete.confirmDescription': string;
   'delete.confirmDescriptionPlural': string;
   'delete.cancel': string;
   'delete.deleting': string;
   'delete.delete': string;
-
-  // Planification translations
+  
+  // Planification
   'planification.accessPin': string;
   'planification.copyPin': string;
   'planification.from': string;
@@ -103,43 +98,28 @@ export interface TranslationKeys {
   'planification.pending': string;
   'planification.limit': string;
   'planification.participants': string;
-  'planification.allStatuses': string;
-  'planification.inProgress': string;
-  'planification.completed': string;
-  'planification.allTypes': string;
-  'planification.public': string;
-  'planification.assigned': string;
-  'planification.searchPlaceholder': string;
-  'planification.filterByStatus': string;
-  'planification.filterByType': string;
-  'planification.bestScore': string;
-  'planification.activeUntil': string;
-  'planification.sessionEnded': string;
-  'planification.viewPlanification': string;
-  'planification.loading': string;
-  'planification.noMatchingResults': string;
-
-  // Loading translations
+  
+  // Loading messages
   'loading.data': string;
   'loading.dataDescription': string;
   'loading.deleting': string;
   'loading.deletingDescription': string;
   'loading.statsTitle': string;
   'loading.statsDescription': string;
-
-  // Success translations
+  
+  // Success messages
   'success.dataLoaded': string;
   'success.dataLoadedDescription': string;
   'success.deleteSuccess': string;
   'success.deleteSuccessDescription': string;
-
-  // Error translations
+  
+  // Error messages
   'error.loadingFailed': string;
   'error.loadingFailedDescription': string;
   'error.deleteFailed': string;
   'error.deleteFailedDescription': string;
 
-  // Create game translations
+  // Create Kahoot
   'create.title': string;
   'create.kahoot': string;
   'create.newKahoot': string;
@@ -153,21 +133,15 @@ export interface TranslationKeys {
   'create.success': string;
   'create.error': string;
   'create.titleRequired': string;
-  'create.subtitle': string;
-  'create.gameInfo': string;
-  'create.optional': string;
-  'create.imageFormats': string;
-  'create.selectedFile': string;
-  'create.preview': string;
 
-  // Game translations
+  // Game Setup
   'game.setup': string;
   'game.configuration': string;
   'game.backToDashboard': string;
   'game.addQuestion': string;
   'game.questionForm': string;
 
-  // Form translations
+  // Question Form
   'form.questionLabel': string;
   'form.questionPlaceholder': string;
   'form.duration': string;
@@ -185,7 +159,7 @@ export interface TranslationKeys {
   'form.addQuestion': string;
   'form.adding': string;
 
-  // Details translations
+  // Game Details
   'details.backToDashboard': string;
   'details.title': string;
   'details.questions': string;
@@ -196,17 +170,17 @@ export interface TranslationKeys {
   'details.noPlanifications': string;
   'details.noSessions': string;
 
-  // Schedule translations
+  // Schedule
   'schedule.title': string;
   'schedule.sessionFor': string;
   'schedule.createSession': string;
 
-  // Not found translations
+  // Not Found
   'notFound.title': string;
   'notFound.message': string;
   'notFound.returnHome': string;
 
-  // Plan details translations
+  // Planification Details
   'planDetails.title': string;
   'planDetails.backButton': string;
   'planDetails.deleteButton': string;
@@ -220,35 +194,11 @@ export interface TranslationKeys {
   'planDetails.notFoundDesc': string;
   'planDetails.loading': string;
 
-  // Breadcrumb translations
+  // Breadcrumbs
   'breadcrumb.dashboard': string;
   'breadcrumb.game': string;
   'breadcrumb.planification': string;
   'breadcrumb.details': string;
-
-  // Planifications translations
-  'planifications.loading': string;
-  'planifications.empty': string;
-  'planifications.emptyDescription': string;
-  'planifications.startCreating': string;
-  'planifications.filter': string;
-  'planifications.allStatuses': string;
-  'planifications.allTypes': string;
-  'planifications.search': string;
-
-  // Create game additional translations
-  'createGame.coverImage': string;
-  'createGame.uploadCover': string;
-  'createGame.dragDrop': string;
-  'createGame.maxSize': string;
-  'createGame.formats': string;
-  'createGame.gameTitle': string;
-  'createGame.titlePlaceholder': string;
-  'createGame.createButton': string;
-  'createGame.creatingButton': string;
-
-  // Password reset translations
-  'passwordReset.success': string;
-  'passwordReset.successMessage': string;
-  'passwordReset.loginButton': string;
 }
+
+export type TranslationKey = keyof TranslationKeys;

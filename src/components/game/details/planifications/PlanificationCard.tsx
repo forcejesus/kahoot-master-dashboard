@@ -44,9 +44,9 @@ export function PlanificationCard({ planification, onCopyPin, onViewPlanificatio
         
         {planification.meilleur_score && (
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-center min-w-[200px]">
-            <div className="text-xs text-yellow-600 uppercase font-semibold">{t('planification.bestScore') || "Best Score"}</div>
+            <div className="text-xs text-yellow-600 uppercase font-semibold">Meilleur score</div>
             <div className="font-bold text-lg">{translateField(planification.meilleur_score, 'apprenant') || planification.meilleur_score.apprenant}</div>
-            <div className="text-yellow-600 font-medium">{planification.meilleur_score.score} {t('question.points').toLowerCase()}</div>
+            <div className="text-yellow-600 font-medium">{planification.meilleur_score.score} points</div>
           </div>
         )}
       </div>
@@ -55,11 +55,11 @@ export function PlanificationCard({ planification, onCopyPin, onViewPlanificatio
         <div className="text-xs text-gray-500">
           {new Date(planification.date_fin) > new Date() ? (
             <span className="text-green-600 font-medium">
-              {t('planification.activeUntil') || "Active session until"} {new Date(planification.date_fin).toLocaleDateString()} {planification.heure_fin}
+              Session active jusqu'au {new Date(planification.date_fin).toLocaleDateString()} {planification.heure_fin}
             </span>
           ) : (
             <span>
-              {t('planification.sessionEnded') || "Session ended on"} {new Date(planification.date_fin).toLocaleDateString()} {planification.heure_fin}
+              Session terminée le {new Date(planification.date_fin).toLocaleDateString()} {planification.heure_fin}
             </span>
           )}
         </div>
@@ -70,7 +70,7 @@ export function PlanificationCard({ planification, onCopyPin, onViewPlanificatio
           onClick={() => onViewPlanification(planification._id)}
         >
           <ExternalLink className="mr-1 h-3 w-3" />
-          {t('planification.viewPlanification') || "View planification"}
+          Consulter la planification
         </Button>
       </div>
     </div>
