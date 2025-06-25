@@ -2,157 +2,7 @@
 import { TranslationKeys } from '@/types/i18n';
 
 export const translations: Record<'fr' | 'en', TranslationKeys> = {
-  en: {
-    // Authentication
-    'auth.title': 'Kahoot Pro',
-    'auth.subtitle': 'Sign in to your educator space',
-    'auth.email': 'Email address',
-    'auth.emailPlaceholder': 'your@email.com',
-    'auth.password': 'Password',
-    'auth.passwordPlaceholder': '••••••••',
-    'auth.signIn': 'Sign in',
-    'auth.loggingIn': 'Signing in...',
-    'auth.forgotPassword': 'Forgot password?',
-    'auth.secureEducator': 'Secure platform for educators',
-    'auth.loginSuccess': 'Login successful!',
-    'auth.welcomeMessage': 'Welcome to your Kahoot space',
-    'auth.loginFailed': 'Login failed',
-    'auth.checkCredentials': 'Please check your credentials and try again',
-    
-    // Navigation
-    'nav.logout': 'Log out',
-    'nav.dashboard': 'Dashboard',
-    'nav.planification': 'Planning',
-    
-    // Dashboard
-    'dashboard.title': 'Dashboard',
-    'dashboard.totalKahoots': 'Total Kahoots',
-    'dashboard.totalLearners': 'Total Learners',
-    'dashboard.createKahoot': 'Create Kahoot',
-    'dashboard.noKahoots': 'No kahoots created yet',
-    'dashboard.loading': 'Loading...',
-    
-    // Loading messages
-    'loading.data': 'Loading data...',
-    'loading.dataDescription': 'Fetching your Kahoots',
-    'loading.deleting': 'Deleting...',
-    'loading.deletingDescription': 'Deleting {{count}} Kahoot(s)',
-    'loading.statsTitle': 'Loading your statistics...',
-    'loading.statsDescription': 'Preparing your personalized dashboard',
-    
-    // Success messages
-    'success.dataLoaded': 'Data loaded successfully!',
-    'success.dataLoadedDescription': '{{count}} Kahoot(s) found',
-    'success.deleteSuccess': 'Successfully deleted!',
-    'success.deleteSuccessDescription': '{{count}} Kahoot(s) deleted successfully',
-    
-    // Error messages
-    'error.loadingFailed': 'Loading error',
-    'error.loadingFailedDescription': 'Unable to fetch your data. Please try again.',
-    'error.deleteFailed': 'Delete error',
-    'error.deleteFailedDescription': 'An error occurred. Please try again.',
-    
-    // Table headers
-    'table.title': 'Title',
-    'table.questions': 'Questions',
-    'table.sessions': 'Sessions',
-    'table.participants': 'Participants',
-    
-    // Game details
-    'game.questions': 'Questions',
-    'game.planifications': 'Planifications',
-    'game.sessions': 'Sessions',
-    'game.noQuestions': 'No questions have been added to this game yet.',
-    'game.deleteConfirm': 'Are you sure?',
-    'game.deleteConfirmDescription': 'This action is irreversible. It will permanently delete the game and all its associated data.',
-    'game.delete': 'Delete',
-    'game.cancel': 'Cancel',
-    'game.schedule': 'Schedule',
-    
-    // Question details
-    'question.details': 'Question details',
-    'question.id': 'ID',
-    'question.label': 'Label',
-    'question.time': 'Time',
-    'question.chronoActive': 'Timer active',
-    'question.chronoEnabled': 'Timer enabled',
-    'question.chronoDisabled': 'No timer',
-    'question.date': 'Date',
-    'question.type': 'Type',
-    'question.points': 'Points',
-    'question.fileType': 'File type',
-    'question.gameId': 'Game ID',
-    'question.seconds': 'sec',
-    'question.yes': 'Yes',
-    'question.no': 'No',
-    
-    // Delete confirmation
-    'delete.confirm': 'Are you sure?',
-    'delete.confirmDescription': 'This action will permanently delete {{count}} kahoot.',
-    'delete.confirmDescriptionPlural': 'This action will permanently delete {{count}} kahoots.',
-    'delete.deleting': 'Deleting...',
-    'delete.cancel': 'Cancel',
-    'delete.delete': 'Delete',
-    
-    // Planification
-    'planification.scheduleGame': 'Schedule a game session',
-    'planification.schedulingFor': 'You are scheduling a session for:',
-    'planification.accessPin': 'Access PIN',
-    'planification.copyPin': 'Copy PIN',
-    'planification.from': 'From',
-    'planification.to': 'to',
-    'planification.at': 'at',
-    'planification.type': 'Type',
-    'planification.limit': 'Limit',
-    'planification.participants': 'participants',
-    'planification.standard': 'Standard',
-    'planification.noPlans': 'No planifications have been created for this game yet.',
-    'planification.noPlanFilters': 'No planifications match your search.',
-    'planification.searchPlaceholder': 'Search by PIN, status or type...',
-    'planification.status': 'Status',
-    'planification.allStatuses': 'All statuses',
-    'planification.pending': 'Pending',
-    'planification.inProgress': 'In progress',
-    'planification.completed': 'Completed',
-    'planification.allTypes': 'All types',
-    'planification.public': 'Public',
-    'planification.assigned': 'Assigned',
-    
-    // Common
-    'common.home': 'Home',
-    'common.back': 'Back',
-    'common.save': 'Save',
-    'common.edit': 'Edit',
-    'common.create': 'Create',
-    'common.update': 'Update',
-    'common.search': 'Search',
-    'common.filter': 'Filter',
-    'common.all': 'All',
-    'common.none': 'None',
-    'common.or': 'or',
-    'common.and': 'and',
-    'common.with': 'with',
-    'common.without': 'without',
-    'common.total': 'Total',
-    'common.found': 'found',
-  },
   fr: {
-    // Authentication
-    'auth.title': 'Kahoot Pro',
-    'auth.subtitle': 'Connectez-vous à votre espace éducateur',
-    'auth.email': 'Adresse email',
-    'auth.emailPlaceholder': 'votre@email.com',
-    'auth.password': 'Mot de passe',
-    'auth.passwordPlaceholder': '••••••••',
-    'auth.signIn': 'Se connecter',
-    'auth.loggingIn': 'Connexion en cours...',
-    'auth.forgotPassword': 'Mot de passe oublié ?',
-    'auth.secureEducator': 'Plateforme sécurisée pour éducateurs',
-    'auth.loginSuccess': 'Connexion réussie !',
-    'auth.welcomeMessage': 'Bienvenue dans votre espace Kahoot',
-    'auth.loginFailed': 'Échec de connexion',
-    'auth.checkCredentials': 'Veuillez vérifier vos identifiants et réessayer',
-    
     // Navigation
     'nav.logout': 'Se déconnecter',
     'nav.dashboard': 'Tableau de bord',
@@ -269,5 +119,123 @@ export const translations: Record<'fr' | 'en', TranslationKeys> = {
     'common.without': 'sans',
     'common.total': 'Total',
     'common.found': 'trouvé(s)',
+  },
+  en: {
+    // Navigation
+    'nav.logout': 'Log out',
+    'nav.dashboard': 'Dashboard',
+    'nav.planification': 'Planning',
+    
+    // Dashboard
+    'dashboard.title': 'Dashboard',
+    'dashboard.totalKahoots': 'Total Kahoots',
+    'dashboard.totalLearners': 'Total Learners',
+    'dashboard.createKahoot': 'Create Kahoot',
+    'dashboard.noKahoots': 'No kahoots created yet',
+    'dashboard.loading': 'Loading...',
+    
+    // Loading messages
+    'loading.data': 'Loading data...',
+    'loading.dataDescription': 'Fetching your Kahoots',
+    'loading.deleting': 'Deleting...',
+    'loading.deletingDescription': 'Deleting {{count}} Kahoot(s)',
+    'loading.statsTitle': 'Loading your statistics...',
+    'loading.statsDescription': 'Preparing your personalized dashboard',
+    
+    // Success messages
+    'success.dataLoaded': 'Data loaded successfully!',
+    'success.dataLoadedDescription': '{{count}} Kahoot(s) found',
+    'success.deleteSuccess': 'Successfully deleted!',
+    'success.deleteSuccessDescription': '{{count}} Kahoot(s) deleted successfully',
+    
+    // Error messages
+    'error.loadingFailed': 'Loading error',
+    'error.loadingFailedDescription': 'Unable to fetch your data. Please try again.',
+    'error.deleteFailed': 'Delete error',
+    'error.deleteFailedDescription': 'An error occurred. Please try again.',
+    
+    // Table headers
+    'table.title': 'Title',
+    'table.questions': 'Questions',
+    'table.sessions': 'Sessions',
+    'table.participants': 'Participants',
+    
+    // Game details
+    'game.questions': 'Questions',
+    'game.planifications': 'Planifications',
+    'game.sessions': 'Sessions',
+    'game.noQuestions': 'No questions have been added to this game yet.',
+    'game.deleteConfirm': 'Are you sure?',
+    'game.deleteConfirmDescription': 'This action is irreversible. It will permanently delete the game and all its associated data.',
+    'game.delete': 'Delete',
+    'game.cancel': 'Cancel',
+    'game.schedule': 'Schedule',
+    
+    // Question details
+    'question.details': 'Question details',
+    'question.id': 'ID',
+    'question.label': 'Label',
+    'question.time': 'Time',
+    'question.chronoActive': 'Timer active',
+    'question.chronoEnabled': 'Timer enabled',
+    'question.chronoDisabled': 'No timer',
+    'question.date': 'Date',
+    'question.type': 'Type',
+    'question.points': 'Points',
+    'question.fileType': 'File type',
+    'question.gameId': 'Game ID',
+    'question.seconds': 'sec',
+    'question.yes': 'Yes',
+    'question.no': 'No',
+    
+    // Delete confirmation
+    'delete.confirm': 'Are you sure?',
+    'delete.confirmDescription': 'This action will permanently delete {{count}} kahoot.',
+    'delete.confirmDescriptionPlural': 'This action will permanently delete {{count}} kahoots.',
+    'delete.deleting': 'Deleting...',
+    'delete.cancel': 'Cancel',
+    'delete.delete': 'Delete',
+    
+    // Planification
+    'planification.scheduleGame': 'Schedule a game session',
+    'planification.schedulingFor': 'You are scheduling a session for:',
+    'planification.accessPin': 'Access PIN',
+    'planification.copyPin': 'Copy PIN',
+    'planification.from': 'From',
+    'planification.to': 'to',
+    'planification.at': 'at',
+    'planification.type': 'Type',
+    'planification.limit': 'Limit',
+    'planification.participants': 'participants',
+    'planification.standard': 'Standard',
+    'planification.noPlans': 'No planifications have been created for this game yet.',
+    'planification.noPlanFilters': 'No planifications match your search.',
+    'planification.searchPlaceholder': 'Search by PIN, status or type...',
+    'planification.status': 'Status',
+    'planification.allStatuses': 'All statuses',
+    'planification.pending': 'Pending',
+    'planification.inProgress': 'In progress',
+    'planification.completed': 'Completed',
+    'planification.allTypes': 'All types',
+    'planification.public': 'Public',
+    'planification.assigned': 'Assigned',
+    
+    // Common
+    'common.home': 'Home',
+    'common.back': 'Back',
+    'common.save': 'Save',
+    'common.edit': 'Edit',
+    'common.create': 'Create',
+    'common.update': 'Update',
+    'common.search': 'Search',
+    'common.filter': 'Filter',
+    'common.all': 'All',
+    'common.none': 'None',
+    'common.or': 'or',
+    'common.and': 'and',
+    'common.with': 'with',
+    'common.without': 'without',
+    'common.total': 'Total',
+    'common.found': 'found',
   },
 };
