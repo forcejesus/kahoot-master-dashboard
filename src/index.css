@@ -23,10 +23,8 @@
   }
 
   body {
-    @apply bg-slate-50 text-neutral-700 antialiased;
+    @apply bg-neutral-50 text-neutral-700 antialiased;
     font-family: 'Inter', system-ui, sans-serif;
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    min-height: 100vh;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -44,15 +42,15 @@
   }
   
   .card-modern {
-    @apply bg-white/90 backdrop-blur-sm rounded-xl shadow-soft hover:shadow-medium transition-all duration-200 border border-neutral-200/50;
+    @apply bg-white rounded-xl shadow-soft hover:shadow-medium transition-all duration-200 border border-neutral-200/50;
   }
   
   .glass-effect {
-    @apply backdrop-blur-sm bg-white/95 border border-white/30;
+    @apply backdrop-blur-sm bg-white/90 border border-white/20;
   }
   
   .input-modern {
-    @apply border-neutral-200 focus:border-primary focus:ring-1 focus:ring-primary/20 transition-colors duration-200 bg-white/90 rounded-lg;
+    @apply border-neutral-200 focus:border-primary focus:ring-1 focus:ring-primary/20 transition-colors duration-200 bg-white rounded-lg;
   }
 }
 
@@ -64,66 +62,3 @@
   0%, 100% { opacity: 0.4; }
   50% { opacity: 1; }
 }
-
-@keyframes bounce-subtle {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-.animate-bounce-subtle {
-  animation: bounce-subtle 3s ease-in-out infinite;
-}
-
-/* Animations inspirées de Kahoot */
-@keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-20px) rotate(5deg); }
-}
-
-@keyframes pulse-color {
-  0%, 100% { 
-    background: linear-gradient(45deg, #8B5CF6, #A855F7);
-  }
-  50% { 
-    background: linear-gradient(45deg, #A855F7, #C084FC);
-  }
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-.animate-pulse-color {
-  animation: pulse-color 3s ease-in-out infinite;
-}
-
-/* Effet de particules flottantes */
-@keyframes particle-float {
-  0% {
-    transform: translateY(100vh) rotate(0deg);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-100vh) rotate(360deg);
-    opacity: 0;
-  }
-}
-
-.particle {
-  animation: particle-float 15s linear infinite;
-}
-
-.particle:nth-child(2) { animation-delay: 2s; }
-.particle:nth-child(3) { animation-delay: 4s; }
-.particle:nth-child(4) { animation-delay: 6s; }
-.particle:nth-child(5) { animation-delay: 8s; }

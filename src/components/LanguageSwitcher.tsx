@@ -36,39 +36,39 @@ export function LanguageSwitcher({
         <Button 
           variant={variant} 
           size={size}
-          className="flex items-center gap-2 hover:bg-white/10 transition-all duration-200 hover:scale-105"
+          className="flex items-center gap-2 hover:bg-white/10 transition-colors"
         >
           <Globe className="h-4 w-4" />
           {showLabel && currentLang && (
             <>
-              <span className="hidden sm:inline text-lg">{currentLang.flag}</span>
-              <span className="hidden md:inline font-medium">{currentLang.name}</span>
+              <span className="hidden sm:inline">{currentLang.flag}</span>
+              <span className="hidden md:inline">{currentLang.name}</span>
             </>
           )}
           {!showLabel && currentLang && (
-            <span className="text-lg">{currentLang.flag}</span>
+            <span>{currentLang.flag}</span>
           )}
-          <ChevronDown className="h-3 w-3 opacity-70 transition-transform duration-200 group-data-[state=open]:rotate-180" />
+          <ChevronDown className="h-3 w-3 opacity-50" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent 
         align="end" 
-        className="w-44 bg-white/98 backdrop-blur-md border border-white/30 shadow-xl rounded-xl overflow-hidden"
+        className="w-40 bg-white/95 backdrop-blur-sm border border-white/20 shadow-xl"
       >
         {languages.map((lang) => (
           <DropdownMenuItem
             key={lang.code}
             onClick={() => setLanguage(lang.code)}
-            className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition-all duration-200 ${
+            className={`flex items-center gap-3 px-3 py-2 cursor-pointer transition-colors ${
               language === lang.code 
-                ? 'bg-primary/10 text-primary font-semibold border-l-4 border-primary' 
-                : 'hover:bg-neutral-50 hover:translate-x-1'
+                ? 'bg-primary/10 text-primary font-medium' 
+                : 'hover:bg-gray-50'
             }`}
           >
-            <span className="text-xl">{lang.flag}</span>
-            <span className="flex-1">{lang.name}</span>
+            <span className="text-lg">{lang.flag}</span>
+            <span>{lang.name}</span>
             {language === lang.code && (
-              <span className="text-primary text-lg">✓</span>
+              <span className="ml-auto text-primary">✓</span>
             )}
           </DropdownMenuItem>
         ))}

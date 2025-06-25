@@ -4,22 +4,23 @@ import { StatCard } from './StatCard';
 import { CreateGameCard } from './CreateGameCard';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTranslation } from '@/contexts/I18nContext';
-import { BookOpen, Users, Calendar, Plus } from 'lucide-react';
+import { BookOpen, Users, Clock } from 'lucide-react';
 
 interface StatsSectionProps {
   onKahootCreated: () => void;
-  kahoots?: any[];
+  kahoots?: any[]; // Ajout pour recevoir les kahoots depuis le parent
 }
 
 export function StatsSection({ onKahootCreated, kahoots = [] }: StatsSectionProps) {
   const { token } = useAuth();
   const { t } = useTranslation();
   const [totalApprenants, setTotalApprenants] = useState(0);
-  const [totalPlanifications, setTotalPlanifications] = useState(0);
+  const [totalSessions, setTotalSessions] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
-  const totalJeux = kahoots.length;
-  const planificationsFromKahoots = kahoots.reduce((total: number, kahoot: any) => 
+  // Calculer les statistiques basées sur les kahoots reçus
+  const totalKahoots = kahoots.length;
+  const sessionsFromKahoots = kahoots.reduce((total: number, kahoot: any) => 
     total + (kahoot.planifications?.length || 0), 0
   );
 
@@ -41,45 +42,38 @@ export function StatsSection({ onKahootCreated, kahoots = [] }: StatsSectionProp
     fetchApprenants();
   }, [token]);
 
+  // Mettre à jour les sessions quand les kahoots changent
   useEffect(() => {
-    setTotalPlanifications(planificationsFromKahoots);
-  }, [planificationsFromKahoots]);
+    setTotalSessions(sessionsFromKahoots);
+  }, [sessionsFromKahoots]);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
       <StatCard 
-        title="Total Jeux" 
-        value={totalJeux} 
+        title={t('dashboard.totalKahoots')} 
+        value={totalKahoots} 
         icon={BookOpen}
         isLoading={false}
         gradient="from-emerald-500 to-teal-600"
       />
       
       <StatCard 
-        title="Total Planifications" 
-        value={totalPlanifications} 
-        icon={Calendar}
-        isLoading={false}
+        title={t('dashboard.totalLearners')} 
+        value={totalApprenants} 
+        icon={Users}
+        isLoading={isLoading}
         gradient="from-blue-500 to-cyan-600"
       />
 
       <StatCard 
-        title="Total Apprenants" 
-        value={totalApprenants} 
-        icon={Users}
-        isLoading={isLoading}
-        gradient="from-purple-500 to-indigo-600"
-      />
-
-      <StatCard 
-        title="Nouveau Jeu" 
-        value="+" 
-        icon={Plus}
+        title={t('dashboard.totalSessions')} 
+        value={totalSessions} 
+        icon={Clock}
         isLoading={false}
         gradient="from-orange-500 to-red-500"
-        isAction={true}
-        onAction={onKahootCreated}
       />
+
+      <CreateGameCard />
     </div>
   );
 }

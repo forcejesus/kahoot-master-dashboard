@@ -8,10 +8,12 @@ import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { 
   LogOut, 
   User, 
+  Settings, 
   Menu, 
   X,
   Sparkles,
-  Home
+  Home,
+  Plus
 } from 'lucide-react';
 
 export function Navbar() {
@@ -31,6 +33,12 @@ export function Navbar() {
       icon: Home,
       path: '/dashboard',
       variant: 'ghost' as const
+    },
+    {
+      label: 'Nouveau Kahoot',
+      icon: Plus,
+      path: '/create-game',
+      variant: 'secondary' as const
     }
   ];
 
@@ -38,16 +46,14 @@ export function Navbar() {
     <nav className="bg-white/95 backdrop-blur-sm border-b border-neutral-200/50 sticky top-0 z-50 shadow-soft">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo amélioré */}
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary-600 rounded-xl flex items-center justify-center shadow-medium transform hover:scale-105 transition-transform duration-200">
-              <Sparkles className="w-7 h-7 text-white" />
+          {/* Logo */}
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-soft">
+              <Sparkles className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-black text-primary tracking-tight bg-gradient-to-r from-primary to-primary-600 bg-clip-text text-transparent">
-                AKILI
-              </h1>
-              <p className="text-xs text-neutral-500 font-medium -mt-1">Plateforme Éducative</p>
+              <h1 className="text-xl font-bold text-neutral-900 tracking-tight">AKILI</h1>
+              <p className="text-xs text-neutral-500 font-medium">Espace Enseignant</p>
             </div>
           </div>
 
@@ -73,25 +79,26 @@ export function Navbar() {
           <div className="hidden md:flex items-center gap-4">
             <LanguageSwitcher variant="ghost" showLabel={false} />
             
-            <div className="flex items-center gap-3 px-3 py-2 bg-neutral-50 rounded-xl border border-neutral-200">
-              <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary-600 rounded-lg flex items-center justify-center">
+            <div className="flex items-center gap-3 px-3 py-2 bg-neutral-100 rounded-lg">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                 <User className="w-4 h-4 text-white" />
               </div>
               <div className="text-sm">
-                <p className="font-semibold text-neutral-900">
+                <p className="font-medium text-neutral-900">
                   {user?.prenom || user?.name || 'Utilisateur'}
                 </p>
-                <p className="text-neutral-500 text-xs">{user?.email}</p>
+                <p className="text-neutral-500">{user?.email}</p>
               </div>
             </div>
 
             <Button
-              variant="destructive"
+              variant="ghost"
+              size="icon"
               onClick={handleLogout}
-              className="gap-2 font-medium bg-red-500 hover:bg-red-600 text-white px-4 py-2 transition-all duration-200 hover:scale-105 shadow-medium"
+              className="text-neutral-600 hover:text-red-600 transition-colors"
+              title={t('nav.logout')}
             >
-              <LogOut className="w-4 h-4" />
-              {t('nav.logout')}
+              <LogOut className="w-5 h-5" />
             </Button>
           </div>
 
@@ -130,7 +137,7 @@ export function Navbar() {
               
               <div className="border-t border-neutral-200 pt-3 mt-3">
                 <div className="flex items-center gap-3 p-3 bg-neutral-50 rounded-lg mb-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-600 rounded-lg flex items-center justify-center">
+                  <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
                     <User className="w-5 h-5 text-white" />
                   </div>
                   <div>
@@ -144,9 +151,9 @@ export function Navbar() {
                 <div className="flex gap-2">
                   <LanguageSwitcher variant="outline" showLabel={true} />
                   <Button
-                    variant="destructive"
+                    variant="outline"
                     onClick={handleLogout}
-                    className="flex-1 gap-2 bg-red-500 hover:bg-red-600 text-white font-medium"
+                    className="flex-1 gap-2 text-red-600 border-red-200 hover:bg-red-50"
                   >
                     <LogOut className="w-4 h-4" />
                     {t('nav.logout')}

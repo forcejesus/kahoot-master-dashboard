@@ -1,3 +1,4 @@
+
 export type Language = 'en' | 'fr';
 
 export type TranslationKey = keyof TranslationKeys;
@@ -50,8 +51,6 @@ export interface TranslationKeys {
   'dashboard.welcomeBack': string;
   'dashboard.user': string;
   'dashboard.welcomeDescription': string;
-  'dashboard.trackProgress': string;
-  'dashboard.engageLearners': string;
   'dashboard.totalKahoots': string;
   'dashboard.totalLearners': string;
   'dashboard.totalSessions': string;

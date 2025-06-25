@@ -7,25 +7,19 @@ import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Eye, EyeOff, Mail, Lock, ArrowRight, Sparkles, Zap, User } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Eye, EyeOff, Mail, Lock, ArrowRight, Sparkles } from 'lucide-react';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { login, isAuthenticated } = useAuth();
+  const { login, isAuthenticated, isLoading } = useAuth();
   const { t } = useTranslation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    try {
-      await login({ email, password });
-    } finally {
-      setIsSubmitting(false);
-    }
+    await login({ email, password });
   };
 
   if (isAuthenticated) {
@@ -33,28 +27,12 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
-      {/* Animated background with Kahoot-inspired colors */}
-      <div className="absolute inset-0 bg-gradient-to-br from-orange-900 via-orange-700 to-red-900">
-        {/* Animated geometric patterns */}
-        <div className="absolute inset-0">
-          {/* Large animated circles */}
-          <div className="absolute -top-20 -left-20 w-80 h-80 bg-gradient-to-r from-orange-500/20 to-red-500/20 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-gradient-to-r from-red-500/20 to-orange-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-          
-          {/* Floating geometric shapes */}
-          <div className="absolute top-1/4 left-1/4 w-4 h-4 bg-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '0.5s' }}></div>
-          <div className="absolute top-3/4 right-1/4 w-6 h-6 bg-pink-400 rotate-45 animate-bounce" style={{ animationDelay: '1.5s' }}></div>
-          <div className="absolute top-1/2 left-1/6 w-3 h-3 bg-green-400 rounded-full animate-bounce" style={{ animationDelay: '2s' }}></div>
-          <div className="absolute bottom-1/4 left-3/4 w-5 h-5 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '2.5s' }}></div>
-          
-          {/* Animated lines */}
-          <div className="absolute top-0 left-1/2 w-px h-full bg-gradient-to-b from-transparent via-orange-300/30 to-transparent animate-pulse"></div>
-          <div className="absolute left-0 top-1/2 w-full h-px bg-gradient-to-r from-transparent via-orange-300/30 to-transparent animate-pulse" style={{ animationDelay: '1s' }}></div>
-        </div>
-        
-        {/* Overlay with pattern */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(249,115,22,0.1)_0%,transparent_50%)] animate-pulse" style={{ animationDelay: '3s' }}></div>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-neutral-50 via-primary-50/30 to-secondary-50/30 relative overflow-hidden">
+      {/* Background decorations */}
+      <div className="absolute inset-0">
+        <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-primary/10 rounded-full blur-2xl animate-bounce-subtle"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-secondary/10 rounded-full blur-3xl animate-bounce-subtle" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-3/4 left-1/2 w-24 h-24 bg-primary/5 rounded-full blur-xl animate-bounce-subtle" style={{ animationDelay: '4s' }}></div>
       </div>
 
       {/* Language switcher */}
@@ -63,46 +41,38 @@ export default function Login() {
       </div>
 
       <div className="w-full max-w-md mx-4 relative z-10 animate-fade-in">
-        <Card className="backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl overflow-hidden">
-          <CardHeader className="text-center space-y-6 pb-8 bg-gradient-to-r from-orange-500/10 to-red-500/10">
+        <Card className="card-modern glass-effect overflow-hidden">
+          <CardHeader className="text-center space-y-6 pb-8 bg-gradient-to-r from-primary/5 to-secondary/5">
             <div className="space-y-4">
               <div className="flex justify-center">
-                <div className="w-20 h-20 bg-gradient-to-r from-orange-600 to-orange-500 rounded-3xl flex items-center justify-center shadow-2xl animate-bounce-subtle">
-                  <div className="relative">
-                    <Sparkles className="w-10 h-10 text-white animate-pulse" />
-                    <Zap className="w-4 h-4 text-yellow-300 absolute -top-1 -right-1 animate-ping" />
-                  </div>
+                <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center shadow-medium">
+                  <Sparkles className="w-8 h-8 text-white" />
                 </div>
               </div>
               
-              <div className="space-y-3">
-                <CardTitle className="text-5xl font-bold text-white tracking-tight">
-                  <span className="bg-gradient-to-r from-orange-200 via-white to-orange-200 bg-clip-text text-transparent animate-pulse">
-                    AKILI
-                  </span>
+              <div className="space-y-2">
+                <CardTitle className="text-4xl font-bold text-neutral-900 tracking-tight">
+                  AKILI
                 </CardTitle>
-                <div className="inline-block px-6 py-2 bg-gradient-to-r from-orange-500/20 to-red-500/20 text-orange-100 text-sm font-medium rounded-full border border-orange-300/30 backdrop-blur-sm">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                    Espace Enseignant
-                  </div>
+                <div className="inline-block px-4 py-1.5 bg-primary/10 text-primary-600 text-sm font-medium rounded-full border border-primary/20">
+                  Espace Enseignant
                 </div>
-                <div className="text-orange-100 text-base mt-4">
+                <CardDescription className="text-neutral-600 text-base mt-3">
                   {t('auth.subtitle')}
-                </div>
+                </CardDescription>
               </div>
             </div>
           </CardHeader>
 
-          <CardContent className="p-8 space-y-6 bg-white/5 backdrop-blur-sm">
+          <CardContent className="p-8 space-y-6">
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-5">
-                <div className="space-y-3">
-                  <Label htmlFor="email" className="text-orange-100 font-medium text-base">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-neutral-700 font-medium">
                     {t('auth.email')}
                   </Label>
-                  <div className="relative group">
-                    <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-orange-300 w-5 h-5 group-focus-within:text-orange-200 transition-colors" />
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 w-5 h-5" />
                     <Input
                       id="email"
                       type="email"
@@ -110,18 +80,18 @@ export default function Login() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
-                      className="pl-12 h-14 bg-white/10 border-white/20 text-white placeholder:text-orange-200 focus:border-orange-400 focus:ring-orange-400/30 backdrop-blur-sm transition-all duration-300 hover:bg-white/15"
-                      disabled={isSubmitting}
+                      className="pl-11 input-modern h-12"
+                      disabled={isLoading}
                     />
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  <Label htmlFor="password" className="text-orange-100 font-medium text-base">
+                <div className="space-y-2">
+                  <Label htmlFor="password" className="text-neutral-700 font-medium">
                     {t('auth.password')}
                   </Label>
-                  <div className="relative group">
-                    <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-orange-300 w-5 h-5 group-focus-within:text-orange-200 transition-colors" />
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 w-5 h-5" />
                     <Input
                       id="password"
                       type={showPassword ? "text" : "password"}
@@ -129,14 +99,14 @@ export default function Login() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
-                      className="pl-12 pr-12 h-14 bg-white/10 border-white/20 text-white placeholder:text-orange-200 focus:border-orange-400 focus:ring-orange-400/30 backdrop-blur-sm transition-all duration-300 hover:bg-white/15"
-                      disabled={isSubmitting}
+                      className="pl-11 pr-11 input-modern h-12"
+                      disabled={isLoading}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-4 top-1/2 transform -translate-y-1/2 text-orange-300 hover:text-orange-200 transition-colors"
-                      disabled={isSubmitting}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-neutral-600 transition-colors"
+                      disabled={isLoading}
                     >
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
@@ -146,30 +116,27 @@ export default function Login() {
 
               <Button 
                 type="submit" 
-                className="w-full h-14 text-base font-semibold bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 border-0 shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
-                disabled={isSubmitting}
+                className="w-full btn-primary h-12 text-base"
+                disabled={isLoading}
               >
-                {isSubmitting ? (
+                {isLoading ? (
                   <div className="flex items-center gap-3">
-                    <div className="relative">
-                      <User className="w-5 h-5 text-white animate-pulse" />
-                      <div className="absolute inset-0 w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    </div>
-                    <span className="text-white">Authentification...</span>
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    {t('auth.loggingIn')}
                   </div>
                 ) : (
                   <div className="flex items-center gap-3">
-                    <span className="text-white">{t('auth.signIn')}</span>
-                    <ArrowRight className="w-5 h-5 text-white group-hover:translate-x-1 transition-transform" />
+                    {t('auth.signIn')}
+                    <ArrowRight className="w-5 h-5" />
                   </div>
                 )}
               </Button>
             </form>
 
-            <div className="text-center pt-6 border-t border-white/20">
+            <div className="text-center pt-4 border-t border-neutral-200">
               <Link 
                 to="/forgot-password" 
-                className="text-orange-200 hover:text-white transition-colors text-sm font-medium underline decoration-orange-300/50 hover:decoration-white/70 underline-offset-4"
+                className="text-neutral-500 hover:text-primary transition-colors text-sm font-medium"
               >
                 {t('auth.forgotPassword')}
               </Link>
@@ -177,13 +144,10 @@ export default function Login() {
           </CardContent>
         </Card>
 
-        <div className="text-center mt-8">
-          <div className="text-orange-200 text-sm bg-black/20 backdrop-blur-sm px-4 py-2 rounded-full border border-orange-300/20">
-            <div className="flex items-center justify-center gap-2">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              {t('auth.secureEducator')}
-            </div>
-          </div>
+        <div className="text-center mt-6">
+          <p className="text-neutral-400 text-sm">
+            {t('auth.secureEducator')}
+          </p>
         </div>
       </div>
     </div>

@@ -8,7 +8,6 @@ import { ScheduleFormProvider, useScheduleForm } from "./ScheduleFormContext";
 import { ScheduleFormInputs } from "./ScheduleFormInputs";
 import { ScheduleSubmitButton } from "./ScheduleSubmitButton";
 import { ScheduleSuccess } from "./ScheduleSuccess";
-import { buildApiUrl } from "@/config/hosts";
 
 function ScheduleFormContent() {
   const { id } = useParams<{ id: string }>();
@@ -26,7 +25,7 @@ function ScheduleFormContent() {
     setIsSubmitting(true);
     
     try {
-      const response = await fetch(buildApiUrl("/planification"), {
+      const response = await fetch("http://kahoot.nos-apps.com/api/planification", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
