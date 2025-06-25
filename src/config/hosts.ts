@@ -65,12 +65,14 @@ export const buildApiUrl = (endpoint: string): string => {
  * Fonction pour obtenir l'environnement actuel
  * @returns L'environnement actuel et ses informations
  */
-export const getCurrentEnvironment = () => ({
-  environment: CURRENT_ENVIRONMENT,
-  config: currentHost,
-  isLocalhost: CURRENT_ENVIRONMENT === 'localhost',
-  isProduction: CURRENT_ENVIRONMENT === 'production'
-});
+export const getCurrentEnvironment = () => {
+  return {
+    environment: CURRENT_ENVIRONMENT,
+    config: currentHost,
+    isLocalhost: CURRENT_ENVIRONMENT === 'localhost' as HostEnvironment,
+    isProduction: CURRENT_ENVIRONMENT === 'production' as HostEnvironment
+  };
+};
 
 /**
  * Logger pour afficher la configuration actuelle (en développement)
