@@ -9,6 +9,7 @@ import { KahootList } from '@/components/dashboard/KahootList';
 import { toast } from 'sonner';
 import { Kahoot } from '@/types/game-details';
 import { Users, GraduationCap, Gamepad, Calendar } from 'lucide-react';
+import { buildApiUrl } from '@/config/hosts';
 
 interface StatsData {
   total_apprenants: number;
@@ -31,12 +32,13 @@ export default function Dashboard() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch('http://kahoot.nos-apps.com/api/jeux', {
+      const response = await fetch(buildApiUrl('/api/jeux'), {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();
       setKahoots(data.data);
     } catch (error) {
+      console.error('Error fetching kahoots:', error);
       toast.error("Erreur lors du chargement des données");
     } finally {
       setIsLoading(false);
@@ -46,13 +48,13 @@ export default function Dashboard() {
   const fetchStats = async () => {
     try {
       // Fetch kahoots count
-      const kahootsResponse = await fetch('http://kahoot.nos-apps.com/api/jeux', {
+      const kahootsResponse = await fetch(buildApiUrl('/api/jeux'), {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const kahootsData = await kahootsResponse.json();
 
       // Fetch apprenants count
-      const apprenantsResponse = await fetch('http://kahoot.nos-apps.com/api/apprenant', {
+      const apprenantsResponse = await fetch(buildApiUrl('/api/apprenant'), {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const apprenantsData = await apprenantsResponse.json();
@@ -78,7 +80,7 @@ export default function Dashboard() {
   const handleDeleteKahoots = async (kahootIds: string[]) => {
     try {
       for (const id of kahootIds) {
-        await fetch(`http://kahoot.nos-apps.com/api/jeux/delete/${id}`, {
+        await fetch(buildApiUrl(`/api/jeux/delete/${id}`), {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${token}`
@@ -89,6 +91,7 @@ export default function Dashboard() {
       fetchData();
       fetchStats();
     } catch (error) {
+      console.error('Error deleting kahoots:', error);
       toast.error("Erreur lors de la suppression");
       throw error;
     }

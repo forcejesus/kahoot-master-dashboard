@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { StatCard } from './StatCard';
 import { CreateKahootDialog } from '@/components/CreateKahootDialog';
 import { useAuth } from '@/contexts/AuthContext';
+import { buildApiUrl } from '@/config/hosts';
 
 interface StatsSectionProps {
   onKahootCreated: () => void;
@@ -16,13 +17,13 @@ export function StatsSection({ onKahootCreated }: StatsSectionProps) {
 
   const fetchStats = async () => {
     try {
-      const kahootsResponse = await fetch('http://kahoot.nos-apps.com/api/jeux', {
+      const kahootsResponse = await fetch(buildApiUrl('/api/jeux'), {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const kahootsData = await kahootsResponse.json();
       setKahoots(kahootsData.data);
 
-      const apprenantResponse = await fetch('http://kahoot.nos-apps.com/api/apprenant', {
+      const apprenantResponse = await fetch(buildApiUrl('/api/apprenant'), {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const apprenantData = await apprenantResponse.json();
