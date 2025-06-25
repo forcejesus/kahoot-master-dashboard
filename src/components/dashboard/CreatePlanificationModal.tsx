@@ -13,7 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Calendar, Loader2 } from "lucide-react";
+import { Calendar, Loader2, Clock } from "lucide-react";
 import { buildApiUrl } from "@/config/api";
 import { Kahoot } from "@/types/game-details";
 import { format } from "date-fns";
@@ -26,7 +26,7 @@ interface CreatePlanificationModalProps {
 export function CreatePlanificationModal({ kahoots, onSuccess }: CreatePlanificationModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedGame, setSelectedGame] = useState("");
+  const [selectedGame, setSelectedGame] = useState(kahoots.length === 1 ? kahoots[0]._id : "");
   const [dateDebut, setDateDebut] = useState(format(new Date(), "yyyy-MM-dd"));
   const [dateFin, setDateFin] = useState(format(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), "yyyy-MM-dd"));
   const [heureDebut, setHeureDebut] = useState("08:00");
@@ -34,8 +34,15 @@ export function CreatePlanificationModal({ kahoots, onSuccess }: CreatePlanifica
   const [limiteParticipant, setLimiteParticipant] = useState("10");
   const { token } = useAuth();
 
+  // Reset selected game when kahoots change
+  useState(() => {
+    if (kahoots.length === 1) {
+      setSelectedGame(kahoots[0]._id);
+    }
+  });
+
   const resetForm = () => {
-    setSelectedGame("");
+    setSelectedGame(kahoots.length === 1 ? kahoots[0]._id : "");
     setDateDebut(format(new Date(), "yyyy-MM-dd"));
     setDateFin(format(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), "yyyy-MM-dd"));
     setHeureDebut("08:00");
@@ -99,39 +106,55 @@ export function CreatePlanificationModal({ kahoots, onSuccess }: CreatePlanifica
     }
   };
 
+  // Determine trigger button style based on context
+  const isGameDetail = kahoots.length === 1;
+  const triggerButton = isGameDetail ? (
+    <Button
+      variant="outline"
+      className="bg-white/10 hover:bg-white hover:text-primary transition-all duration-200 text-white border-white/20"
+    >
+      <Clock className="mr-2 h-4 w-4" />
+      Planifier une session
+    </Button>
+  ) : (
+    <Button 
+      size="lg"
+      className="w-full h-20 bg-gradient-to-r from-violet-500 to-violet-600 hover:from-violet-600 hover:to-violet-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
+    >
+      <Calendar className="mr-2 h-6 w-6" />
+      Créer une planification
+    </Button>
+  );
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button 
-          size="lg"
-          className="w-full h-20 bg-gradient-to-r from-violet-500 to-violet-600 hover:from-violet-600 hover:to-violet-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
-        >
-          <Calendar className="mr-2 h-6 w-6" />
-          Créer une planification
-        </Button>
+        {triggerButton}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px] bg-gradient-to-br from-orange-50 via-white to-orange-100 border-orange-200">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent">
-            Créer une planification
+            {isGameDetail ? `Planifier une session pour ${kahoots[0].titre}` : "Créer une planification"}
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6 pt-4">
-          <div className="space-y-2">
-            <Label htmlFor="game" className="text-gray-700 font-medium">Sélectionner un jeu</Label>
-            <Select value={selectedGame} onValueChange={setSelectedGame} disabled={isLoading}>
-              <SelectTrigger className="border-orange-200 focus:border-orange-400 focus:ring-orange-200">
-                <SelectValue placeholder="Choisir un jeu" />
-              </SelectTrigger>
-              <SelectContent>
-                {kahoots.map((kahoot) => (
-                  <SelectItem key={kahoot._id} value={kahoot._id}>
-                    {kahoot.titre}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          {!isGameDetail && (
+            <div className="space-y-2">
+              <Label htmlFor="game" className="text-gray-700 font-medium">Sélectionner un jeu</Label>
+              <Select value={selectedGame} onValueChange={setSelectedGame} disabled={isLoading}>
+                <SelectTrigger className="border-orange-200 focus:border-orange-400 focus:ring-orange-200">
+                  <SelectValue placeholder="Choisir un jeu" />
+                </SelectTrigger>
+                <SelectContent>
+                  {kahoots.map((kahoot) => (
+                    <SelectItem key={kahoot._id} value={kahoot._id}>
+                      {kahoot.titre}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">

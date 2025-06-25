@@ -3,7 +3,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Button } from '@/components/ui/button';
 import { Trash2 } from 'lucide-react';
 import { Kahoot } from '@/types/game-details';
-import { ScheduleDialog } from '../schedule/ScheduleDialog';
+import { CreatePlanificationModal } from '@/components/dashboard/CreatePlanificationModal';
 
 interface GameHeaderProps {
   jeu: Kahoot;
@@ -21,11 +21,12 @@ export function GameHeader({ jeu, token, onDelete, onRefresh }: GameHeaderProps)
         </h1>
       </div>
       <div className="flex space-x-4">
-        <ScheduleDialog 
-          gameId={jeu._id} 
-          jeu={jeu} 
-          onSuccess={onRefresh} 
-        />
+        <div className="bg-white/10 backdrop-blur-sm rounded-md">
+          <CreatePlanificationModal 
+            kahoots={[jeu]} 
+            onSuccess={onRefresh}
+          />
+        </div>
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button 
