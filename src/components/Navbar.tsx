@@ -6,7 +6,7 @@ import { LanguageSwitcher } from './LanguageSwitcher';
 import { Button } from './ui/button';
 import { Avatar, AvatarFallback } from './ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
-import { LogOut, Settings } from 'lucide-react';
+import { LogOut, Settings, User } from 'lucide-react';
 
 export function Navbar() {
   const { user, logout } = useAuth();
@@ -57,6 +57,10 @@ export function Navbar() {
                   <p className="text-sm font-medium leading-none">{user?.prenom} {user?.nom}</p>
                   <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
                 </div>
+                <DropdownMenuItem>
+                  <User className="mr-2 h-4 w-4" />
+                  <span>{t('nav.profile')}</span>
+                </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Settings className="mr-2 h-4 w-4" />
                   <span>{t('nav.settings')}</span>
