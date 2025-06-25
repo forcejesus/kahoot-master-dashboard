@@ -12,9 +12,10 @@ export type HostEnvironment = 'localhost' | 'production';
 
 /**
  * Variable pour changer l'environnement actuel
+ * CONFIGURATION PAR DÉFAUT : LOCALHOST
  * Modifier cette valeur pour basculer entre les environnements
  */
-const CURRENT_ENVIRONMENT: HostEnvironment = 'localhost'; // Changer ici pour basculer
+const CURRENT_ENVIRONMENT: HostEnvironment = 'localhost'; // Par défaut en localhost
 
 /**
  * Configuration des hôtes pour chaque environnement
@@ -45,9 +46,18 @@ export const API_ENDPOINTS = {
   login: `${currentHost.api}/login`,
   logout: `${currentHost.api}/logout`,
   
+  // Jeux et Kahoot
+  games: `${currentHost.api}/jeux`,
+  
+  // Questions et réponses
+  questions: `${currentHost.api}/questions`,
+  responses: `${currentHost.api}/reponse`,
+  
+  // Planification
+  planification: `${currentHost.api}/planification`,
+  
   // Autres endpoints à ajouter selon les besoins
   // users: `${currentHost.api}/users`,
-  // games: `${currentHost.api}/games`,
 } as const;
 
 /**
@@ -58,7 +68,14 @@ export const API_ENDPOINTS = {
 export const buildApiUrl = (endpoint: string): string => {
   // Enlever le slash initial si présent
   const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint;
-  return `${currentHost.api}/${cleanEndpoint}`;
+  const fullUrl = `${currentHost.api}/${cleanEndpoint}`;
+  
+  // Logger l'URL construite pour debug
+  if (CURRENT_ENVIRONMENT === 'localhost') {
+    console.log(`🔗 API Call: ${fullUrl}`);
+  }
+  
+  return fullUrl;
 };
 
 /**
@@ -69,8 +86,8 @@ export const getCurrentEnvironment = () => {
   return {
     environment: CURRENT_ENVIRONMENT,
     config: currentHost,
-    isLocalhost: CURRENT_ENVIRONMENT === 'localhost' as HostEnvironment,
-    isProduction: CURRENT_ENVIRONMENT === 'production' as HostEnvironment
+    isLocalhost: CURRENT_ENVIRONMENT === ('localhost' as HostEnvironment),
+    isProduction: CURRENT_ENVIRONMENT === ('production' as HostEnvironment)
   };
 };
 
@@ -78,11 +95,12 @@ export const getCurrentEnvironment = () => {
  * Logger pour afficher la configuration actuelle (en développement)
  */
 if (CURRENT_ENVIRONMENT === 'localhost') {
-  console.log('🌐 Configuration des hôtes:', {
+  console.log('🌐 Configuration des hôtes (PAR DÉFAUT LOCALHOST):', {
     environnement: CURRENT_ENVIRONMENT,
     nom: currentHost.name,
     api: currentHost.api,
-    app: currentHost.app
+    app: currentHost.app,
+    note: '✅ Configuration par défaut en localhost'
   });
 }
 

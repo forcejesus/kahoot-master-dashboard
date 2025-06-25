@@ -3,29 +3,30 @@
 // CONFIGURATION API
 // ================================
 
-import { env } from '@/config/environment';
+import { currentHost, CURRENT_ENVIRONMENT } from '@/config/hosts';
 
 export interface ApiConfig {
   baseUrl: string;
   debug: boolean;
-  environment: 'development' | 'production';
+  environment: 'localhost' | 'production';
   timeout: number;
 }
 
-// Configuration basée sur l'environnement détecté
+// Configuration basée sur notre système de hosts centralisé
 export const apiConfig: ApiConfig = {
-  baseUrl: env.api.baseUrl,
-  debug: env.app.debug,
-  environment: env.name,
-  timeout: env.api.timeout,
+  baseUrl: currentHost.api,
+  debug: CURRENT_ENVIRONMENT === 'localhost', // Debug activé seulement en localhost
+  environment: CURRENT_ENVIRONMENT,
+  timeout: CURRENT_ENVIRONMENT === 'localhost' ? 10000 : 15000, // Timeout plus long en production
 };
 
 // Logger la configuration si debug activé
 if (apiConfig.debug) {
-  console.log('🔧 Configuration API:', {
+  console.log('🔧 Configuration API (utilise hosts.ts):', {
     environment: apiConfig.environment,
     baseUrl: apiConfig.baseUrl,
     debug: apiConfig.debug,
     timeout: apiConfig.timeout,
+    note: '✅ Configuration synchronisée avec hosts.ts'
   });
 }

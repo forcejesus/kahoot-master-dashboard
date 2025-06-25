@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -10,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Loader2, Sparkles, GamepadIcon } from "lucide-react";
 import { ImageUpload } from "./ImageUpload";
+import { buildApiUrl } from "@/config/hosts";
 
 export function CreateGameForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -35,7 +35,7 @@ export function CreateGameForm() {
         formData.append("image", image);
       }
 
-      const response = await fetch("http://kahoot.nos-apps.com/api/jeux", {
+      const response = await fetch(buildApiUrl("/jeux"), {
         method: "POST",
         headers: {
           'Authorization': `Bearer ${token}`

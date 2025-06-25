@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTranslation } from "@/contexts/I18nContext";
@@ -16,6 +15,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { Plus, ImageIcon, Loader2, ArrowLeft } from "lucide-react";
+import { buildApiUrl } from "@/config/hosts";
 
 interface CreateKahootDialogProps {
   onSuccess?: () => void;
@@ -56,7 +56,7 @@ export function CreateKahootDialog({ onSuccess }: CreateKahootDialogProps) {
         formData.append("image", image);
       }
 
-      const response = await fetch("http://kahoot.nos-apps.com/api/jeux", {
+      const response = await fetch(buildApiUrl("/jeux"), {
         method: "POST",
         headers: {
           'Authorization': `Bearer ${token}`
