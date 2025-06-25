@@ -1,10 +1,9 @@
 
 import { Button } from "@/components/ui/button";
-import { Copy, ExternalLink, Calendar, Users, Clock, Trophy } from "lucide-react";
+import { Copy, ExternalLink } from "lucide-react";
 import { Planification } from "@/types/game-details";
 import { useTranslation } from "@/contexts/I18nContext";
 import { useApiTranslation } from "@/hooks/useApiTranslation";
-import { Badge } from "@/components/ui/badge";
 
 interface PlanificationCardProps {
   planification: Planification;
@@ -16,104 +15,63 @@ export function PlanificationCard({ planification, onCopyPin, onViewPlanificatio
   const { t } = useTranslation();
   const { translateField } = useApiTranslation();
 
-  const isActive = new Date(planification.date_fin) > new Date();
-
   return (
-    <div className={`bg-gradient-to-br ${isActive ? 'from-green-50 via-white to-green-50/30 border-green-200 shadow-green-100' : 'from-gray-50 via-white to-gray-50/30 border-gray-200'} rounded-xl shadow-lg p-6 border-2 transition-all duration-200 hover:shadow-xl hover:scale-[1.02]`}>
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-        {/* Section principale */}
-        <div className="flex-1 space-y-4">
-          {/* PIN en évidence */}
-          <div className="flex items-center gap-3 p-3 bg-white rounded-lg shadow-sm border">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <Clock className="h-5 w-5 text-blue-600" />
-            </div>
-            <div className="flex-1">
-              <span className="text-sm font-medium text-gray-600">{t('planification.accessPin')}:</span>
-              <div className="flex items-center gap-2 mt-1">
-                <code className="bg-blue-50 text-blue-800 px-3 py-1 rounded-md font-bold text-lg border border-blue-200">
-                  {planification.pin}
-                </code>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => onCopyPin(planification.pin)}
-                  className="h-8 w-8 p-0 hover:bg-blue-100"
-                >
-                  <Copy className="h-4 w-4 text-blue-600" />
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          {/* Informations de la planification */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-            <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-gray-500" />
-              <span className="font-medium">{t('planification.from')}:</span> 
-              <span>{new Date(planification.date_debut || planification.date_fin).toLocaleDateString()} {planification.heure_debut || ""}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-gray-500" />
-              <span className="font-medium">{t('planification.to')}:</span> 
-              <span>{new Date(planification.date_fin).toLocaleDateString()} {planification.heure_fin || ""}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Badge variant="outline" className="text-xs">
-                {translateField(planification, 'type') || planification.type || t('planification.standard')}
-              </Badge>
-            </div>
-            <div className="flex items-center gap-2">
-              <Users className="h-4 w-4 text-gray-500" />
-              <span className="font-medium">{t('planification.participants')}:</span> 
-              <span className="font-semibold">{planification.participants?.length || 0}</span>
-              {planification.limite_participation && (
-                <span className="text-gray-500">/ {planification.limite_participation}</span>
-              )}
-            </div>
-          </div>
-
-          {/* Statut */}
+    <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <Badge 
-              variant={isActive ? "default" : "secondary"}
-              className={isActive ? "bg-green-100 text-green-800 border-green-300" : ""}
+            <span className="font-semibold">{t('planification.accessPin')}:</span>
+            <code className="bg-gray-100 px-2 py-1 rounded">{planification.pin}</code>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onCopyPin(planification.pin)}
+              className="h-8 w-8 p-0"
             >
-              {isActive 
-                ? `${t('planification.activeUntil')} ${new Date(planification.date_fin).toLocaleDateString()} ${planification.heure_fin}`
-                : `${t('planification.sessionEnded')} ${new Date(planification.date_fin).toLocaleDateString()} ${planification.heure_fin}`
-              }
-            </Badge>
+              <span className="sr-only">{t('planification.copyPin')}</span>
+              <Copy className="h-4 w-4" />
+            </Button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 text-sm">
+            <div><span className="font-medium">{t('planification.from')}:</span> {new Date(planification.date_debut || planification.date_fin).toLocaleDateString()} {planification.heure_debut || ""}</div>
+            <div><span className="font-medium">{t('planification.to')}:</span> {new Date(planification.date_fin).toLocaleDateString()} {planification.heure_fin || ""}</div>
+            <div><span className="font-medium">{t('planification.type')}:</span> {translateField(planification, 'type') || planification.type || t('planification.standard')}</div>
+            <div><span className="font-medium">{t('planification.status')}:</span> {translateField(planification, 'statut') || planification.statut || t('planification.pending')}</div>
+            <div><span className="font-medium">{t('planification.limit')}:</span> {planification.limite_participation || "∞"} {t('planification.participants')}</div>
+            <div><span className="font-medium">{t('planification.participants')}:</span> {planification.participants?.length || 0}</div>
           </div>
         </div>
         
-        {/* Section meilleur score et actions */}
-        <div className="flex flex-col items-center gap-4 min-w-[200px]">
-          {planification.meilleur_score && (
-            <div className="bg-gradient-to-br from-yellow-50 via-yellow-100 to-orange-50 border-2 border-yellow-200 rounded-xl p-4 text-center w-full shadow-md">
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <Trophy className="h-5 w-5 text-yellow-600" />
-                <div className="text-xs text-yellow-700 uppercase font-bold">{t('planification.bestScore')}</div>
-              </div>
-              <div className="font-bold text-lg text-yellow-800 mb-1">
-                {translateField(planification.meilleur_score, 'apprenant') || planification.meilleur_score.apprenant}
-              </div>
-              <div className="text-yellow-700 font-semibold text-lg">
-                {planification.meilleur_score.score} {t('question.points').toLowerCase()}
-              </div>
-            </div>
+        {planification.meilleur_score && (
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-center min-w-[200px]">
+            <div className="text-xs text-yellow-600 uppercase font-semibold">{t('planification.bestScore') || "Best Score"}</div>
+            <div className="font-bold text-lg">{translateField(planification.meilleur_score, 'apprenant') || planification.meilleur_score.apprenant}</div>
+            <div className="text-yellow-600 font-medium">{planification.meilleur_score.score} {t('question.points').toLowerCase()}</div>
+          </div>
+        )}
+      </div>
+      
+      <div className="mt-3 flex justify-between items-center">
+        <div className="text-xs text-gray-500">
+          {new Date(planification.date_fin) > new Date() ? (
+            <span className="text-green-600 font-medium">
+              {t('planification.activeUntil') || "Active session until"} {new Date(planification.date_fin).toLocaleDateString()} {planification.heure_fin}
+            </span>
+          ) : (
+            <span>
+              {t('planification.sessionEnded') || "Session ended on"} {new Date(planification.date_fin).toLocaleDateString()} {planification.heure_fin}
+            </span>
           )}
-          
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="w-full text-sm font-medium hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-all" 
-            onClick={() => onViewPlanification(planification._id)}
-          >
-            <ExternalLink className="mr-2 h-4 w-4" />
-            {t('planification.viewPlanification')}
-          </Button>
         </div>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="text-xs" 
+          onClick={() => onViewPlanification(planification._id)}
+        >
+          <ExternalLink className="mr-1 h-3 w-3" />
+          {t('planification.viewPlanification') || "View planification"}
+        </Button>
       </div>
     </div>
   );

@@ -1,96 +1,89 @@
 
 import { StatisticsData } from "@/types/planification-details";
-import { Trophy, TrendingDown, Users, Medal, Crown, Target } from "lucide-react";
-import { useTranslation } from "@/contexts/I18nContext";
-import { useApiTranslation } from "@/hooks/useApiTranslation";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Trophy, TrendingDown, Users } from "lucide-react";
 
 interface PlanificationStatsProps {
   stats: StatisticsData;
 }
 
 export function PlanificationStats({ stats }: PlanificationStatsProps) {
-  const { t } = useTranslation();
-  const { translateField } = useApiTranslation();
-
-  if (stats.totalParticipants === 0) {
-    return (
-      <div className="text-center py-8">
-        <div className="bg-white/5 rounded-2xl p-8 border border-white/10">
-          <Target className="h-16 w-16 text-white/40 mx-auto mb-4" />
-          <p className="text-white/60 text-lg">Aucune statistique disponible</p>
-          <p className="text-white/40 text-sm mt-2">Les statistiques apparaîtront une fois que des participants auront rejoint la session</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      {/* Total Participants */}
-      <div className="bg-gradient-to-br from-blue-500/20 to-indigo-500/20 rounded-2xl p-6 border border-blue-300/20 shadow-lg hover:shadow-xl transition-all duration-300">
-        <div className="flex items-center gap-4 mb-4">
-          <div className="p-3 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl shadow-lg">
-            <Users className="h-6 w-6 text-white" />
-          </div>
-          <div>
-            <h3 className="text-white/80 text-sm font-semibold uppercase tracking-wide">Total Participants</h3>
-          </div>
-        </div>
-        <div className="text-4xl font-black text-white mb-2">
-          {stats.totalParticipants}
-        </div>
-        <p className="text-blue-200 text-sm">
-          {stats.totalParticipants === 1 ? 'Participant actif' : 'Participants actifs'}
-        </p>
-      </div>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* Meilleur Score */}
+      <Card className="border-2 border-yellow-200 bg-gradient-to-br from-yellow-50 to-yellow-100/30">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg flex items-center text-yellow-700">
+            <Trophy className="h-5 w-5 mr-2 text-yellow-500" />
+            Meilleur Score
+          </CardTitle>
+          <CardDescription>Participant avec le score le plus élevé</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {stats.bestScore ? (
+            <div className="space-y-2">
+              <div className="text-xl font-bold">{stats.bestScore.participant.score} points</div>
+              <div className="space-y-1 text-sm">
+                <div><span className="font-medium">Nom:</span> {stats.bestScore.participant.apprenant.prenom} {stats.bestScore.participant.apprenant.nom}</div>
+                <div><span className="font-medium">Matricule:</span> {stats.bestScore.participant.apprenant.matricule}</div>
+                <div><span className="font-medium">Téléphone:</span> {stats.bestScore.participant.apprenant.phone}</div>
+              </div>
+            </div>
+          ) : (
+            <div className="text-sm text-gray-500 italic">Aucun participant</div>
+          )}
+        </CardContent>
+      </Card>
 
-      {/* Best Score */}
-      {stats.bestScore && (
-        <div className="bg-gradient-to-br from-yellow-500/20 to-orange-500/20 rounded-2xl p-6 border border-yellow-300/20 shadow-lg hover:shadow-xl transition-all duration-300">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="p-3 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-xl shadow-lg">
-              <Crown className="h-6 w-6 text-white" />
+      {/* Score le plus faible */}
+      <Card className="border-2 border-gray-200 bg-gradient-to-br from-gray-50 to-gray-100/30">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg flex items-center text-gray-700">
+            <TrendingDown className="h-5 w-5 mr-2 text-gray-500" />
+            Score le plus faible
+          </CardTitle>
+          <CardDescription>Participant avec le score le plus bas</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {stats.worstScore ? (
+            <div className="space-y-2">
+              <div className="text-xl font-bold">{stats.worstScore.participant.score} points</div>
+              <div className="space-y-1 text-sm">
+                <div><span className="font-medium">Nom:</span> {stats.worstScore.participant.apprenant.prenom} {stats.worstScore.participant.apprenant.nom}</div>
+                <div><span className="font-medium">Matricule:</span> {stats.worstScore.participant.apprenant.matricule}</div>
+                <div><span className="font-medium">Téléphone:</span> {stats.worstScore.participant.apprenant.phone}</div>
+              </div>
             </div>
-            <div>
-              <h3 className="text-white/80 text-sm font-semibold uppercase tracking-wide">Meilleur Score</h3>
+          ) : (
+            <div className="text-sm text-gray-500 italic">
+              {stats.totalParticipants > 0 
+                ? "Score unique ou identique au meilleur score" 
+                : "Aucun participant"}
             </div>
-          </div>
-          <div className="text-2xl font-bold text-white mb-1">
-            {translateField(stats.bestScore.participant.apprenant, 'prenom')} {translateField(stats.bestScore.participant.apprenant, 'nom')}
-          </div>
-          <div className="flex items-center gap-2">
-            <Trophy className="h-5 w-5 text-yellow-300" />
-            <span className="text-3xl font-black text-yellow-100">
-              {stats.bestScore.participant.score}
-            </span>
-            <span className="text-yellow-200 text-sm">points</span>
-          </div>
-        </div>
-      )}
+          )}
+        </CardContent>
+      </Card>
 
-      {/* Worst Score */}
-      {stats.worstScore && (
-        <div className="bg-gradient-to-br from-red-500/20 to-pink-500/20 rounded-2xl p-6 border border-red-300/20 shadow-lg hover:shadow-xl transition-all duration-300">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="p-3 bg-gradient-to-r from-red-500 to-pink-500 rounded-xl shadow-lg">
-              <Medal className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <h3 className="text-white/80 text-sm font-semibold uppercase tracking-wide">Score le Plus Bas</h3>
-            </div>
+      {/* Total des participants */}
+      <Card className="border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100/30">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg flex items-center text-blue-700">
+            <Users className="h-5 w-5 mr-2 text-blue-500" />
+            Total des participants
+          </CardTitle>
+          <CardDescription>Nombre d'apprenants ayant joué</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="text-3xl font-bold">{stats.totalParticipants}</div>
+          <div className="text-sm text-gray-500 mt-2">
+            {stats.totalParticipants === 0 
+              ? "Aucun apprenant n'a encore participé"
+              : stats.totalParticipants === 1
+                ? "1 apprenant a participé à cette session"
+                : `${stats.totalParticipants} apprenants ont participé à cette session`}
           </div>
-          <div className="text-2xl font-bold text-white mb-1">
-            {translateField(stats.worstScore.participant.apprenant, 'prenom')} {translateField(stats.worstScore.participant.apprenant, 'nom')}
-          </div>
-          <div className="flex items-center gap-2">
-            <TrendingDown className="h-5 w-5 text-red-300" />
-            <span className="text-3xl font-black text-red-100">
-              {stats.worstScore.participant.score}
-            </span>
-            <span className="text-red-200 text-sm">points</span>
-          </div>
-        </div>
-      )}
+        </CardContent>
+      </Card>
     </div>
   );
 }

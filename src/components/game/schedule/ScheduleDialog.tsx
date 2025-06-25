@@ -77,8 +77,8 @@ export function ScheduleDialog({ gameId, jeu, onSuccess }: ScheduleDialogProps) 
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          variant="default"
-          className="bg-blue-600 hover:bg-blue-700 text-white border-none font-semibold px-6 py-2 shadow-lg hover:shadow-xl transition-all duration-200 w-full sm:w-auto"
+          variant="outline"
+          className="bg-white/10 hover:bg-white hover:text-primary transition-all duration-200 text-white border-white/20"
         >
           <Clock className="mr-2 h-4 w-4" />
           Planifier une session

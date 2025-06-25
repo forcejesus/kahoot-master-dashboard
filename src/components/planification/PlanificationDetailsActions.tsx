@@ -25,7 +25,7 @@ export function PlanificationDetailsActions({ onGoBack, onDeleteClick }: Planifi
       <Button
         variant="destructive"
         onClick={onDeleteClick}
-        className="shadow-sm bg-red-600 hover:bg-red-700 text-white"
+        className="shadow-sm"
       >
         <Trash2 className="mr-2 h-4 w-4" />
         {t('planDetails.deleteButton')}

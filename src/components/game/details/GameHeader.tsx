@@ -37,9 +37,9 @@ export function GameHeader({ jeu, token, onDelete, onRefresh }: GameHeaderProps)
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button 
-                variant="destructive"
+                variant="outline"
                 size="default"
-                className="w-full sm:w-auto"
+                className="bg-white/10 hover:bg-destructive hover:text-destructive-foreground transition-all duration-200 text-slate-700 border-slate-300 hover:border-destructive w-full sm:w-auto"
               >
                 <Trash2 className="mr-2 h-4 w-4" />
                 {t('delete.delete')}
