@@ -3,7 +3,7 @@
 // CONFIGURATION API
 // ================================
 
-import { currentHost, CURRENT_ENVIRONMENT } from '@/config/hosts';
+import { currentHost, getCurrentEnvironment } from '@/config/hosts';
 
 export interface ApiConfig {
   baseUrl: string;
@@ -13,11 +13,13 @@ export interface ApiConfig {
 }
 
 // Configuration basée sur notre système de hosts centralisé
+const currentEnv = getCurrentEnvironment();
+
 export const apiConfig: ApiConfig = {
   baseUrl: currentHost.api,
-  debug: CURRENT_ENVIRONMENT === 'localhost', // Debug activé seulement en localhost
-  environment: CURRENT_ENVIRONMENT,
-  timeout: CURRENT_ENVIRONMENT === 'localhost' ? 10000 : 15000, // Timeout plus long en production
+  debug: currentEnv.isLocalhost, // Debug activé seulement en localhost
+  environment: currentEnv.environment,
+  timeout: currentEnv.isLocalhost ? 10000 : 15000, // Timeout plus long en production
 };
 
 // Logger la configuration si debug activé
