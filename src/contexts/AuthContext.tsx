@@ -42,8 +42,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             id: payload.id,
             name: payload.name,
             email: payload.email,
-            nom: payload.nom || payload.name?.split(' ')[1] || '',
-            prenom: payload.prenom || payload.name?.split(' ')[0] || '',
             ecole: payload.ecole,
           };
 
@@ -85,8 +83,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           id: payload.id,
           name: payload.name,
           email: payload.email,
-          nom: payload.nom || payload.name?.split(' ')[1] || '',
-          prenom: payload.prenom || payload.name?.split(' ')[0] || '',
           ecole: payload.ecole,
         };
 
@@ -132,10 +128,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     modernToasts.success('Déconnexion réussie', 'À bientôt !');
   };
 
-  // Show centered loading state
+  // Show compact loading state instead of full screen
   if (state.isLoading && !state.user) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
         <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-white/20">
           <div className="flex items-center gap-4">
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>

@@ -1,3 +1,4 @@
+
 import { TranslationKeys } from '@/types/i18n';
 
 export const translations: {
@@ -36,9 +37,6 @@ export const translations: {
     'auth.resetLinkError': 'Failed to send reset link',
     'auth.resetLinkErrorDescription': 'Please verify your email address and try again',
     'nav.logout': 'Logout',
-    'nav.profile': 'Profile',
-    'nav.settings': 'Settings',
-    'nav.loggingOut': 'Logging out...',
     'dashboard.goodMorning': 'Good Morning',
     'dashboard.goodAfternoon': 'Good Afternoon',
     'dashboard.goodEvening': 'Good Evening',
@@ -201,9 +199,6 @@ export const translations: {
     'auth.resetLinkError': 'Échec de l\'envoi du lien',
     'auth.resetLinkErrorDescription': 'Veuillez vérifier votre adresse email et réessayer',
     'nav.logout': 'Déconnexion',
-    'nav.profile': 'Profil',
-    'nav.settings': 'Paramètres',
-    'nav.loggingOut': 'Déconnexion en cours...',
     'dashboard.goodMorning': 'Bonjour',
     'dashboard.goodAfternoon': 'Bon après-midi',
     'dashboard.goodEvening': 'Bonsoir',

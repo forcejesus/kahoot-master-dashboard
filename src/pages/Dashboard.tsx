@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTranslation } from '@/contexts/I18nContext';
@@ -90,9 +91,7 @@ export default function Dashboard() {
           duration: 4000,
         }
       );
-      
-      // Rafraîchir immédiatement les données après suppression
-      await fetchData();
+      fetchData();
     } catch (error) {
       toast.dismiss(loadingToastId);
       toast.error(
@@ -108,50 +107,35 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Image de fond */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')`
-        }}
-      />
-      
-      {/* Overlay gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-purple-900/70 to-indigo-800/80" />
-      
-      {/* Motifs géométriques décoratifs */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-20 left-20 w-64 h-64 bg-white/10 rounded-full mix-blend-overlay filter blur-xl animate-pulse"></div>
-        <div className="absolute top-40 right-20 w-48 h-48 bg-blue-300/20 rounded-full mix-blend-overlay filter blur-xl animate-pulse delay-1000"></div>
-        <div className="absolute bottom-20 left-40 w-56 h-56 bg-purple-300/20 rounded-full mix-blend-overlay filter blur-xl animate-pulse delay-2000"></div>
-        <div className="absolute bottom-40 right-40 w-40 h-40 bg-indigo-300/20 rounded-full mix-blend-overlay filter blur-xl animate-pulse delay-3000"></div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-teal-50/30 to-blue-50/40 relative overflow-hidden">
+      {/* Motifs de fond paisibles */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Cercles doux */}
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-teal-200/20 to-blue-200/20 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-slate-200/25 to-teal-200/25 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/3 left-1/4 w-64 h-64 bg-gradient-to-br from-blue-100/20 to-slate-100/20 rounded-full blur-2xl"></div>
+        <div className="absolute bottom-1/3 right-1/4 w-48 h-48 bg-gradient-to-br from-teal-100/25 to-blue-100/25 rounded-full blur-2xl"></div>
       </div>
 
-      {/* Motif de grille */}
-      <div className="absolute inset-0 opacity-10" style={{
-        backgroundImage: `
-          linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px)
-        `,
-        backgroundSize: '50px 50px'
+      {/* Motif géométrique subtil */}
+      <div className="absolute inset-0 opacity-[0.02]" style={{
+        backgroundImage: `radial-gradient(circle at 2px 2px, rgb(71, 85, 105) 1px, transparent 0)`,
+        backgroundSize: '32px 32px'
       }}></div>
 
-      {/* Formes géométriques décoratives */}
-      <div className="absolute inset-0 opacity-15">
-        <div className="absolute top-10 left-10 w-8 h-8 border-2 border-white/30 rounded-full animate-pulse"></div>
-        <div className="absolute top-32 right-32 w-12 h-12 border-2 border-blue-300/40 rotate-45 animate-pulse delay-500"></div>
-        <div className="absolute bottom-20 right-20 w-6 h-6 bg-white/30 rounded-full animate-pulse delay-1000"></div>
-        <div className="absolute bottom-40 left-20 w-10 h-10 border-2 border-purple-300/40 rotate-12 animate-pulse delay-1500"></div>
-        <div className="absolute top-60 left-60 w-14 h-14 border-2 border-indigo-300/40 rounded-full animate-pulse delay-2000"></div>
-        <div className="absolute top-80 right-80 w-8 h-8 bg-blue-300/30 rotate-45 animate-pulse delay-2500"></div>
+      {/* Lignes ondulées */}
+      <div className="absolute inset-0 opacity-[0.03]">
+        <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <path d="M0,20 Q25,10 50,20 T100,20 L100,0 L0,0 Z" fill="currentColor" className="text-teal-300"/>
+          <path d="M0,80 Q25,70 50,80 T100,80 L100,100 L0,100 Z" fill="currentColor" className="text-blue-300"/>
+        </svg>
       </div>
 
       <Navbar />
       
       <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <WelcomeHeader />
-        <StatsSection onKahootCreated={fetchData} kahoots={kahoots} />
+        <StatsSection onKahootCreated={fetchData} />
         <KahootList 
           kahoots={kahoots} 
           isLoading={isLoading} 

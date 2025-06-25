@@ -1,3 +1,4 @@
+
 export type Language = 'fr' | 'en';
 
 export interface TranslationKeys {
@@ -35,9 +36,6 @@ export interface TranslationKeys {
   
   // Navigation
   'nav.logout': string;
-  'nav.profile': string;
-  'nav.settings': string;
-  'nav.loggingOut': string;
   
   // Dashboard
   'dashboard.goodMorning': string;
