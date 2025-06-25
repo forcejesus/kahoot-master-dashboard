@@ -2,6 +2,7 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { AuthState, LoginCredentials, LoginResponse, User } from '@/types/auth';
 import { modernToasts } from '@/components/ui/modern-alerts';
+import { API_ENDPOINTS } from '@/config/hosts';
 
 interface AuthContextType extends AuthState {
   login: (credentials: LoginCredentials) => Promise<void>;
@@ -77,7 +78,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (credentials: LoginCredentials) => {
     setState(prev => ({ ...prev, isLoading: true, error: null }));
     try {
-      const response = await fetch('http://kahoot.nos-apps.com/api/login', {
+      const response = await fetch(API_ENDPOINTS.login, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(credentials),
