@@ -75,101 +75,136 @@ export function GameDetailsEditor({
   };
 
   return (
-    <Card className="backdrop-blur-xl bg-white/95 border-0 shadow-lg rounded-2xl">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-xl font-bold text-orange-600">
-          Détails du jeu
-        </CardTitle>
-        {!isEditing && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setIsEditing(true)}
-            className="gap-2"
-          >
-            <Edit2 className="h-4 w-4" />
-            Modifier
-          </Button>
-        )}
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {isEditing ? (
-          <>
-            <div className="space-y-2">
-              <Label htmlFor="title">Titre du jeu</Label>
-              <Input
-                id="title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="Enter le titre du jeu"
-                className="bg-white/80"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="image">Image du jeu (optionnel)</Label>
-              <Input
-                id="image"
-                type="file"
-                accept="image/*"
-                onChange={(e) => setImageFile(e.target.files?.[0] || null)}
-                className="bg-white/80"
-              />
-              {imageFile && (
-                <p className="text-sm text-green-600">
-                  Nouvelle image sélectionnée: {imageFile.name}
-                </p>
-              )}
-            </div>
-
-            <div className="flex gap-2 pt-4">
-              <Button
-                onClick={handleSave}
-                disabled={isUpdating}
-                className="gap-2"
-              >
-                {isUpdating ? (
-                  <>
-                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                    Mise à jour...
-                  </>
-                ) : (
-                  <>
-                    <Save className="h-4 w-4" />
-                    Sauvegarder
-                  </>
-                )}
-              </Button>
-              <Button
-                variant="outline"
-                onClick={handleCancel}
-                disabled={isUpdating}
-                className="gap-2"
-              >
-                <X className="h-4 w-4" />
-                Annuler
-              </Button>
-            </div>
-          </>
-        ) : (
-          <div className="space-y-3">
-            <div>
-              <Label className="text-sm font-medium text-gray-600">Titre</Label>
-              <p className="text-lg font-semibold text-gray-900">{currentTitle}</p>
-            </div>
-            {currentImage && (
-              <div>
-                <Label className="text-sm font-medium text-gray-600">Image actuelle</Label>
-                <img 
-                  src={`${buildApiUrl('')}/${currentImage}`}
-                  alt={currentTitle}
-                  className="mt-2 w-32 h-32 object-cover rounded-lg border"
+    <div className="space-y-6">
+      <Card className="backdrop-blur-xl bg-white/95 border-0 shadow-lg rounded-2xl">
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle className="text-xl font-bold text-orange-600">
+            Détails du jeu
+          </CardTitle>
+          {!isEditing && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsEditing(true)}
+              className="gap-2"
+            >
+              <Edit2 className="h-4 w-4" />
+              Modifier
+            </Button>
+          )}
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {isEditing ? (
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="title">Titre du jeu</Label>
+                <Input
+                  id="title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="Entrez le titre du jeu"
+                  className="bg-white/80"
                 />
               </div>
-            )}
+              
+              <div className="space-y-2">
+                <Label htmlFor="image">Image du jeu (optionnel)</Label>
+                <Input
+                  id="image"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                  className="bg-white/80"
+                />
+                {imageFile && (
+                  <p className="text-sm text-green-600">
+                    Nouvelle image sélectionnée: {imageFile.name}
+                  </p>
+                )}
+              </div>
+
+              <div className="flex gap-2 pt-4">
+                <Button
+                  onClick={handleSave}
+                  disabled={isUpdating}
+                  className="gap-2"
+                >
+                  {isUpdating ? (
+                    <>
+                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                      Mise à jour...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-4 w-4" />
+                      Sauvegarder
+                    </>
+                  )}
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={handleCancel}
+                  disabled={isUpdating}
+                  className="gap-2"
+                >
+                  <X className="h-4 w-4" />
+                  Annuler
+                </Button>
+              </div>
+            </>
+          ) : (
+            <div className="space-y-3">
+              <div>
+                <Label className="text-sm font-medium text-gray-600">Titre</Label>
+                <p className="text-lg font-semibold text-gray-900">{currentTitle}</p>
+              </div>
+              {currentImage && (
+                <div>
+                  <Label className="text-sm font-medium text-gray-600">Image actuelle</Label>
+                  <img 
+                    src={`${buildApiUrl('')}/${currentImage}`}
+                    alt={currentTitle}
+                    className="mt-2 w-32 h-32 object-cover rounded-lg border"
+                  />
+                </div>
+              )}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Information sur les types de questions */}
+      <Card className="backdrop-blur-xl bg-white/95 border-0 shadow-lg rounded-2xl">
+        <CardHeader>
+          <CardTitle className="text-xl font-bold text-orange-600">
+            Types de questions disponibles
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid gap-4">
+            <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <h4 className="font-semibold text-blue-800 mb-2">CHOIX_UNIQUE</h4>
+              <p className="text-sm text-blue-700">
+                L'apprenant ne peut sélectionner qu'une seule bonne réponse parmi les options proposées.
+              </p>
+            </div>
+            
+            <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+              <h4 className="font-semibold text-green-800 mb-2">CHOIX_MULTIPLE</h4>
+              <p className="text-sm text-green-700">
+                L'apprenant peut sélectionner plusieurs bonnes réponses parmi les options proposées.
+              </p>
+            </div>
+            
+            <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
+              <h4 className="font-semibold text-purple-800 mb-2">REPONSE_COURTE</h4>
+              <p className="text-sm text-purple-700">
+                L'apprenant doit saisir une réponse courte dans un champ de texte.
+              </p>
+            </div>
           </div>
-        )}
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
