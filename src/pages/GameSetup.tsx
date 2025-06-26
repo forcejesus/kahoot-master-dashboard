@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -12,6 +11,7 @@ import { QuestionsList } from '@/components/game/QuestionsList';
 import { GameDetailsEditor } from '@/components/game/GameDetailsEditor';
 import { ArrowLeft, BookOpen, Users, GraduationCap } from 'lucide-react';
 import { buildApiUrl } from '@/config/api';
+import { QuestionsView } from '@/components/game/QuestionsView';
 
 export default function GameSetup() {
   const { token } = useAuth();
@@ -29,6 +29,7 @@ export default function GameSetup() {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [questionTypes, setQuestionTypes] = useState<QuestionType[]>([]);
   const [points, setPoints] = useState<Point[]>([]);
+  const [questionsRefreshTrigger, setQuestionsRefreshTrigger] = useState(0);
 
   useEffect(() => {
     console.log('GameSetup useEffect - gameId:', gameId);
@@ -75,6 +76,8 @@ export default function GameSetup() {
 
   const handleQuestionAdded = (question: Question) => {
     setQuestions([...questions, question]);
+    // Trigger refresh of the questions view
+    setQuestionsRefreshTrigger(prev => prev + 1);
   };
 
   const handleBackToDashboard = () => {
@@ -200,6 +203,20 @@ export default function GameSetup() {
               </div>
             </div>
 
+            {/* Questions View */}
+            <div className="relative">
+              <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-3xl transform rotate-1 scale-105"></div>
+              <div className="absolute inset-0 bg-white/5 backdrop-blur-sm rounded-3xl transform -rotate-1 scale-102"></div>
+              
+              <div className="relative backdrop-blur-xl bg-white/95 border-0 shadow-2xl shadow-orange-900/20 rounded-3xl p-8">
+                <QuestionsView 
+                  gameId={gameId}
+                  token={token}
+                  refreshTrigger={questionsRefreshTrigger}
+                />
+              </div>
+            </div>
+
             {/* Question Form */}
             <div className="relative">
               {/* Effet de profondeur pour le formulaire */}
@@ -216,18 +233,6 @@ export default function GameSetup() {
                 />
               </div>
             </div>
-
-            {questions.length > 0 && (
-              <div className="relative">
-                {/* Effet de profondeur pour la liste */}
-                <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-3xl transform rotate-1 scale-105"></div>
-                <div className="absolute inset-0 bg-white/5 backdrop-blur-sm rounded-3xl transform -rotate-1 scale-102"></div>
-                
-                <div className="relative backdrop-blur-xl bg-white/95 border-0 shadow-2xl shadow-orange-900/20 rounded-3xl p-8">
-                  <QuestionsList questions={questions} />
-                </div>
-              </div>
-            )}
           </div>
         </main>
       </div>
