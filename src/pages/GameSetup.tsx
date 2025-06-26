@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { Question, QuestionType, Point } from '@/types/game';
 import { QuestionForm } from '@/components/game/QuestionForm';
 import { QuestionsList } from '@/components/game/QuestionsList';
+import { GameDetailsEditor } from '@/components/game/GameDetailsEditor';
 import { ArrowLeft, BookOpen, Users, GraduationCap } from 'lucide-react';
 import { buildApiUrl } from '@/config/api';
 
@@ -17,12 +18,11 @@ export default function GameSetup() {
   const location = useLocation();
   const navigate = useNavigate();
   
-  // Debug logs pour voir ce qui est passé
   console.log('GameSetup - location.state:', location.state);
   
   const gameId = location.state?.gameId;
-  const gameTitle = location.state?.gameTitle;
-  const gameImage = location.state?.gameImage;
+  const [gameTitle, setGameTitle] = useState(location.state?.gameTitle || '');
+  const [gameImage, setGameImage] = useState(location.state?.gameImage);
 
   console.log('GameSetup - gameId:', gameId, 'gameTitle:', gameTitle);
 
@@ -81,7 +81,13 @@ export default function GameSetup() {
     navigate('/dashboard');
   };
 
-  // Affichage de débogage si pas de gameId
+  const handleGameDetailsUpdate = (newTitle: string, newImage?: string) => {
+    setGameTitle(newTitle);
+    if (newImage) {
+      setGameImage(newImage);
+    }
+  };
+
   if (!gameId) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 flex items-center justify-center">
@@ -116,10 +122,8 @@ export default function GameSetup() {
 
       <Navbar />
       
-      {/* Contenu principal */}
       <div className="relative z-10">
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          {/* Back to Dashboard Button */}
           <Button 
             variant="outline" 
             className="mb-6 bg-white/90 hover:bg-white border-white/50 text-orange-600 hover:text-orange-700 shadow-lg hover:shadow-xl transition-all duration-200 backdrop-blur-sm"
@@ -179,8 +183,24 @@ export default function GameSetup() {
             </Card>
           </div>
 
-          {/* Form and Questions with modern styling */}
           <div className="space-y-8">
+            {/* Game Details Editor */}
+            <div className="relative">
+              <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-3xl transform rotate-1 scale-105"></div>
+              <div className="absolute inset-0 bg-white/5 backdrop-blur-sm rounded-3xl transform -rotate-1 scale-102"></div>
+              
+              <div className="relative backdrop-blur-xl bg-white/95 border-0 shadow-2xl shadow-orange-900/20 rounded-3xl p-8">
+                <GameDetailsEditor
+                  gameId={gameId}
+                  currentTitle={gameTitle}
+                  currentImage={gameImage}
+                  token={token}
+                  onUpdate={handleGameDetailsUpdate}
+                />
+              </div>
+            </div>
+
+            {/* Question Form */}
             <div className="relative">
               {/* Effet de profondeur pour le formulaire */}
               <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-3xl transform rotate-1 scale-105"></div>

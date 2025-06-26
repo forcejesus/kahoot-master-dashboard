@@ -84,12 +84,17 @@ export default function Dashboard() {
   const handleDeleteKahoots = async (kahootIds: string[]) => {
     try {
       for (const id of kahootIds) {
-        await fetch(buildApiUrl(`/api/jeux/delete/${id}`), {
-          method: 'DELETE',
+        const response = await fetch(buildApiUrl(`/api/jeux/delete/${id}`), {
+          method: 'POST',
           headers: {
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
           }
         });
+        
+        if (!response.ok) {
+          throw new Error(`Failed to delete kahoot ${id}`);
+        }
       }
       toast.success(`${kahootIds.length} kahoot(s) supprimé(s)`);
       fetchData();
