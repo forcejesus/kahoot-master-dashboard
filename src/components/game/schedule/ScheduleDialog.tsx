@@ -27,8 +27,7 @@ function ScheduleDialogContent({ gameId, onSuccess }: { gameId: string, onSucces
     setIsSubmitting(true);
     
     try {
-      // Updated API endpoint
-      const response = await fetch("http://kahoot.nos-apps.com/api/planification", {
+      const response = await fetch("https://kahoot.nos-apps.com/api/planification", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -77,10 +76,10 @@ export function ScheduleDialog({ gameId, jeu, onSuccess }: ScheduleDialogProps) 
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          variant="outline"
-          className="bg-white/10 hover:bg-white hover:text-primary transition-all duration-200 text-white border-white/20"
+          size="lg"
+          className="w-full h-20 bg-gradient-to-r from-violet-500 to-violet-600 hover:from-violet-600 hover:to-violet-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
         >
-          <Clock className="mr-2 h-4 w-4" />
+          <Clock className="mr-2 h-6 w-6" />
           Planifier une session
         </Button>
       </DialogTrigger>

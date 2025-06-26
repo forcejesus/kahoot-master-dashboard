@@ -44,11 +44,13 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
   // Reset answers when question type changes
   useEffect(() => {
     if (questionTypeLabel === 'REPONSE_COURTE') {
-      setAnswers([]);
+      setAnswers(['']);
       setCorrectAnswer(null);
       setCorrectAnswers([]);
-    } else if (questionTypeLabel && answers.length === 0) {
-      setAnswers(['', '']);
+    } else if (questionTypeLabel && (questionTypeLabel === 'CHOIX_UNIQUE' || questionTypeLabel === 'CHOIX_MULTIPLE')) {
+      if (answers.length < 2) {
+        setAnswers(['', '']);
+      }
       setCorrectAnswer(null);
       setCorrectAnswers([]);
     }
@@ -58,14 +60,20 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
     e.preventDefault();
 
     // Validation based on question type
-    if (questionTypeLabel === 'CHOIX_UNIQUE' && correctAnswer === null) {
-      return;
+    if (questionTypeLabel === 'CHOIX_UNIQUE') {
+      if (correctAnswer === null || answers.some(answer => answer.trim() === '')) {
+        return;
+      }
     }
-    if (questionTypeLabel === 'CHOIX_MULTIPLE' && correctAnswers.length === 0) {
-      return;
+    if (questionTypeLabel === 'CHOIX_MULTIPLE') {
+      if (correctAnswers.length === 0 || answers.some(answer => answer.trim() === '')) {
+        return;
+      }
     }
-    if (questionTypeLabel === 'REPONSE_COURTE' && answers.length === 0) {
-      return;
+    if (questionTypeLabel === 'REPONSE_COURTE') {
+      if (answers.length === 0 || answers[0].trim() === '') {
+        return;
+      }
     }
 
     // Determine correct answer index for submission
@@ -73,13 +81,17 @@ export function QuestionForm({ gameId, token, questionTypes, points, onQuestionA
     if (questionTypeLabel === 'CHOIX_UNIQUE') {
       finalCorrectAnswer = correctAnswer || 0;
     } else if (questionTypeLabel === 'CHOIX_MULTIPLE') {
-      finalCorrectAnswer = correctAnswers[0] || 0; // For now, use first correct answer
+      finalCorrectAnswer = correctAnswers[0] || 0;
     }
 
     await handleFormSubmit(
       (question) => {
         onQuestionAdded(question);
-        setAnswers(['', '']);
+        if (questionTypeLabel === 'REPONSE_COURTE') {
+          setAnswers(['']);
+        } else {
+          setAnswers(['', '']);
+        }
         setCorrectAnswer(null);
         setCorrectAnswers([]);
       },

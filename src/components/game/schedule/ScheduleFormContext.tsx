@@ -55,7 +55,7 @@ export function ScheduleFormProvider({
     setIsSubmitting(true);
     
     try {
-      const response = await fetch("http://kahoot.nos-apps.com/api/planifications/create", {
+      const response = await fetch("https://kahoot.nos-apps.com/api/planification", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
