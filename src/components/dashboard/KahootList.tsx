@@ -58,43 +58,57 @@ export function KahootList({ kahoots, isLoading, onDelete }: KahootListProps) {
 
   return (
     <>
-      <Card className="backdrop-blur-sm bg-white/80 border-t border-white/50 shadow-2xl">
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            Mes Kahoots
-          </CardTitle>
-          {selectedKahoots.length > 0 && (
-            <Button
-              variant="destructive"
-              onClick={() => setIsDeleteDialogOpen(true)}
-              className="gap-2"
-              disabled={isDeleting}
-            >
-              {isDeleting ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Suppression...
-                </>
-              ) : (
-                <>
-                  <Trash2 className="h-4 w-4" />
-                  Supprimer ({selectedKahoots.length})
-                </>
-              )}
-            </Button>
-          )}
-        </CardHeader>
-        <CardContent>
-          <KahootTable
-            kahoots={kahoots}
-            selectedKahoots={selectedKahoots}
-            onSelectKahoot={handleSelectKahoot}
-            onSelectAll={handleSelectAll}
-            onKahootClick={handleKahootClick}
-            isLoading={isLoading}
-          />
-        </CardContent>
-      </Card>
+      <div className="relative">
+        {/* Effet de profondeur */}
+        <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-3xl transform rotate-1 scale-105"></div>
+        <div className="absolute inset-0 bg-white/5 backdrop-blur-sm rounded-3xl transform -rotate-1 scale-102"></div>
+        
+        <Card className="relative backdrop-blur-xl bg-white/95 border-0 shadow-2xl shadow-orange-900/20 rounded-3xl">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle className="text-3xl font-bold bg-gradient-to-r from-orange-500 via-orange-600 to-orange-700 bg-clip-text text-transparent">
+                Mes Jeux
+              </CardTitle>
+              <div className="flex items-center justify-center space-x-2 mt-2">
+                <div className="h-1 w-8 bg-gradient-to-r from-transparent to-orange-500 rounded-full"></div>
+                <div className="h-1 w-16 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full shadow-lg"></div>
+                <div className="h-1 w-8 bg-gradient-to-r from-orange-500 to-transparent rounded-full"></div>
+              </div>
+            </div>
+            {selectedKahoots.length > 0 && (
+              <Button
+                variant="destructive"
+                onClick={() => setIsDeleteDialogOpen(true)}
+                className="gap-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 shadow-lg"
+                disabled={isDeleting}
+              >
+                {isDeleting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Suppression...
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="h-4 w-4" />
+                    Supprimer ({selectedKahoots.length})
+                  </>
+                )}
+              </Button>
+            )}
+          </CardHeader>
+          <CardContent className="p-8">
+            <KahootTable
+              kahoots={kahoots}
+              selectedKahoots={selectedKahoots}
+              onSelectKahoot={handleSelectKahoot}
+              onSelectAll={handleSelectAll}
+              onKahootClick={handleKahootClick}
+              onDelete={onDelete}
+              isLoading={isLoading}
+            />
+          </CardContent>
+        </Card>
+      </div>
 
       <DeleteConfirmDialog
         isOpen={isDeleteDialogOpen}

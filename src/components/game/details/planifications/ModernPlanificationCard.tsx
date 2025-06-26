@@ -3,13 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Copy, ExternalLink, Users, Calendar, Clock, Trophy } from "lucide-react";
 import { Planification } from "@/types/game-details";
 
-interface PlanificationCardProps {
+interface ModernPlanificationCardProps {
   planification: Planification;
   onCopyPin: (pin: string) => void;
   onViewPlanification: (id: string) => void;
 }
 
-export function PlanificationCard({ planification, onCopyPin, onViewPlanification }: PlanificationCardProps) {
+export function ModernPlanificationCard({ planification, onCopyPin, onViewPlanification }: ModernPlanificationCardProps) {
   const isActive = new Date(planification.date_fin) > new Date();
 
   return (
