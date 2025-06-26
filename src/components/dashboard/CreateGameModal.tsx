@@ -54,6 +54,8 @@ export function CreateGameModal({ onSuccess }: CreateGameModalProps) {
         formData.append("image", image);
       }
 
+      console.log('Creating game with title:', titre);
+
       const response = await fetch(buildApiUrl("/api/jeux"), {
         method: "POST",
         headers: {
@@ -64,11 +66,21 @@ export function CreateGameModal({ onSuccess }: CreateGameModalProps) {
 
       const data = await response.json();
       
+      console.log('Game creation response:', data);
+      
       if (response.ok && data.statut === 200) {
         toast.success(data.message || "Jeu créé avec succès");
         setIsOpen(false);
         resetForm();
+        
         if (data.jeu) {
+          console.log('Navigating to game setup with:', {
+            gameId: data.jeu._id,
+            gameTitle: data.jeu.titre,
+            gameImage: data.jeu.image
+          });
+          
+          // Navigation vers la page de configuration avec les données du jeu
           navigate('/game/setup', {
             state: {
               gameId: data.jeu._id,
@@ -79,6 +91,7 @@ export function CreateGameModal({ onSuccess }: CreateGameModalProps) {
         }
         onSuccess?.();
       } else {
+        console.error('Game creation failed:', data);
         toast.error(data.message || "Erreur lors de la création du jeu");
       }
     } catch (error) {

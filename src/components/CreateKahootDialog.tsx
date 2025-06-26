@@ -15,6 +15,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { Plus, ImageIcon, Loader2, ArrowLeft } from "lucide-react";
+import { buildApiUrl } from "@/config/api";
 
 interface CreateKahootDialogProps {
   onSuccess?: () => void;
@@ -54,7 +55,9 @@ export function CreateKahootDialog({ onSuccess }: CreateKahootDialogProps) {
         formData.append("image", image);
       }
 
-      const response = await fetch("http://kahoot.nos-apps.com/api/jeux", {
+      console.log('Creating kahoot with title:', titre);
+
+      const response = await fetch(buildApiUrl("/api/jeux"), {
         method: "POST",
         headers: {
           'Authorization': `Bearer ${token}`
@@ -64,11 +67,21 @@ export function CreateKahootDialog({ onSuccess }: CreateKahootDialogProps) {
 
       const data = await response.json();
       
+      console.log('Kahoot creation response:', data);
+      
       if (response.ok && data.statut === 200) {
         toast.success(data.message || "Kahoot créé avec succès");
         setIsOpen(false);
         resetForm();
+        
         if (data.jeu) {
+          console.log('Navigating to game setup with:', {
+            gameId: data.jeu._id,
+            gameTitle: data.jeu.titre,
+            gameImage: data.jeu.image
+          });
+          
+          // Navigation vers la page de configuration avec les données du jeu
           navigate('/game/setup', {
             state: {
               gameId: data.jeu._id,

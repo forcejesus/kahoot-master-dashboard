@@ -10,42 +10,62 @@ import { Question, QuestionType, Point } from '@/types/game';
 import { QuestionForm } from '@/components/game/QuestionForm';
 import { QuestionsList } from '@/components/game/QuestionsList';
 import { ArrowLeft, BookOpen, Users, GraduationCap } from 'lucide-react';
+import { buildApiUrl } from '@/config/api';
 
 export default function GameSetup() {
   const { token } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  
+  // Debug logs pour voir ce qui est passé
+  console.log('GameSetup - location.state:', location.state);
+  
   const gameId = location.state?.gameId;
   const gameTitle = location.state?.gameTitle;
   const gameImage = location.state?.gameImage;
+
+  console.log('GameSetup - gameId:', gameId, 'gameTitle:', gameTitle);
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [questionTypes, setQuestionTypes] = useState<QuestionType[]>([]);
   const [points, setPoints] = useState<Point[]>([]);
 
   useEffect(() => {
+    console.log('GameSetup useEffect - gameId:', gameId);
+    
     if (!gameId) {
-      navigate('/');
+      console.log('No gameId found, redirecting to dashboard');
+      toast.error("Aucun jeu sélectionné");
+      navigate('/dashboard');
       return;
     }
 
     const fetchData = async () => {
       try {
+        console.log('Fetching question types and points...');
+        
         const [typesResponse, pointsResponse] = await Promise.all([
-          fetch('http://kahoot.nos-apps.com/api/type-question', {
+          fetch(buildApiUrl('/api/type-question'), {
             headers: { 'Authorization': `Bearer ${token}` }
           }),
-          fetch('http://kahoot.nos-apps.com/api/points', {
+          fetch(buildApiUrl('/api/points'), {
             headers: { 'Authorization': `Bearer ${token}` }
           })
         ]);
 
+        console.log('Types response status:', typesResponse.status);
+        console.log('Points response status:', pointsResponse.status);
+
         const typesData = await typesResponse.json();
         const pointsData = await pointsResponse.json();
 
-        setQuestionTypes(typesData.data);
-        setPoints(pointsData.data);
+        console.log('Types data:', typesData);
+        console.log('Points data:', pointsData);
+
+        setQuestionTypes(typesData.data || []);
+        setPoints(pointsData.data || []);
       } catch (error) {
+        console.error('Error fetching data:', error);
         toast.error("Erreur lors du chargement des données");
       }
     };
@@ -60,6 +80,18 @@ export default function GameSetup() {
   const handleBackToDashboard = () => {
     navigate('/dashboard');
   };
+
+  // Affichage de débogage si pas de gameId
+  if (!gameId) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 flex items-center justify-center">
+        <div className="text-white text-center">
+          <h1 className="text-2xl font-bold mb-4">Chargement...</h1>
+          <p>Redirection vers le tableau de bord...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -128,7 +160,7 @@ export default function GameSetup() {
                     <div className="flex items-center space-x-2">
                       <div className="h-2 w-2 bg-orange-500 rounded-full animate-pulse"></div>
                       <span className="text-orange-700 font-bold text-xl tracking-wide">
-                        {gameTitle}
+                        {gameTitle || 'Nouveau jeu'}
                       </span>
                       <div className="h-2 w-2 bg-orange-500 rounded-full animate-pulse"></div>
                     </div>
@@ -138,8 +170,8 @@ export default function GameSetup() {
               {gameImage && (
                 <CardContent className="text-center pb-8">
                   <img 
-                    src={`http://kahoot.nos-apps.com/${gameImage}`}
-                    alt={gameTitle} 
+                    src={`${buildApiUrl('')}/${gameImage}`}
+                    alt={gameTitle || 'Image du jeu'} 
                     className="w-full max-w-md mx-auto rounded-2xl shadow-lg"
                   />
                 </CardContent>
