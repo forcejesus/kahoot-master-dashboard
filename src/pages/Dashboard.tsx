@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Navbar } from '@/components/Navbar';
@@ -84,6 +83,8 @@ export default function Dashboard() {
   const handleDeleteKahoots = async (kahootIds: string[]) => {
     try {
       for (const id of kahootIds) {
+        console.log(`Attempting to delete kahoot with ID: ${id}`);
+        
         const response = await fetch(buildApiUrl(`/api/jeux/delete/${id}`), {
           method: 'POST',
           headers: {
@@ -92,8 +93,23 @@ export default function Dashboard() {
           }
         });
         
+        console.log(`Delete response status: ${response.status}`);
+        console.log(`Delete response ok: ${response.ok}`);
+        
+        // Lire la réponse pour déboguer
+        const responseText = await response.text();
+        console.log(`Delete response body: ${responseText}`);
+        
         if (!response.ok) {
-          throw new Error(`Failed to delete kahoot ${id}`);
+          // Essayer de parser la réponse pour obtenir plus d'informations
+          let errorMessage = `HTTP ${response.status}`;
+          try {
+            const errorData = JSON.parse(responseText);
+            errorMessage = errorData.message || errorData.error || errorMessage;
+          } catch (e) {
+            errorMessage = responseText || errorMessage;
+          }
+          throw new Error(`Failed to delete kahoot ${id}: ${errorMessage}`);
         }
       }
       toast.success(`${kahootIds.length} kahoot(s) supprimé(s)`);
@@ -101,7 +117,7 @@ export default function Dashboard() {
       fetchStats();
     } catch (error) {
       console.error('Error deleting kahoots:', error);
-      toast.error("Erreur lors de la suppression");
+      toast.error(`Erreur lors de la suppression: ${error.message || error}`);
       throw error;
     }
   };
