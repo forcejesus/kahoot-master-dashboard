@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import GameCreation from "./pages/GameCreation";
 import GameDetails from "./pages/GameDetails";
 import GameSetup from "./pages/GameSetup";
 import GameSchedule from "./pages/GameSchedule";
@@ -27,6 +28,11 @@ function AppRoutes() {
       <Route path="/dashboard" element={
         <PrivateRoute>
           <Dashboard />
+        </PrivateRoute>
+      } />
+      <Route path="/game/create" element={
+        <PrivateRoute>
+          <GameCreation />
         </PrivateRoute>
       } />
       <Route path="/game/setup" element={

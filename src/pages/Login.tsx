@@ -78,7 +78,7 @@ export default function Login() {
                 </div>
               </div>
 
-              {/* Section Espace Enseignant déplacée ici */}
+              {/* Section Espace Enseignant simplifiée */}
               <div className="text-center">
                 <div className="relative mb-4">
                   <div className="absolute inset-0 flex items-center">
@@ -99,16 +99,6 @@ export default function Login() {
                     </span>
                     <div className="h-2 w-2 bg-orange-500 rounded-full animate-pulse"></div>
                   </div>
-                </div>
-                
-                <p className="text-sm text-gray-600 mt-3 font-medium">
-                  Accès réservé aux enseignants autorisés
-                </p>
-                
-                <div className="flex items-center justify-center space-x-2 mt-2 text-xs text-gray-400">
-                  <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-                  <span>Plateforme sécurisée</span>
-                  <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
                 </div>
               </div>
             </CardHeader>
@@ -137,7 +127,7 @@ export default function Login() {
                 {error && (
                   <div className="px-4 py-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm font-medium flex items-center space-x-2">
                     <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                    <span>{error}</span>
+                    <span>Compte non trouvé.</span>
                   </div>
                 )}
 
@@ -169,7 +159,7 @@ export default function Login() {
               Échec de connexion
             </AlertDialogTitle>
             <AlertDialogDescription className="text-gray-700 text-base">
-              {error || "Une erreur s'est produite lors de la connexion. Veuillez vérifier vos identifiants et réessayer."}
+              Compte non trouvé.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
