@@ -1,7 +1,7 @@
 
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Button } from '@/components/ui/button';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Calendar, Sparkles } from 'lucide-react';
 import { Kahoot } from '@/types/game-details';
 import { CreatePlanificationModal } from '@/components/dashboard/CreatePlanificationModal';
 
@@ -21,12 +21,20 @@ export function GameHeader({ jeu, token, onDelete, onRefresh }: GameHeaderProps)
         </h1>
       </div>
       <div className="flex space-x-4">
-        <div className="bg-white/10 backdrop-blur-sm rounded-md">
-          <CreatePlanificationModal 
-            kahoots={[jeu]} 
-            onSuccess={onRefresh}
-          />
+        {/* Bouton Planifier avec le même style que le tableau de bord */}
+        <div className="relative group cursor-pointer">
+          {/* Effet de profondeur */}
+          <div className="absolute inset-0 bg-gradient-to-r from-violet-600 to-violet-700 rounded-2xl transform rotate-1 scale-105 opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-violet-500 to-violet-600 rounded-2xl transform -rotate-1 scale-102 opacity-30 group-hover:opacity-40 transition-opacity duration-300"></div>
+          
+          <div className="relative backdrop-blur-xl bg-gradient-to-br from-violet-50 via-white to-violet-100 border-2 border-violet-200/50 rounded-2xl px-6 py-3 shadow-xl shadow-violet-900/20 hover:shadow-2xl hover:shadow-violet-900/30 transition-all duration-300 transform hover:scale-[1.02]">
+            <CreatePlanificationModal 
+              kahoots={[jeu]} 
+              onSuccess={onRefresh}
+            />
+          </div>
         </div>
+
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button 

@@ -1,16 +1,14 @@
-
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { Navbar } from '@/components/Navbar';
-import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
+import { AppHeader } from '@/components/layout/AppHeader';
 import { ModernStatsCard } from '@/components/dashboard/ModernStatsCard';
 import { KahootList } from '@/components/dashboard/KahootList';
-import { CreateGameModal } from '@/components/dashboard/CreateGameModal';
-import { ScheduleGameModal } from '@/components/dashboard/ScheduleGameModal';
 import { toast } from 'sonner';
 import { Kahoot } from '@/types/game-details';
 import { Users, Gamepad, Calendar } from 'lucide-react';
 import { buildApiUrl } from '@/config/api';
+import { SidebarProvider } from '@/components/ui/sidebar';
+import { AppSidebar } from '@/components/layout/AppSidebar';
 
 interface StatsData {
   total_apprenants: number;
@@ -160,66 +158,62 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-50">
-      <Navbar />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-12">
-        {/* Dashboard Header */}
-        <DashboardHeader />
-
-        {/* Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8">
-          {statsConfig.map((stat, index) => (
-            <ModernStatsCard
-              key={index}
-              title={stat.title}
-              value={stat.value}
-              icon={stat.icon}
-              bgColor={stat.bgColor}
-              textColor={stat.textColor}
-              change={stat.change}
-              isLoading={statsLoading}
+    <SidebarProvider>
+      <div className="min-h-screen w-full bg-gradient-to-br from-blue-50/30 via-white to-green-50/20">
+        <div className="flex w-full">
+          <AppSidebar />
+          
+          <div className="flex-1 flex flex-col">
+            <AppHeader 
+              kahoots={kahoots}
+              onGameCreated={handleGameCreated}
+              onPlanificationCreated={handlePlanificationCreated}
             />
-          ))}
-        </div>
-
-        {/* Quick Actions */}
-        <div className="mb-8">
-          <div className="relative mb-6">
-            <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-3xl transform rotate-1 scale-105"></div>
-            <div className="absolute inset-0 bg-white/5 backdrop-blur-sm rounded-3xl transform -rotate-1 scale-102"></div>
             
-            <div className="relative backdrop-blur-xl bg-white/95 border-0 shadow-2xl shadow-orange-900/20 rounded-3xl p-8">
-              <div className="text-center space-y-4 mb-8">
-                <h2 className="text-3xl font-black bg-gradient-to-r from-orange-600 via-orange-700 to-orange-800 bg-clip-text text-transparent">
-                  Actions rapides
-                </h2>
-                <p className="text-lg text-orange-600/70">
-                  Créez et planifiez vos expériences éducatives
-                </p>
-                
-                {/* Ligne décorative */}
-                <div className="flex items-center justify-center space-x-2">
-                  <div className="h-1 w-8 bg-gradient-to-r from-transparent to-orange-500 rounded-full"></div>
-                  <div className="h-1 w-16 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full shadow-lg"></div>
-                  <div className="h-1 w-8 bg-gradient-to-r from-orange-500 to-transparent rounded-full"></div>
+            <main className="flex-1 p-6 space-y-8">
+              {/* Greeting Card */}
+              <div className="bg-gradient-to-r from-orange-500/90 to-orange-600/90 text-white p-8 rounded-3xl shadow-xl backdrop-blur-sm">
+                <div className="flex items-center space-x-4">
+                  <div className="h-16 w-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                    <Gamepad className="h-8 w-8 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-3xl font-bold text-white mb-2">
+                      Bienvenue sur AKILI! 👋
+                    </h2>
+                    <p className="text-orange-100 text-lg">
+                      Créez, gérez et analysez vos expériences éducatives interactives
+                    </p>
+                  </div>
                 </div>
               </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <CreateGameModal onSuccess={handleGameCreated} />
-                <ScheduleGameModal kahoots={kahoots} onSuccess={handlePlanificationCreated} />
+
+              {/* Statistics Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {statsConfig.map((stat, index) => (
+                  <ModernStatsCard
+                    key={index}
+                    title={stat.title}
+                    value={stat.value}
+                    icon={stat.icon}
+                    bgColor={stat.bgColor}
+                    textColor={stat.textColor}
+                    change={stat.change}
+                    isLoading={statsLoading}
+                  />
+                ))}
               </div>
-            </div>
+
+              {/* Kahoots List */}
+              <KahootList 
+                kahoots={kahoots} 
+                isLoading={isLoading} 
+                onDelete={handleDeleteKahoots} 
+              />
+            </main>
           </div>
         </div>
-
-        {/* Kahoots List */}
-        <KahootList 
-          kahoots={kahoots} 
-          isLoading={isLoading} 
-          onDelete={handleDeleteKahoots} 
-        />
-      </main>
-    </div>
+      </div>
+    </SidebarProvider>
   );
 }

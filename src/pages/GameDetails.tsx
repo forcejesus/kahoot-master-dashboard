@@ -1,6 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { Navbar } from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
@@ -10,6 +9,9 @@ import { useEffect, useState } from 'react';
 import { GameBackgroundImage } from '@/components/game/details/GameBackgroundImage';
 import { GameDetailsTabs } from '@/components/game/details/GameDetailsTabs';
 import { buildApiUrl } from '@/config/api';
+import { SidebarProvider } from '@/components/ui/sidebar';
+import { AppSidebar } from '@/components/layout/AppSidebar';
+import { AppHeader } from '@/components/layout/AppHeader';
 
 export default function GameDetails() {
   const navigate = useNavigate();
@@ -50,14 +52,6 @@ export default function GameDetails() {
     }
   }, [jeu, navigate]);
 
-  if (!jeu) {
-    return null;
-  }
-
-  const planificationsEnCours = jeu.planifications?.filter(p => 
-    new Date(p.date_fin) > new Date()
-  ) || [];
-
   const handleCopyPin = (pin: string) => {
     navigator.clipboard.writeText(pin);
     toast.success("PIN copié !");
@@ -65,7 +59,7 @@ export default function GameDetails() {
 
   const handleDeleteGame = async () => {
     try {
-      const response = await fetch(buildApiUrl(`/api/jeux/delete/${jeu._id}`), {
+      const response = await fetch(buildApiUrl(`/api/jeux/delete/${jeu?._id}`), {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -83,42 +77,58 @@ export default function GameDetails() {
     }
   };
 
+  if (!jeu) {
+    return null;
+  }
+
+  const planificationsEnCours = jeu.planifications?.filter(p => 
+    new Date(p.date_fin) > new Date()
+  ) || [];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100">
-      <Navbar />
-      
-      <div className="relative">
-        {/* Background Image Section */}
-        <GameBackgroundImage jeu={jeu} />
+    <SidebarProvider>
+      <div className="min-h-screen w-full bg-gradient-to-br from-blue-50/30 via-white to-green-50/20">
+        <div className="flex w-full">
+          <AppSidebar />
+          
+          <div className="flex-1 flex flex-col">
+            <AppHeader />
+            
+            <div className="flex-1">
+              {/* Background Image Section */}
+              <GameBackgroundImage jeu={jeu} />
 
-        {/* Content Section */}
-        <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <Button
-            variant="navigation"
-            className="mb-6 bg-orange-100 hover:bg-orange-200 text-orange-700 border-orange-200"
-            onClick={() => navigate('/dashboard')}
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Retour au tableau de bord
-          </Button>
+              {/* Content Section */}
+              <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <Button
+                  variant="navigation"
+                  className="mb-6 bg-orange-100 hover:bg-orange-200 text-orange-700 border-orange-200"
+                  onClick={() => navigate('/dashboard')}
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Retour au tableau de bord
+                </Button>
 
-          <div className="space-y-8 animate-fade-in">
-            <GameHeader 
-              jeu={jeu} 
-              token={token} 
-              onDelete={handleDeleteGame} 
-              onRefresh={refreshGameDetails} 
-            />
+                <div className="space-y-8 animate-fade-in">
+                  <GameHeader 
+                    jeu={jeu} 
+                    token={token} 
+                    onDelete={handleDeleteGame} 
+                    onRefresh={refreshGameDetails} 
+                  />
 
-            {/* Tabbed interface for game statistics */}
-            <GameDetailsTabs 
-              jeu={jeu} 
-              planificationsEnCours={planificationsEnCours} 
-              onCopyPin={handleCopyPin} 
-            />
+                  {/* Tabbed interface for game statistics */}
+                  <GameDetailsTabs 
+                    jeu={jeu} 
+                    planificationsEnCours={planificationsEnCours} 
+                    onCopyPin={handleCopyPin} 
+                  />
+                </div>
+              </main>
+            </div>
           </div>
-        </main>
+        </div>
       </div>
-    </div>
+    </SidebarProvider>
   );
 }
