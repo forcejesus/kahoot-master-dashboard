@@ -2,7 +2,10 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Check, Calendar, Users } from 'lucide-react';
-import { ScheduleForm } from '@/components/game/schedule/ScheduleForm';
+import { ScheduleFormProvider } from '@/components/game/schedule/ScheduleFormContext';
+import { ScheduleFormInputs } from '@/components/game/schedule/ScheduleFormInputs';
+import { ScheduleSubmitButton } from '@/components/game/schedule/ScheduleSubmitButton';
+import { ScheduleSuccess } from '@/components/game/schedule/ScheduleSuccess';
 
 interface GameCreationStep3Props {
   gameId: string | null;
@@ -67,12 +70,13 @@ export function GameCreationStep3({ gameId, gameTitle, onFinish, onPrevious, tok
           </>
         ) : (
           <div className="w-full">
-            <ScheduleForm 
-              gameId={gameId}
-              token={token}
-              onSuccess={onFinish}
-              onCancel={() => setShowScheduleForm(false)}
-            />
+            <ScheduleFormProvider gameId={gameId || ""}>
+              <div className="space-y-4">
+                <ScheduleFormInputs />
+                <ScheduleSubmitButton />
+                <ScheduleSuccess gameId={gameId || ""} onClose={onFinish} />
+              </div>
+            </ScheduleFormProvider>
           </div>
         )}
       </div>
