@@ -13,7 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Plus, ImageIcon, Loader2 } from "lucide-react";
+import { Plus, ImageIcon, Loader2, Gamepad2, Sparkles } from "lucide-react";
 import { buildApiUrl } from "@/config/api";
 
 interface CreateGameModalProps {
@@ -80,7 +80,6 @@ export function CreateGameModal({ onSuccess }: CreateGameModalProps) {
             gameImage: data.jeu.image
           });
           
-          // Navigation vers la page de configuration avec les données du jeu
           navigate('/game/setup', {
             state: {
               gameId: data.jeu._id,
@@ -111,67 +110,119 @@ export function CreateGameModal({ onSuccess }: CreateGameModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button 
-          size="lg"
-          className="w-full h-20 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
-        >
-          <Plus className="mr-2 h-6 w-6" />
-          Créer un nouveau jeu
-        </Button>
+        <div className="relative group cursor-pointer">
+          {/* Effet de profondeur */}
+          <div className="absolute inset-0 bg-gradient-to-r from-orange-600 to-orange-700 rounded-3xl transform rotate-1 scale-105 opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-600 rounded-3xl transform -rotate-1 scale-102 opacity-30 group-hover:opacity-40 transition-opacity duration-300"></div>
+          
+          <div className="relative backdrop-blur-xl bg-gradient-to-br from-orange-50 via-white to-orange-100 border-2 border-orange-200/50 rounded-3xl p-8 shadow-2xl shadow-orange-900/20 hover:shadow-3xl hover:shadow-orange-900/30 transition-all duration-300 transform hover:scale-[1.02] h-32 flex items-center justify-center">
+            <div className="text-center space-y-3">
+              <div className="flex items-center justify-center space-x-3">
+                <div className="h-12 w-12 bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg">
+                  <Gamepad2 className="h-6 w-6 text-white" />
+                </div>
+                <Sparkles className="h-6 w-6 text-orange-500 animate-pulse" />
+              </div>
+              
+              <div>
+                <h3 className="text-xl font-bold bg-gradient-to-r from-orange-600 via-orange-700 to-orange-800 bg-clip-text text-transparent">
+                  Créer un nouveau jeu
+                </h3>
+                <p className="text-sm text-orange-600/80 font-medium">
+                  Démarrez votre aventure éducative
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px] bg-gradient-to-br from-orange-50 via-white to-orange-100 border-orange-200">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent">
-            Créer un nouveau jeu
-          </DialogTitle>
-        </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-6 pt-4">
-          <div className="space-y-2">
-            <Label htmlFor="titre" className="text-gray-700 font-medium">Nom du jeu</Label>
-            <Input
-              id="titre"
-              placeholder="Entrez le nom du jeu"
-              value={titre}
-              onChange={(e) => setTitre(e.target.value)}
-              disabled={isLoading}
-              className="border-orange-200 focus:border-orange-400 focus:ring-orange-200"
-            />
+      
+      <DialogContent className="sm:max-w-[600px] bg-gradient-to-br from-orange-50 via-white to-orange-100 border-2 border-orange-200/50 rounded-3xl shadow-2xl">
+        <DialogHeader className="text-center space-y-4 pb-6">
+          <div className="mx-auto h-16 w-16 bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg">
+            <Gamepad2 className="h-8 w-8 text-white" />
           </div>
           
-          <div className="space-y-2">
-            <Label htmlFor="image" className="text-gray-700 font-medium">Image du jeu</Label>
-            <div className="flex items-center gap-4">
+          <div>
+            <DialogTitle className="text-3xl font-black bg-gradient-to-r from-orange-600 via-orange-700 to-orange-800 bg-clip-text text-transparent">
+              Créer un nouveau jeu
+            </DialogTitle>
+            <p className="text-orange-600/70 mt-2 text-lg">
+              Donnez vie à vos idées éducatives
+            </p>
+          </div>
+          
+          {/* Ligne décorative */}
+          <div className="flex items-center justify-center space-x-2">
+            <div className="h-1 w-8 bg-gradient-to-r from-transparent to-orange-500 rounded-full"></div>
+            <div className="h-1 w-16 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full shadow-lg"></div>
+            <div className="h-1 w-8 bg-gradient-to-r from-orange-500 to-transparent rounded-full"></div>
+          </div>
+        </DialogHeader>
+        
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="space-y-6">
+            <div className="space-y-3">
+              <Label htmlFor="titre" className="text-lg font-semibold text-gray-800 flex items-center space-x-2">
+                <span>Nom du jeu</span>
+                <span className="text-orange-500">*</span>
+              </Label>
               <Input
-                id="image"
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
+                id="titre"
+                placeholder="Ex: Quiz sur l'Histoire de France, Mathématiques niveau 5ème..."
+                value={titre}
+                onChange={(e) => setTitre(e.target.value)}
                 disabled={isLoading}
-                className="hidden"
+                className="h-14 text-lg border-2 border-orange-200 focus:border-orange-400 focus:ring-orange-200 bg-white/80 rounded-xl px-4 placeholder:text-gray-400"
               />
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => document.getElementById("image")?.click()}
-                className="w-full border-orange-200 hover:bg-orange-50 hover:border-orange-300"
-                disabled={isLoading}
-              >
-                <ImageIcon className="mr-2 h-4 w-4" />
-                {image ? "Changer l'image" : "Ajouter une image"}
-              </Button>
+              <p className="text-sm text-orange-600/70">
+                Choisissez un nom attractif et descriptif pour votre jeu
+              </p>
+            </div>
+            
+            <div className="space-y-3">
+              <Label htmlFor="image" className="text-lg font-semibold text-gray-800">
+                Image du jeu (optionnel)
+              </Label>
+              <div className="flex items-center gap-4">
+                <Input
+                  id="image"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  disabled={isLoading}
+                  className="hidden"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => document.getElementById("image")?.click()}
+                  className="w-full h-14 border-2 border-orange-200 hover:bg-orange-50 hover:border-orange-300 rounded-xl text-lg"
+                  disabled={isLoading}
+                >
+                  <ImageIcon className="mr-3 h-5 w-5" />
+                  {image ? "Changer l'image" : "Ajouter une image"}
+                </Button>
+              </div>
               {image && (
-                <span className="text-sm text-gray-600 truncate max-w-[150px]">
-                  {image.name}
-                </span>
+                <div className="flex items-center space-x-3 p-3 bg-orange-50 rounded-xl border border-orange-200">
+                  <ImageIcon className="h-5 w-5 text-orange-600" />
+                  <span className="text-sm text-orange-700 font-medium truncate">
+                    {image.name}
+                  </span>
+                </div>
               )}
+              <p className="text-sm text-orange-600/70">
+                Une image attrayante rendra votre jeu plus engageant
+              </p>
             </div>
           </div>
 
-          <div className="flex gap-3 pt-4">
+          <div className="flex gap-4 pt-6">
             <Button 
               type="button" 
               variant="outline" 
-              className="w-full border-orange-200 hover:bg-orange-50" 
+              className="w-full h-14 border-2 border-orange-200 hover:bg-orange-50 text-lg font-semibold rounded-xl" 
               disabled={isLoading}
               onClick={handleClose}
             >
@@ -180,16 +231,19 @@ export function CreateGameModal({ onSuccess }: CreateGameModalProps) {
             
             <Button 
               type="submit" 
-              className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700" 
+              className="w-full h-14 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-lg font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200" 
               disabled={isLoading}
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Création...
+                  <Loader2 className="mr-3 h-5 w-5 animate-spin" />
+                  Création en cours...
                 </>
               ) : (
-                "Créer le jeu"
+                <>
+                  <Plus className="mr-3 h-5 w-5" />
+                  Créer le jeu
+                </>
               )}
             </Button>
           </div>

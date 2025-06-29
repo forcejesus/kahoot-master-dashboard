@@ -1,7 +1,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Trash2, Loader2, Search, Filter } from 'lucide-react';
+import { Trash2, Loader2, Search, Filter, Gamepad2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -106,22 +106,35 @@ export function KahootList({ kahoots, isLoading, onDelete }: KahootListProps) {
         <div className="absolute inset-0 bg-white/5 backdrop-blur-sm rounded-3xl transform -rotate-1 scale-102"></div>
         
         <Card className="relative backdrop-blur-xl bg-white/95 border-0 shadow-2xl shadow-orange-900/20 rounded-3xl">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle className="text-3xl font-bold bg-gradient-to-r from-orange-500 via-orange-600 to-orange-700 bg-clip-text text-transparent">
-                Mes Jeux
-              </CardTitle>
-              <div className="flex items-center justify-center space-x-2 mt-2">
+          <CardHeader className="flex flex-row items-center justify-between p-8">
+            <div className="space-y-4">
+              <div className="flex items-center space-x-4">
+                <div className="h-12 w-12 bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg">
+                  <Gamepad2 className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <CardTitle className="text-3xl font-black bg-gradient-to-r from-orange-600 via-orange-700 to-orange-800 bg-clip-text text-transparent">
+                    Mes Jeux
+                  </CardTitle>
+                  <p className="text-orange-600/70 font-medium">
+                    Gérez et organisez vos créations éducatives
+                  </p>
+                </div>
+              </div>
+              
+              {/* Ligne décorative */}
+              <div className="flex items-center space-x-2">
                 <div className="h-1 w-8 bg-gradient-to-r from-transparent to-orange-500 rounded-full"></div>
                 <div className="h-1 w-16 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full shadow-lg"></div>
                 <div className="h-1 w-8 bg-gradient-to-r from-orange-500 to-transparent rounded-full"></div>
               </div>
             </div>
+            
             {selectedKahoots.length > 0 && (
               <Button
                 variant="destructive"
                 onClick={() => setIsDeleteDialogOpen(true)}
-                className="gap-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 shadow-lg"
+                className="gap-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 shadow-lg rounded-xl h-12 px-6"
                 disabled={isDeleting}
               >
                 {isDeleting ? (
@@ -138,23 +151,24 @@ export function KahootList({ kahoots, isLoading, onDelete }: KahootListProps) {
               </Button>
             )}
           </CardHeader>
-          <CardContent className="p-8">
+          
+          <CardContent className="p-8 pt-0">
             {/* Search and Filter Section */}
-            <div className="mb-6 space-y-4">
+            <div className="mb-8 space-y-6">
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
                   <Input
-                    placeholder="Rechercher un jeu..."
+                    placeholder="Rechercher un jeu par nom..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 bg-white/80 border-orange-200 focus:border-orange-400 focus:ring-orange-200"
+                    className="pl-12 h-14 bg-white/80 border-2 border-orange-200 focus:border-orange-400 focus:ring-orange-200 rounded-xl text-lg"
                   />
                 </div>
-                <div className="flex items-center gap-2">
-                  <Filter className="h-4 w-4 text-gray-500" />
+                <div className="flex items-center gap-3">
+                  <Filter className="h-5 w-5 text-gray-500" />
                   <Select value={filterType} onValueChange={setFilterType}>
-                    <SelectTrigger className="w-48 bg-white/80 border-orange-200">
+                    <SelectTrigger className="w-56 h-14 bg-white/80 border-2 border-orange-200 rounded-xl text-lg">
                       <SelectValue placeholder="Filtrer par..." />
                     </SelectTrigger>
                     <SelectContent>
@@ -169,8 +183,11 @@ export function KahootList({ kahoots, isLoading, onDelete }: KahootListProps) {
               </div>
               
               {searchTerm && (
-                <div className="text-sm text-gray-600">
-                  {filteredKahoots.length} résultat(s) pour "{searchTerm}"
+                <div className="flex items-center space-x-2 p-3 bg-orange-50 rounded-xl border border-orange-200">
+                  <Search className="h-4 w-4 text-orange-600" />
+                  <span className="text-sm text-orange-700 font-medium">
+                    {filteredKahoots.length} résultat(s) pour "{searchTerm}"
+                  </span>
                 </div>
               )}
             </div>

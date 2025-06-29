@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Navbar } from '@/components/Navbar';
@@ -5,7 +6,7 @@ import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 import { ModernStatsCard } from '@/components/dashboard/ModernStatsCard';
 import { KahootList } from '@/components/dashboard/KahootList';
 import { CreateGameModal } from '@/components/dashboard/CreateGameModal';
-import { CreatePlanificationModal } from '@/components/dashboard/CreatePlanificationModal';
+import { ScheduleGameModal } from '@/components/dashboard/ScheduleGameModal';
 import { toast } from 'sonner';
 import { Kahoot } from '@/types/game-details';
 import { Users, Gamepad, Calendar } from 'lucide-react';
@@ -183,12 +184,32 @@ export default function Dashboard() {
 
         {/* Quick Actions */}
         <div className="mb-8">
-          <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6">
-            Actions rapides
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <CreateGameModal onSuccess={handleGameCreated} />
-            <CreatePlanificationModal kahoots={kahoots} onSuccess={handlePlanificationCreated} />
+          <div className="relative mb-6">
+            <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-3xl transform rotate-1 scale-105"></div>
+            <div className="absolute inset-0 bg-white/5 backdrop-blur-sm rounded-3xl transform -rotate-1 scale-102"></div>
+            
+            <div className="relative backdrop-blur-xl bg-white/95 border-0 shadow-2xl shadow-orange-900/20 rounded-3xl p-8">
+              <div className="text-center space-y-4 mb-8">
+                <h2 className="text-3xl font-black bg-gradient-to-r from-orange-600 via-orange-700 to-orange-800 bg-clip-text text-transparent">
+                  Actions rapides
+                </h2>
+                <p className="text-lg text-orange-600/70">
+                  Créez et planifiez vos expériences éducatives
+                </p>
+                
+                {/* Ligne décorative */}
+                <div className="flex items-center justify-center space-x-2">
+                  <div className="h-1 w-8 bg-gradient-to-r from-transparent to-orange-500 rounded-full"></div>
+                  <div className="h-1 w-16 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full shadow-lg"></div>
+                  <div className="h-1 w-8 bg-gradient-to-r from-orange-500 to-transparent rounded-full"></div>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <CreateGameModal onSuccess={handleGameCreated} />
+                <ScheduleGameModal kahoots={kahoots} onSuccess={handlePlanificationCreated} />
+              </div>
+            </div>
           </div>
         </div>
 
