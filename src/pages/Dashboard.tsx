@@ -5,7 +5,7 @@ import { ModernStatsCard } from '@/components/dashboard/ModernStatsCard';
 import { KahootList } from '@/components/dashboard/KahootList';
 import { toast } from 'sonner';
 import { Kahoot } from '@/types/game-details';
-import { Users, Gamepad, Calendar } from 'lucide-react';
+import { Users, Gamepad, Calendar, Sparkles, Star, BookOpen } from 'lucide-react';
 import { buildApiUrl } from '@/config/api';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/layout/AppSidebar';
@@ -26,6 +26,11 @@ export default function Dashboard() {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [statsLoading, setStatsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchData();
+    fetchStats();
+  }, [token]);
 
   const fetchData = async () => {
     try {
@@ -73,11 +78,6 @@ export default function Dashboard() {
       setStatsLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchData();
-    fetchStats();
-  }, [token]);
 
   const handleDeleteKahoots = async (kahootIds: string[]) => {
     try {
@@ -135,32 +135,42 @@ export default function Dashboard() {
       title: "Total Jeux",
       value: stats.total_jeux,
       icon: Gamepad,
-      bgColor: "bg-orange-100",
-      textColor: "text-orange-600",
+      bgColor: "bg-gradient-to-br from-purple-100 to-purple-200",
+      textColor: "text-purple-700",
       change: "+12%"
     },
     {
       title: "Total Planifications",
       value: stats.total_planifications,
       icon: Calendar,
-      bgColor: "bg-violet-100", 
-      textColor: "text-violet-600",
+      bgColor: "bg-gradient-to-br from-blue-100 to-blue-200", 
+      textColor: "text-blue-700",
       change: "+8%"
     },
     {
       title: "Total Apprenants",
       value: stats.total_apprenants,
       icon: Users,
-      bgColor: "bg-blue-100",
-      textColor: "text-blue-600",
+      bgColor: "bg-gradient-to-br from-green-100 to-green-200",
+      textColor: "text-green-700",
       change: "+25%"
     }
   ];
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen w-full bg-gradient-to-br from-blue-50/30 via-white to-green-50/20">
-        <div className="flex w-full">
+      <div className="min-h-screen w-full bg-gradient-to-br from-purple-50/80 via-blue-50/60 to-cyan-50/40 relative overflow-hidden">
+        {/* Éléments décoratifs de fond */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 left-20 w-64 h-64 bg-purple-200/30 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute top-1/3 right-32 w-48 h-48 bg-blue-200/25 rounded-full blur-2xl animate-pulse delay-1000"></div>
+          <div className="absolute bottom-32 left-1/3 w-56 h-56 bg-cyan-200/20 rounded-full blur-3xl animate-pulse delay-500"></div>
+          <Star className="absolute top-1/4 right-1/4 w-8 h-8 text-yellow-300/40 animate-pulse" />
+          <Sparkles className="absolute bottom-1/4 left-1/4 w-6 h-6 text-pink-300/40 animate-pulse delay-700" />
+          <BookOpen className="absolute top-1/2 left-1/5 w-7 h-7 text-purple-300/30 animate-pulse delay-300" />
+        </div>
+
+        <div className="flex w-full relative z-10">
           <AppSidebar />
           
           <div className="flex-1 flex flex-col">
@@ -170,46 +180,66 @@ export default function Dashboard() {
               onPlanificationCreated={handlePlanificationCreated}
             />
             
-            <main className="flex-1 p-6 space-y-8">
-              {/* Greeting Card */}
-              <div className="bg-gradient-to-r from-orange-500/90 to-orange-600/90 text-white p-8 rounded-3xl shadow-xl backdrop-blur-sm">
-                <div className="flex items-center space-x-4">
-                  <div className="h-16 w-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                    <Gamepad className="h-8 w-8 text-white" />
+            <main className="flex-1 p-8 space-y-8">
+              {/* Greeting Card améliorée */}
+              <div className="relative animate-slide-down">
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-600/90 to-blue-600/90 rounded-3xl transform rotate-1 scale-105 opacity-20"></div>
+                <div className="relative bg-gradient-to-r from-purple-500/95 to-blue-500/95 text-white p-8 rounded-3xl shadow-2xl backdrop-blur-sm border border-white/20">
+                  <div className="flex items-center space-x-6">
+                    <div className="relative">
+                      <div className="h-20 w-20 rounded-3xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-xl">
+                        <Gamepad className="h-10 w-10 text-white" />
+                      </div>
+                      <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center animate-bounce">
+                        <Sparkles className="h-4 w-4 text-yellow-800" />
+                      </div>
+                    </div>
+                    <div>
+                      <h2 className="text-4xl font-black text-white mb-3 flex items-center space-x-3">
+                        <span>Bienvenue sur AKILI!</span>
+                        <span className="text-3xl animate-bounce">👋</span>
+                      </h2>
+                      <p className="text-blue-100 text-xl font-medium">
+                        🎯 Créez, gérez et analysez vos expériences éducatives interactives
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h2 className="text-3xl font-bold text-white mb-2">
-                      Bienvenue sur AKILI! 👋
-                    </h2>
-                    <p className="text-orange-100 text-lg">
-                      Créez, gérez et analysez vos expériences éducatives interactives
-                    </p>
+                  
+                  {/* Éléments décoratifs */}
+                  <div className="absolute top-4 right-8 opacity-30">
+                    <Star className="h-6 w-6 text-yellow-200 animate-pulse" />
+                  </div>
+                  <div className="absolute bottom-4 right-12 opacity-40">
+                    <BookOpen className="h-5 w-5 text-cyan-200 animate-pulse delay-500" />
                   </div>
                 </div>
               </div>
 
-              {/* Statistics Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Statistics Cards avec animation */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 animate-fade-in">
                 {statsConfig.map((stat, index) => (
-                  <ModernStatsCard
-                    key={index}
-                    title={stat.title}
-                    value={stat.value}
-                    icon={stat.icon}
-                    bgColor={stat.bgColor}
-                    textColor={stat.textColor}
-                    change={stat.change}
-                    isLoading={statsLoading}
-                  />
+                  <div key={index} className="transform hover:scale-105 transition-all duration-300">
+                    <ModernStatsCard
+                      title={stat.title}
+                      value={stat.value}
+                      icon={stat.icon}
+                      bgColor={stat.bgColor}
+                      textColor={stat.textColor}
+                      change={stat.change}
+                      isLoading={statsLoading}
+                    />
+                  </div>
                 ))}
               </div>
 
-              {/* Kahoots List */}
-              <KahootList 
-                kahoots={kahoots} 
-                isLoading={isLoading} 
-                onDelete={handleDeleteKahoots} 
-              />
+              {/* Kahoots List avec animation */}
+              <div className="animate-slide-up">
+                <KahootList 
+                  kahoots={kahoots} 
+                  isLoading={isLoading} 
+                  onDelete={handleDeleteKahoots} 
+                />
+              </div>
             </main>
           </div>
         </div>
