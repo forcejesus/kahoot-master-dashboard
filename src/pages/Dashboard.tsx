@@ -5,10 +5,15 @@ import { ModernStatsCard } from '@/components/dashboard/ModernStatsCard';
 import { KahootList } from '@/components/dashboard/KahootList';
 import { toast } from 'sonner';
 import { Kahoot } from '@/types/game-details';
-import { Users, Gamepad, Calendar, Sparkles, Star, BookOpen } from 'lucide-react';
+import { Users, Gamepad, Calendar, Sparkles, Star, BookOpen, Plus, Eye, Play } from 'lucide-react';
 import { buildApiUrl } from '@/config/api';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/layout/AppSidebar';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { CreateGameModal } from '@/components/dashboard/CreateGameModal';
+import { ScheduleGameModal } from '@/components/dashboard/ScheduleGameModal';
+import { useNavigate } from 'react-router-dom';
 
 interface StatsData {
   total_apprenants: number;
@@ -18,6 +23,7 @@ interface StatsData {
 
 export default function Dashboard() {
   const { token } = useAuth();
+  const navigate = useNavigate();
   const [kahoots, setKahoots] = useState<Kahoot[]>([]);
   const [stats, setStats] = useState<StatsData>({
     total_apprenants: 0,
@@ -26,6 +32,8 @@ export default function Dashboard() {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [statsLoading, setStatsLoading] = useState(true);
+  const [isCreateGameOpen, setIsCreateGameOpen] = useState(false);
+  const [isScheduleGameOpen, setIsScheduleGameOpen] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -124,43 +132,43 @@ export default function Dashboard() {
   const handleGameCreated = () => {
     fetchData();
     fetchStats();
+    setIsCreateGameOpen(false);
   };
 
   const handlePlanificationCreated = () => {
     fetchStats();
+    setIsScheduleGameOpen(false);
   };
 
-  const statsConfig = [
+  // Quick actions configuration
+  const quickActions = [
     {
-      title: "Total Jeux",
-      value: stats.total_jeux,
+      title: "Voir les résultats d'une session de jeux",
+      icon: Eye,
+      onClick: () => navigate('/planifications'),
+      bgColor: "bg-gradient-to-br from-blue-500 to-blue-600",
+      hoverColor: "hover:from-blue-600 hover:to-blue-700"
+    },
+    {
+      title: "Créer une session de jeux",
+      icon: Plus,
+      onClick: () => setIsScheduleGameOpen(true),
+      bgColor: "bg-gradient-to-br from-green-500 to-green-600",
+      hoverColor: "hover:from-green-600 hover:to-green-700"
+    },
+    {
+      title: "Créer un nouveau jeu",
       icon: Gamepad,
-      bgColor: "bg-gradient-to-br from-purple-100 to-purple-200",
-      textColor: "text-purple-700",
-      change: "+12%"
-    },
-    {
-      title: "Total Planifications",
-      value: stats.total_planifications,
-      icon: Calendar,
-      bgColor: "bg-gradient-to-br from-blue-100 to-blue-200", 
-      textColor: "text-blue-700",
-      change: "+8%"
-    },
-    {
-      title: "Total Apprenants",
-      value: stats.total_apprenants,
-      icon: Users,
-      bgColor: "bg-gradient-to-br from-green-100 to-green-200",
-      textColor: "text-green-700",
-      change: "+25%"
+      onClick: () => setIsCreateGameOpen(true),
+      bgColor: "bg-gradient-to-br from-purple-500 to-purple-600",
+      hoverColor: "hover:from-purple-600 hover:to-purple-700"
     }
   ];
 
   return (
     <SidebarProvider>
       <div className="min-h-screen w-full bg-gradient-to-br from-purple-50/80 via-blue-50/60 to-cyan-50/40 relative overflow-hidden">
-        {/* Éléments décoratifs de fond */}
+        {/* Background decorative elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-20 left-20 w-64 h-64 bg-purple-200/30 rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute top-1/3 right-32 w-48 h-48 bg-blue-200/25 rounded-full blur-2xl animate-pulse delay-1000"></div>
@@ -181,59 +189,84 @@ export default function Dashboard() {
             />
             
             <main className="flex-1 p-8 space-y-8">
-              {/* Greeting Card améliorée */}
-              <div className="relative animate-slide-down">
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-600/90 to-blue-600/90 rounded-3xl transform rotate-1 scale-105 opacity-20"></div>
-                <div className="relative bg-gradient-to-r from-purple-500/95 to-blue-500/95 text-white p-8 rounded-3xl shadow-2xl backdrop-blur-sm border border-white/20">
-                  <div className="flex items-center space-x-6">
-                    <div className="relative">
-                      <div className="h-20 w-20 rounded-3xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-xl">
-                        <Gamepad className="h-10 w-10 text-white" />
-                      </div>
-                      <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center animate-bounce">
-                        <Sparkles className="h-4 w-4 text-yellow-800" />
-                      </div>
+              {/* Navigation Stats Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-slide-down">
+                <Card className="bg-gradient-to-br from-purple-100 to-purple-200 border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                  <CardContent className="p-6 text-center">
+                    <div className="h-16 w-16 bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                      <Gamepad className="h-8 w-8 text-white" />
                     </div>
-                    <div>
-                      <h2 className="text-4xl font-black text-white mb-3 flex items-center space-x-3">
-                        <span>Bienvenue sur AKILI!</span>
-                        <span className="text-3xl animate-bounce">👋</span>
-                      </h2>
-                      <p className="text-blue-100 text-xl font-medium">
-                        🎯 Créez, gérez et analysez vos expériences éducatives interactives
-                      </p>
+                    <h3 className="text-2xl font-bold text-purple-700 mb-2">{stats.total_jeux}</h3>
+                    <p className="text-purple-600 font-semibold">Mes Jeux</p>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gradient-to-br from-blue-100 to-blue-200 border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                  <CardContent className="p-6 text-center">
+                    <div className="h-16 w-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                      <Calendar className="h-8 w-8 text-white" />
                     </div>
-                  </div>
-                  
-                  {/* Éléments décoratifs */}
-                  <div className="absolute top-4 right-8 opacity-30">
-                    <Star className="h-6 w-6 text-yellow-200 animate-pulse" />
-                  </div>
-                  <div className="absolute bottom-4 right-12 opacity-40">
-                    <BookOpen className="h-5 w-5 text-cyan-200 animate-pulse delay-500" />
-                  </div>
+                    <h3 className="text-2xl font-bold text-blue-700 mb-2">{stats.total_planifications}</h3>
+                    <p className="text-blue-600 font-semibold">Planifications</p>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gradient-to-br from-green-100 to-green-200 border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                  <CardContent className="p-6 text-center">
+                    <div className="h-16 w-16 bg-gradient-to-r from-green-500 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                      <Users className="h-8 w-8 text-white" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-green-700 mb-2">{stats.total_apprenants}</h3>
+                    <p className="text-green-600 font-semibold">Apprenants</p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Actions rapides */}
+              <div className="animate-slide-up">
+                <div className="mb-6">
+                  <h2 className="text-2xl font-bold text-gray-800 mb-2 flex items-center space-x-3">
+                    <Sparkles className="h-6 w-6 text-purple-500" />
+                    <span>Actions rapides</span>
+                  </h2>
+                  <div className="h-1 w-24 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full"></div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {quickActions.map((action, index) => (
+                    <Button
+                      key={index}
+                      onClick={action.onClick}
+                      className={`${action.bgColor} ${action.hoverColor} text-white p-6 h-auto flex flex-col items-center space-y-3 shadow-lg rounded-2xl border-0 transition-all duration-300 hover:scale-105 hover:shadow-xl`}
+                    >
+                      <div className="h-12 w-12 bg-white/20 rounded-xl flex items-center justify-center">
+                        <action.icon className="h-6 w-6 text-white" />
+                      </div>
+                      <span className="text-center font-semibold text-sm leading-tight">
+                        {action.title}
+                      </span>
+                    </Button>
+                  ))}
                 </div>
               </div>
 
-              {/* Statistics Cards avec animation */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 animate-fade-in">
-                {statsConfig.map((stat, index) => (
-                  <div key={index} className="transform hover:scale-105 transition-all duration-300">
-                    <ModernStatsCard
-                      title={stat.title}
-                      value={stat.value}
-                      icon={stat.icon}
-                      bgColor={stat.bgColor}
-                      textColor={stat.textColor}
-                      change={stat.change}
-                      isLoading={statsLoading}
-                    />
+              {/* Section des jeux récemment créés */}
+              <div className="animate-slide-up delay-200">
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-2 flex items-center space-x-3">
+                      <Star className="h-6 w-6 text-orange-500" />
+                      <span>Jeux récemment créés</span>
+                    </h2>
+                    <div className="h-1 w-32 bg-gradient-to-r from-orange-500 to-red-500 rounded-full"></div>
                   </div>
-                ))}
-              </div>
+                  
+                  <div className="text-right">
+                    <h3 className="text-lg font-semibold text-gray-700 mb-1">Filtre et barre de recherche</h3>
+                    <p className="text-sm text-gray-500">Recherchez et filtrez vos jeux</p>
+                  </div>
+                </div>
 
-              {/* Kahoots List avec animation */}
-              <div className="animate-slide-up">
                 <KahootList 
                   kahoots={kahoots} 
                   isLoading={isLoading} 
@@ -243,6 +276,19 @@ export default function Dashboard() {
             </main>
           </div>
         </div>
+
+        {/* Modals */}
+        <CreateGameModal 
+          isOpen={isCreateGameOpen}
+          onOpenChange={setIsCreateGameOpen}
+          onSuccess={handleGameCreated}
+        />
+        <ScheduleGameModal 
+          kahoots={kahoots}
+          isOpen={isScheduleGameOpen}
+          onOpenChange={setIsScheduleGameOpen}
+          onSuccess={handlePlanificationCreated}
+        />
       </div>
     </SidebarProvider>
   );
