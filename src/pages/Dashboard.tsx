@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { AppHeader } from '@/components/layout/AppHeader';
-import { ModernStatsCard } from '@/components/dashboard/ModernStatsCard';
 import { KahootList } from '@/components/dashboard/KahootList';
 import { toast } from 'sonner';
 import { Kahoot } from '@/types/game-details';
-import { Users, Gamepad, Calendar, Sparkles, Star, BookOpen, Plus, Eye, Play } from 'lucide-react';
+import { Plus, Eye, Gamepad2, Calendar, Sparkles } from 'lucide-react';
 import { buildApiUrl } from '@/config/api';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/layout/AppSidebar';
@@ -140,45 +139,10 @@ export default function Dashboard() {
     setIsScheduleGameOpen(false);
   };
 
-  // Quick actions configuration
-  const quickActions = [
-    {
-      title: "Voir les résultats d'une session de jeux",
-      icon: Eye,
-      onClick: () => navigate('/planifications'),
-      bgColor: "bg-gradient-to-br from-blue-500 to-blue-600",
-      hoverColor: "hover:from-blue-600 hover:to-blue-700"
-    },
-    {
-      title: "Créer une session de jeux",
-      icon: Plus,
-      onClick: () => setIsScheduleGameOpen(true),
-      bgColor: "bg-gradient-to-br from-green-500 to-green-600",
-      hoverColor: "hover:from-green-600 hover:to-green-700"
-    },
-    {
-      title: "Créer un nouveau jeu",
-      icon: Gamepad,
-      onClick: () => setIsCreateGameOpen(true),
-      bgColor: "bg-gradient-to-br from-purple-500 to-purple-600",
-      hoverColor: "hover:from-purple-600 hover:to-purple-700"
-    }
-  ];
-
   return (
     <SidebarProvider>
-      <div className="min-h-screen w-full bg-gradient-to-br from-purple-50/80 via-blue-50/60 to-cyan-50/40 relative overflow-hidden">
-        {/* Background decorative elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-20 left-20 w-64 h-64 bg-purple-200/30 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute top-1/3 right-32 w-48 h-48 bg-blue-200/25 rounded-full blur-2xl animate-pulse delay-1000"></div>
-          <div className="absolute bottom-32 left-1/3 w-56 h-56 bg-cyan-200/20 rounded-full blur-3xl animate-pulse delay-500"></div>
-          <Star className="absolute top-1/4 right-1/4 w-8 h-8 text-yellow-300/40 animate-pulse" />
-          <Sparkles className="absolute bottom-1/4 left-1/4 w-6 h-6 text-pink-300/40 animate-pulse delay-700" />
-          <BookOpen className="absolute top-1/2 left-1/5 w-7 h-7 text-purple-300/30 animate-pulse delay-300" />
-        </div>
-
-        <div className="flex w-full relative z-10">
+      <div className="min-h-screen w-full bg-gray-50">
+        <div className="flex w-full">
           <AppSidebar />
           
           <div className="flex-1 flex flex-col">
@@ -188,82 +152,76 @@ export default function Dashboard() {
               onPlanificationCreated={handlePlanificationCreated}
             />
             
-            <main className="flex-1 p-8 space-y-8">
-              {/* Navigation Stats Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-slide-down">
-                <Card className="bg-gradient-to-br from-purple-100 to-purple-200 border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                  <CardContent className="p-6 text-center">
-                    <div className="h-16 w-16 bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                      <Gamepad className="h-8 w-8 text-white" />
+            <main className="flex-1 p-6 space-y-8">
+              {/* Hero Section avec actions principales */}
+              <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
+                <div className="flex items-center justify-between mb-8">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center">
+                      <Plus className="w-8 h-8 text-orange-600" />
                     </div>
-                    <h3 className="text-2xl font-bold text-purple-700 mb-2">{stats.total_jeux}</h3>
-                    <p className="text-purple-600 font-semibold">Mes Jeux</p>
-                  </CardContent>
-                </Card>
-
-                <Card className="bg-gradient-to-br from-blue-100 to-blue-200 border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                  <CardContent className="p-6 text-center">
-                    <div className="h-16 w-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                      <Calendar className="h-8 w-8 text-white" />
+                    <div>
+                      <h2 className="text-2xl font-bold text-gray-900">Créer un nouveau jeu</h2>
+                      <p className="text-gray-600">Concevez vos expériences éducatives</p>
                     </div>
-                    <h3 className="text-2xl font-bold text-blue-700 mb-2">{stats.total_planifications}</h3>
-                    <p className="text-blue-600 font-semibold">Planifications</p>
-                  </CardContent>
-                </Card>
-
-                <Card className="bg-gradient-to-br from-green-100 to-green-200 border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                  <CardContent className="p-6 text-center">
-                    <div className="h-16 w-16 bg-gradient-to-r from-green-500 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                      <Users className="h-8 w-8 text-white" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-green-700 mb-2">{stats.total_apprenants}</h3>
-                    <p className="text-green-600 font-semibold">Apprenants</p>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-4 mb-8">
+                  <div className="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center">
+                    <Calendar className="w-8 h-8 text-purple-600" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900">Planifier une session</h2>
+                    <p className="text-gray-600">Organisez vos sessions de jeu</p>
+                  </div>
+                </div>
               </div>
 
               {/* Actions rapides */}
-              <div className="animate-slide-up">
-                <div className="mb-6">
-                  <h2 className="text-2xl font-bold text-gray-800 mb-2 flex items-center space-x-3">
-                    <Sparkles className="h-6 w-6 text-purple-500" />
-                    <span>Actions rapides</span>
-                  </h2>
-                  <div className="h-1 w-24 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full"></div>
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2">
+                  <Sparkles className="w-5 h-5 text-orange-500" />
+                  <h3 className="text-lg font-semibold text-gray-900">Actions rapides</h3>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {quickActions.map((action, index) => (
-                    <Button
-                      key={index}
-                      onClick={action.onClick}
-                      className={`${action.bgColor} ${action.hoverColor} text-white p-6 h-auto flex flex-col items-center space-y-3 shadow-lg rounded-2xl border-0 transition-all duration-300 hover:scale-105 hover:shadow-xl`}
-                    >
-                      <div className="h-12 w-12 bg-white/20 rounded-xl flex items-center justify-center">
-                        <action.icon className="h-6 w-6 text-white" />
-                      </div>
-                      <span className="text-center font-semibold text-sm leading-tight">
-                        {action.title}
-                      </span>
-                    </Button>
-                  ))}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Button
+                    onClick={() => navigate('/planifications')}
+                    className="h-20 bg-blue-500 hover:bg-blue-600 text-white rounded-2xl flex items-center justify-center space-x-3 text-base font-semibold"
+                  >
+                    <Eye className="w-6 h-6" />
+                    <span>Voir les résultats d'une session de jeux</span>
+                  </Button>
+                  
+                  <Button
+                    onClick={() => setIsScheduleGameOpen(true)}
+                    className="h-20 bg-green-500 hover:bg-green-600 text-white rounded-2xl flex items-center justify-center space-x-3 text-base font-semibold"
+                  >
+                    <Plus className="w-6 h-6" />
+                    <span>Créer une session de jeux</span>
+                  </Button>
+                  
+                  <Button
+                    onClick={() => setIsCreateGameOpen(true)}
+                    className="h-20 bg-purple-500 hover:bg-purple-600 text-white rounded-2xl flex items-center justify-center space-x-3 text-base font-semibold"
+                  >
+                    <Gamepad2 className="w-6 h-6" />
+                    <span>Créer un nouveau jeu</span>
+                  </Button>
                 </div>
               </div>
 
               {/* Section des jeux récemment créés */}
-              <div className="animate-slide-up delay-200">
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <h2 className="text-2xl font-bold text-gray-800 mb-2 flex items-center space-x-3">
-                      <Star className="h-6 w-6 text-orange-500" />
-                      <span>Jeux récemment créés</span>
-                    </h2>
-                    <div className="h-1 w-32 bg-gradient-to-r from-orange-500 to-red-500 rounded-full"></div>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Sparkles className="w-5 h-5 text-orange-500" />
+                    <h3 className="text-lg font-semibold text-gray-900">Jeux récemment créés</h3>
                   </div>
-                  
                   <div className="text-right">
-                    <h3 className="text-lg font-semibold text-gray-700 mb-1">Filtre et barre de recherche</h3>
-                    <p className="text-sm text-gray-500">Recherchez et filtrez vos jeux</p>
+                    <p className="text-sm text-gray-600">Filtre et barre de recherche</p>
+                    <p className="text-xs text-gray-500">Recherchez et filtrez vos jeux</p>
                   </div>
                 </div>
 
