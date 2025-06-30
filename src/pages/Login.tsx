@@ -6,12 +6,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogAction } from '@/components/ui/alert-dialog';
-import { GraduationCap, Users, BookOpen } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { GraduationCap, Users, BookOpen, AlertCircle, UserPlus } from 'lucide-react';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showErrorDialog, setShowErrorDialog] = useState(false);
+  const [showNoAccountDialog, setShowNoAccountDialog] = useState(false);
   const { login, isAuthenticated, isLoading, error } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -124,11 +126,20 @@ export default function Login() {
                   />
                 </div>
 
+                {/* Amélioration de l'affichage des erreurs */}
                 {error && (
-                  <div className="px-4 py-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm font-medium flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                    <span>Compte non trouvé.</span>
-                  </div>
+                  <Alert className="bg-red-50 border-red-200 rounded-xl animate-shake">
+                    <AlertCircle className="h-5 w-5 text-red-600" />
+                    <AlertDescription className="text-red-700 font-medium ml-2">
+                      <div className="space-y-2">
+                        <p className="font-semibold">Connexion impossible</p>
+                        <p className="text-sm">
+                          Vos identifiants ne correspondent à aucun compte enseignant. 
+                          Vérifiez votre email et mot de passe, ou contactez votre administrateur.
+                        </p>
+                      </div>
+                    </AlertDescription>
+                  </Alert>
                 )}
 
                 <Button 
@@ -146,28 +157,85 @@ export default function Login() {
                   )}
                 </Button>
               </form>
+
+              {/* Bouton "Je n'ai pas de compte" */}
+              <div className="pt-4 border-t border-gray-200">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowNoAccountDialog(true)}
+                  className="w-full h-14 text-gray-700 border-2 border-gray-200 hover:border-orange-300 hover:bg-orange-50 rounded-xl transition-all duration-200 transform hover:scale-[1.02] font-medium"
+                >
+                  <UserPlus className="h-5 w-5 mr-2" />
+                  Je n'ai pas de compte
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </div>
       </div>
 
-      {/* Dialog d'erreur */}
+      {/* Dialog d'erreur amélioré */}
       <AlertDialog open={showErrorDialog} onOpenChange={setShowErrorDialog}>
-        <AlertDialogContent className="rounded-2xl">
-          <AlertDialogHeader>
-            <AlertDialogTitle className="text-red-600 text-xl">
+        <AlertDialogContent className="rounded-2xl max-w-md">
+          <AlertDialogHeader className="text-center">
+            <div className="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
+              <AlertCircle className="h-8 w-8 text-red-600" />
+            </div>
+            <AlertDialogTitle className="text-red-600 text-xl font-bold">
               Échec de connexion
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-gray-700 text-base">
-              Compte non trouvé.
+            <AlertDialogDescription className="text-gray-700 text-base space-y-2">
+              <p>Vos identifiants ne correspondent à aucun compte enseignant.</p>
+              <p className="text-sm text-gray-600">
+                Vérifiez votre email et mot de passe, ou contactez votre administrateur pour obtenir de l'aide.
+              </p>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogAction 
               onClick={() => setShowErrorDialog(false)}
-              className="bg-orange-500 hover:bg-orange-600 rounded-xl"
+              className="bg-orange-500 hover:bg-orange-600 rounded-xl w-full"
             >
               Compris
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Dialog "Je n'ai pas de compte" */}
+      <AlertDialog open={showNoAccountDialog} onOpenChange={setShowNoAccountDialog}>
+        <AlertDialogContent className="rounded-2xl max-w-lg">
+          <AlertDialogHeader className="text-center">
+            <div className="mx-auto w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+              <UserPlus className="h-8 w-8 text-blue-600" />
+            </div>
+            <AlertDialogTitle className="text-blue-600 text-xl font-bold">
+              Création de compte enseignant
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-700 text-base space-y-3">
+              <p className="font-medium">
+                Pour accéder à la plateforme AKILI, vous devez disposer d'un compte enseignant validé.
+              </p>
+              <div className="bg-blue-50 p-4 rounded-xl space-y-2">
+                <p className="font-semibold text-blue-800">Contactez votre administrateur :</p>
+                <ul className="text-sm text-blue-700 space-y-1 list-disc list-inside">
+                  <li>Direction de votre établissement scolaire</li>
+                  <li>Responsable informatique de votre école</li>
+                  <li>Coordinateur pédagogique de votre centre</li>
+                </ul>
+              </div>
+              <p className="text-sm text-gray-600">
+                Il pourra créer votre compte et vous fournir vos identifiants de connexion.
+              </p>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction 
+              onClick={() => setShowNoAccountDialog(false)}
+              className="bg-blue-500 hover:bg-blue-600 rounded-xl w-full"
+            >
+              J'ai compris
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
